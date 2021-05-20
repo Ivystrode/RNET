@@ -10,9 +10,9 @@ rotator.start(2.5)
 
 # SERVO 2 (ELEVATE SERVO)
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(12, GPIO.OUT)
+GPIO.setup(11, GPIO.OUT)
 
-pwm=GPIO.PWM(12,50)
+pwm=GPIO.PWM(11,50)
 pwm.start(2.5)
 
 rotator.ChangeDutyCycle(1.5) # FURTHEST RIGHT
