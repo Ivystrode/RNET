@@ -72,7 +72,16 @@ def move_servo(update, context):
     posn = context.args[2]
     unit_address = dbcontrol.get_unit_address(name)
     update.message.reply_text(f"{name} address: {unit_address}")
-    commands.servo_test(unit_address, 7502, axis, posn)
+    
+    try:
+        commands.servo_test(unit_address, 7502, axis, posn)
+        time.sleep(0.5)
+        update.message.reply_text(f"[{axis.upper()}: {posn}] servo command sent to {name}")
+    except Exception as e:
+        update.message.reply_text(f"Unable to send command to {name}")
+        time.sleep(0.5)
+        update.message.reply_text(f"{e}")
+        
     
 def get_unit_name(update, context):
     """

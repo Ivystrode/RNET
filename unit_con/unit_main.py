@@ -106,11 +106,14 @@ class Unit():
                 
                 print(f"{self.label} Signal from hub: {cleaned_receive}")
                 if cleaned_receive[0] == "<SERVO_MOVE>":
-                    axis = cleaned_receive[1]
-                    position = cleaned_receive[2]
-                    print(f"{self.label} {axis.upper()} servo move to {position}")
-                    servo.rotate(position, axis)
-                    print(f"{self.label} Command complete")
+                    try:
+                        axis = cleaned_receive[1]
+                        position = cleaned_receive[2]
+                        print(f"{self.label} {axis.upper()} servo move to {position}")
+                        servo.rotate(position, axis)
+                        print(f"{self.label} Command complete")
+                    except:
+                        print(f"{self.label} Invalid servo move command")
                 
             except Exception as e:
                 print(f"{self.label} Connection error: {e}")

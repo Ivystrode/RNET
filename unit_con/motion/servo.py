@@ -43,7 +43,7 @@ def rotate(posn, axis):
 	elif axis == "elevate":
 		elevate_servo.ChangeDutyCycle(float(posn))
 	else:
-		print(f"[{socket.gethostname().upper()}] Invalid servo move command")
+		print(f"[{socket.gethostname().upper()} - Servo Control] Error")
      
 	
 rotate(1.5, "rotate")
