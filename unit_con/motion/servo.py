@@ -46,18 +46,18 @@ def rotate(posn, axis):
 		print(f"[{socket.gethostname().upper()}] Invalid servo move command")
      
 	
-rotate(1.5, rotate_servo)
+rotate(1.5, "rotate")
 sleep(0.5)
-rotate(12.6, rotate_servo)
+rotate(12.6, "rotate")
 sleep(0.5)
-rotate(7.1, rotate_servo)
+rotate(7.1, "rotate")
 sleep(1)
 
-rotate(1.5, elevate_servo)
+rotate(1.5, "elevate")
 sleep(0.5)
-rotate(12.6, elevate_servo)
+rotate(12.6, "elevate")
 sleep(0.5)
-rotate(7.1, elevate_servo)
+rotate(7.1, "elevate")
 sleep(1)
 
 # pwm.stop()
