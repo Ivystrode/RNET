@@ -16,7 +16,7 @@ GPIO.setup(11, GPIO.OUT)
 elevator=GPIO.PWM(11,50)
 elevator.start(2.5)
 
-print(f"[{socket.gethostname().upper()]} Testing rotator servo")
+print(f"[{socket.gethostname().upper()}] Testing rotator servo")
 
 rotator.ChangeDutyCycle(1.5) # FURTHEST RIGHT
 sleep(1)
@@ -32,7 +32,7 @@ sleep(1)
 rotator.Chang
 eDutyCycle(12.6) # FURTHEST LEFT
 sleep(1)
-print(f"[{socket.gethostname().upper()]} Testing elevator servo")
+print(f"[{socket.gethostname().upper()}] Testing elevator servo")
 
 # elevator.ChangeDutyCycle(1.5) # FURTHEST RIGHT
 # sleep(1)
