@@ -41,7 +41,7 @@ def rotate(posn, axis):
 	if axis == "rotate":
 		rotate_servo.ChangeDutyCycle(float(posn))
 	elif axis == "elevate":
-    	elevate_servo.ChangeDutyCycle(float(posn))
+		elevate_servo.ChangeDutyCycle(float(posn))
 	else:
 		print(f"[{socket.gethostname().upper()}] Invalid servo move command")
      
