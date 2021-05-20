@@ -9,7 +9,7 @@ def connect():
     conn.close()
     
 def get_status(unitname):
-    print(f"Storage: checking status of {unitname}")
+    print(f"[HUB - DATABASE] checking status of {unitname}")
     conn=sqlite3.connect("database.db")
     cur = conn.cursor()
 
@@ -17,13 +17,13 @@ def get_status(unitname):
     result = cur.fetchall()
     
     if result:
-        print(f"{unitname} found, status: {result}")
+        print(f"[HUB - DATABASE] {unitname} found, status: {result}")
         return result
     else:
         print(f"{unitname} not found, it may not have checked in recently")
     
 def get_unit_address(unitname):
-    print(f"Storage: checking address of {unitname}")
+    # print(f"Storage: checking address of {unitname}")
     conn=sqlite3.connect("database.db")
     cur = conn.cursor()
 
@@ -35,7 +35,7 @@ def get_unit_address(unitname):
         print(f"{unitname} found: {result}")
         return result[0][2]
     else:
-        print(f"{unitname} not found, it may not have checked in recently")
+        print(f"[HUB - DATABASE] {unitname} not found, it may not have checked in recently")
         
 def get_all_units():    
     conn=sqlite3.connect("database.db")

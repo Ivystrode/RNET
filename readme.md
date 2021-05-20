@@ -16,3 +16,4 @@ NOTES
     - cp        0      0 0.0.0.0:8069            0.0.0.0:*               LISTEN      10869/python2 
     - or a line to that effect...the process number is 10869
     - sudo kill -9 10869
+- May need to disable or add exception to firewall to communicate
