@@ -99,7 +99,7 @@ class Unit():
             
             try:
                 hub_socket, address = s.accept()
-                print(f"{self.label} Signal received from {hub_socket[0]}")
+                print(f"{self.label} Signal received from {address[0]}")
                 
                 received = hub_socket.recv(self.BUFFER_SIZE).decode()
                 cleaned_receive = received.split(self.SEPARATOR)
