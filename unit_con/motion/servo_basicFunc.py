@@ -17,7 +17,7 @@ sleep(1)
 
 def rotate(posn):
 	# print(f"Rotating to {posn}")
-	pwm.ChangeDutyCycle(int(posn))
+	pwm.ChangeDutyCycle(float(posn))
 	
 rotate(1.5)
 sleep(0.5)
