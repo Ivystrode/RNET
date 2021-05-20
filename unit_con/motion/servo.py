@@ -36,6 +36,7 @@ sleep(1)
 
 
 def rotate(posn, axis):
+    print(f"Move {axis} to position {posn}")
 	servo = axis
 	# print(f"Rotating to {posn}")
 	servo.ChangeDutyCycle(float(posn))
