@@ -11,7 +11,7 @@ import socket
 import time
 import threading
 
-from motion import servo_basicFunc
+from motion import servo
 import unit_id
 
 class Unit():
@@ -106,9 +106,10 @@ class Unit():
                 
                 print(f"{self.label} Signal from hub: {cleaned_receive}")
                 if cleaned_receive[0] == "<SERVO_MOVE>":
-                    position = cleaned_receive[1]
-                    print(f"{self.label} Servo move to {position}")
-                    servo_basicFunc.rotate(position)
+                    axis = cleaned_receive[1]
+                    position = cleaned_receive[2]
+                    print(f"{self.label} {axis.upper()} servo move to {position}")
+                    servo.rotate(position, axis)
                     print(f"{self.label} Command complete")
                 
             except Exception as e:

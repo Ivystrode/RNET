@@ -40,7 +40,7 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CommandHandler('name', get_unit_name))
     dispatcher.add_handler(CommandHandler('status', get_unit_status))
-    dispatcher.add_handler(CommandHandler('move', move_servo))
+    dispatcher.add_handler(CommandHandler('axis', move_servo))
     
     updater.start_polling()
     updater.idle()
@@ -68,10 +68,11 @@ def move_servo(update, context):
     Get the address of a unit in order to send commands
     """
     name = context.args[0]
-    servo_moveamount = context.args[1]
+    axis = context.args[1]
+    posn = context.args[2]
     unit_address = dbcontrol.get_unit_address(name)
     update.message.reply_text(f"{name} address: {unit_address}")
-    commands.servo_test(unit_address, 7502, servo_moveamount)
+    commands.servo_test(unit_address, 7502, axis, posn)
     
 def get_unit_name(update, context):
     """
