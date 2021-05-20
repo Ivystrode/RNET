@@ -6,15 +6,15 @@ import socket
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12, GPIO.OUT)
 
-rotator=GPIO.PWM(12,50)
-rotator.start(2.5)
+rotate_servo=GPIO.PWM(12,50)
+rotate_servo.start(2.5)
 
-print(f"[{socket.gethostname().upper()}] Testing rotator servo")
-rotator.ChangeDutyCycle(1.5) # FURTHEST RIGHT
+print(f"[{socket.gethostname().upper()}] Testing rotate_servo servo")
+rotate_servo.ChangeDutyCycle(1.5) # FURTHEST RIGHT
 sleep(1)
-rotator.ChangeDutyCycle(7.1) # CENTRE
+rotate_servo.ChangeDutyCycle(7.1) # CENTRE
 sleep(1)
-rotator.ChangeDutyCycle(12.6) # FURTHEST LEFT
+rotate_servo.ChangeDutyCycle(12.6) # FURTHEST LEFT
 sleep(1)
 
 
@@ -22,15 +22,15 @@ sleep(1)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.OUT)
 
-elevator=GPIO.PWM(11,50)
-elevator.start(2.5)
+elevate_servo=GPIO.PWM(11,50)
+elevate_servo.start(2.5)
 
-print(f"[{socket.gethostname().upper()}] Testing elevator servo")
-elevator.ChangeDutyCycle(1.5) # FURTHEST RIGHT
+print(f"[{socket.gethostname().upper()}] Testing elevate_servo servo")
+elevate_servo.ChangeDutyCycle(1.5) # FURTHEST RIGHT
 sleep(1)
-elevator.ChangeDutyCycle(7.1) # CENTRE
+elevate_servo.ChangeDutyCycle(7.1) # CENTRE
 sleep(1)
-elevator.ChangeDutyCycle(12.6) # FURTHEST LEFT
+elevate_servo.ChangeDutyCycle(12.6) # FURTHEST LEFT
 sleep(1)
 
 
@@ -41,18 +41,18 @@ def rotate(posn, axis):
 	# print(f"Rotating to {posn}")
 	servo.ChangeDutyCycle(float(posn))
 	
-rotate(1.5, rotator)
+rotate(1.5, rotate_servo)
 sleep(0.5)
-rotate(12.6, rotator)
+rotate(12.6, rotate_servo)
 sleep(0.5)
-rotate(7.1, rotator)
+rotate(7.1, rotate_servo)
 sleep(1)
 
-rotate(1.5, elevator)
+rotate(1.5, elevate_servo)
 sleep(0.5)
-rotate(12.6, elevator)
+rotate(12.6, elevate_servo)
 sleep(0.5)
-rotate(7.1, elevator)
+rotate(7.1, elevate_servo)
 sleep(1)
 
 # pwm.stop()
