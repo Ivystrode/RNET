@@ -1,0 +1,12 @@
+"""
+Unique file for each unit
+"""
+
+import socket
+
+unit_details = {
+    "unit_name": socket.gethostname().upper(),
+    "unit_id": "01",
+    "type": "prototype",
+    "description": "Test unit for development"
+}

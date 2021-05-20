@@ -1,0 +1,7 @@
+project_env
+res
+key.py
+keys
+__pycache__
+*.sqlite3
+*.db
