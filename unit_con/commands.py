@@ -12,8 +12,6 @@ def command_router(command):
         
     elif command[0] == "<CPU_COMD>":
         cpu_comd(command)
-        
-   
 
 def servo_command(command):
     

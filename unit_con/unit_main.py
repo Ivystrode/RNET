@@ -87,7 +87,7 @@ class Unit():
             
             s.send(message.encode())
             
-            print(f"{self.label} Status update to hub: {self.status}")
+            print(f"{self.label} Status update to hub: {self.status}\n")
             
             s.close()
             

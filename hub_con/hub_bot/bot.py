@@ -88,7 +88,7 @@ def cpu_comd(update, context):
 
     try:
         commands.cpu_comd(unit_address, command_channel, command)
-        update.message.reply_text(f"[CPU: {command.upper}] command sent to {name}")
+        update.message.reply_text(f"[CPU: {command.upper()}] command sent to {name}")
 
     except Exception as e:
         update.message.reply_text(f"{e}")

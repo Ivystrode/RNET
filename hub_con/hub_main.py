@@ -78,7 +78,6 @@ class Hub():
                         dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Idle", str(datetime.now().strftime("%Y%m%d%H%M")))
                     except Exception as e:
                         print(f"[HUB] Database error: {e}")
-                    # self.track_active_units(unit_address[0])
                     
                 # else if it is a file, process it as ordered...
                 else:
@@ -112,20 +111,10 @@ class Hub():
             # print(f"[HUB] Active units: {self.active_units}")
             
             if len(self.lost_connection_units) > 0:
-                print(f"\n[HUB] WARNING! Connection Lost to: {self.lost_connection_units}\n")
+                print(f"[HUB] WARNING! Connection Lost to: {self.lost_connection_units}")
             else:
                 print("[HUB] All active units online")
             time.sleep(60)
-            
-    def command_channel(self, unit_address, command):
-        """
-        This loop will send commands to units
-        """
-        try:
-            unit = dbcontrol.get_unit(unit_address)
-            print(unit)
-        except:
-            print(f"{unit_address} not found")
         
                 
     def unit_message(self, name, status):
