@@ -2,6 +2,7 @@ import socket
 from actions import servo_con
 
 def command_router(command):
+    print(command)
     
     if command[0] == "<SERVO_MOVE>":
         servo_command(command)
