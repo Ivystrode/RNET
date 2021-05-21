@@ -13,6 +13,7 @@ def command_router(command):
    
 
 def servo_command(command):
+    print(f"SERVO - {command}")
     
     # CUSTOM/NORMAL SERVO MOVE
     if command[1] != "centre":
