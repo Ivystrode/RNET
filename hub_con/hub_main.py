@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import ntpath
 import socket
 import threading
 import time
@@ -143,9 +144,11 @@ class Hub():
                     # file = filedata[1]
                     # filesize = int(filedata[2])
                     file, filesize = received.split(self.SEPARATOR)
+                    filesize = int(filesize)
+                    filename = ntpath.basename(file)
                     
-                    progress = tqdm(range(filesize), f"[HUB] Progress {file}", unit="B", unit_scale=True, unit_divisor=1024)
-                    with open(file, "wb") as f: 
+                    progress = tqdm(range(filesize), f"[HUB] Progress {filename}", unit="B", unit_scale=True, unit_divisor=1024)
+                    with open(filename, "wb") as f: 
                         for _ in progress:
                             bytes_read = unit_socket.recv(self.BUFFER_SIZE)
                             if not bytes_read:
