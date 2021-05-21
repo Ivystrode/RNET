@@ -1,10 +1,11 @@
 import socket
-from actions import servo_con
+import time
+
+from actions import servo_con, cpu_con
 
 label = "[" + socket.gethostname().upper() + "]"
 
 def command_router(command):
-    print(f"{label} COMMAND ROUTER: {command}")
     
     if command[0] == "<SERVO_MOVE>":
         servo_command(command)
@@ -15,7 +16,6 @@ def command_router(command):
    
 
 def servo_command(command):
-    # print(f"SERVO - {command}")
     
     # CUSTOM/NORMAL SERVO MOVE
     if command[1] != "centre":
@@ -53,4 +53,8 @@ def servo_command(command):
                 print(f"{label} Servo error: {e}")
                 
 def cpu_comd(command):
-    pass
+    
+    if command[1] == "reboot":
+        print(f"{label} Rebooting...")
+        time.sleep(2)
+        cpu_con.reboot()
