@@ -34,21 +34,21 @@ def servo_command(command):
         if command[2] == "rotate" or command[2] == "x":
             try:
                 servo_con.centre_rotate()
-                print(f"{label} Centred X and Y servo axis")
+                print(f"{label} Centred X servo axis")
             except Exception as e:
                 print(f"{label} Servo error: {e}")
                 
         elif command[2] == "elevate" or command[2] == "y":
             try:
                 servo_con.centre_elevate()()
-                print(f"{label} Centred X servo axis")
+                print(f"{label} Centred Y servo axis")
             except Exception as e:
                 print(f"{label} Servo error: {e}")
                 
         elif command[2] == "both" or not command[2]:
             try:
                 servo_con.centre_both()
-                print(f"{label} Centred Y servo axis")
+                print(f"{label} Centred X and Y servo axis")
             except Exception as e:
                 print(f"{label} Servo error: {e}")
                 
