@@ -80,9 +80,9 @@ class Hub():
                     except Exception as e:
                         print(f"[HUB] Database error: {e}")
                         
-                elif cleaned_receive[0] == "<FILE_TRANSFER>":
+                elif cleaned_received[0] == "<FILE_TRANSFER>":
                     try:
-                        unit_name = dbcontrol.get_unit_name(unit_status[0])
+                        unit_name = dbcontrol.get_unit_name(unit_address[0])
                         
                         if unit_name is not None:
                             
@@ -91,9 +91,9 @@ class Hub():
                             filesize = int(cleaned_received[2])
                             
                             progress = tqdm(range(filesize), f"Receiving {file}", unit="B", unit_scale=True, unit_divisor=1024)
-                            with open(filename, "wb") as f: 
+                            with open(file, "wb") as f: 
                                 for _ in progress:
-                                    bytes_read = client_socket.recv(self.BUFFER_SIZE)
+                                    bytes_read = unit_socket.recv(self.BUFFER_SIZE)
                                     if not bytes_read:
         
                                         break

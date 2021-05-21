@@ -4,7 +4,7 @@ import os
 import socket
 import time
 
-label = "[" + socket.gethostname() + "]"
+label = "[" + socket.gethostname().upper() + "]"
 name = socket.gethostname()
 send_channel = 7501 # same as status channel which hub is listening on. make a third channel if necessary/possible
 
@@ -19,6 +19,8 @@ def capt_img(hub_addr):
     camera.start_preview()
     time.sleep(2) # apparently camera has to "warm up"
     camera.capture(img_name)
+    time.sleep(0.5)
+    camera.close()
     print(f"{label} Image saved as {img_name}")
     send_file(hub_addr, img_name)
     
