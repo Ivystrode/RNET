@@ -36,7 +36,8 @@ sleep(1)
 
 
 def rotate(posn, axis):
-    print("servocon rotate")
+	print("servocon rotate")
+    
 	if axis == "rotate":
 		rotate_servo.ChangeDutyCycle(float(posn))
 	elif axis == "elevate":
