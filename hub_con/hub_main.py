@@ -139,8 +139,10 @@ class Hub():
                 if unit_name is not None:
                     
                     print(f"[HUB] Receiving file from {unit_name}")
-                    file = cleaned_received[1]
-                    filesize = int(cleaned_received[2])
+                    # filedata = received.split(self.SEPARATOR)
+                    # file = filedata[1]
+                    # filesize = int(filedata[2])
+                    file, filesize = received.split(self.SEPARATOR)
                     
                     progress = tqdm(range(filesize), f"[HUB] Progress {file}", unit="B", unit_scale=True, unit_divisor=1024)
                     with open(file, "wb") as f: 

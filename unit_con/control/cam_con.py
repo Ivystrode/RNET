@@ -33,7 +33,7 @@ def send_file(hub_addr, file):
     filesize = os.path.getsize(file)
 
     print(f"{label} Sending file: {file}")
-    s.send(f"<FILE_TRANSFER>{SEPARATOR}{file}{SEPARATOR}{filesize}".encode())
+    s.send(f"{file}{SEPARATOR}{filesize}".encode())
     print(f"{label} {file} sent to hub")
     s.close()
 
