@@ -105,7 +105,7 @@ class Unit():
             s.close()
             time.sleep(0.5)
         
-    def statrep():
+    def statrep(self):
         print(f"{self.label} STATUS: Idle")
         
         s=socket.socket()

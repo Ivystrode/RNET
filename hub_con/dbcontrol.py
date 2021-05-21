@@ -8,13 +8,13 @@ def connect():
     conn.commit()
     conn.close()
     
-def get_status(unitname):
+def get_unit_status(unitname):
     unitname = unitname.lower()
     print(f"[HUB - DATABASE] checking status of {unitname}")
     conn=sqlite3.connect("database.db")
     cur = conn.cursor()
 
-    cur.execute("SELECT * from units WHERE Name=?", (unitname))
+    cur.execute("SELECT * from units WHERE Name=?", (unitname,))
     result = cur.fetchall()
     
     if result:

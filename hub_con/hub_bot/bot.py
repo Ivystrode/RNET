@@ -73,7 +73,8 @@ def get_unit_status(update, context):
     unit_address = dbcontrol.get_unit_address(name)
     update.message.reply_text(f"Checking status of {name}...")
     time.sleep(0.5)
-    
+    commands.get_unit_status(name, unit_address)
+
     
     
     
