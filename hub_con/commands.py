@@ -40,3 +40,11 @@ def cpu_comd(unit_addr, command_channel, command):
     s.send(f"<CPU_COMD>{SEPARATOR}{command}".encode())
     print(f"[HUB - COMMANDS] CPU command '{command}' sent to {unit_addr}")
     s.close()
+    
+def send_file(unit_addr, command_channel, filetype, vid_length):
+    print("[HUB - COMMANDS] File send command")
+    s = socket.socket()
+    s.connect((unit_addr, command_channel))
+    s.send(f"<SEND_FILE>{SEPARATOR}{filetype}{SEPARATOR}{vid_length}")
+    print(f"[HUB - COMMANDS] {filetype.upper} command sent to {unit_addr}")
+    s.close()

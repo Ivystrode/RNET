@@ -96,7 +96,7 @@ class Unit():
                 if cleaned_receive[0] == "<SEND_STATREP>":
                     self.statrep()
                 else:                
-                    commands.command_router(cleaned_receive)
+                    commands.command_router(cleaned_receive, self.HUB_ADDRESS)
   
             except Exception as e:
                 print(f"{self.label} Connection error: {e}")

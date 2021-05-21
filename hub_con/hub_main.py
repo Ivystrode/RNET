@@ -3,6 +3,7 @@ import json
 import socket
 import threading
 import time
+from tqdm import tqdm
 
 import commands
 import dbcontrol
@@ -78,8 +79,32 @@ class Hub():
                         dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Idle", str(datetime.now().strftime("%Y%m%d%H%M")))
                     except Exception as e:
                         print(f"[HUB] Database error: {e}")
+                        
+                elif cleaned_receive[0] == "<FILE_TRANSFER>":
+                    try:
+                        unit_name = dbcontrol.get_unit_name(unit_status[0])
+                        
+                        if unit_name is not None:
+                            
+                            print(f"[HUB] Receiving file from {unit_name}")
+                            file = cleaned_received[1]
+                            filesize = int(cleaned_received[2])
+                            
+                            progress = tqdm(range(filesize), f"Receiving {file}", unit="B", unit_scale=True, unit_divisor=1024)
+                            with open(filename, "wb") as f: 
+                                for _ in progress:
+                                    bytes_read = client_socket.recv(self.BUFFER_SIZE)
+                                    if not bytes_read:
+        
+                                        break
+                                    f.write(bytes_read)
+                                    progress.update(len(bytes_read))
+                                    
+                        else:
+                            print("[HUB] File send attempt from unknown sender, file not accepted")
+                    except Exception as e:
+                        print(f"[HUB] {e}")
                     
-                # else if it is a file, process it as ordered...
                 else:
                     pass
                 

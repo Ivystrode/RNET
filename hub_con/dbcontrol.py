@@ -53,13 +53,13 @@ def get_all_units():
         print("not found...")
         return "not found"
     
-def get_unit(address):    
+def get_unit_name(address):    
     conn=sqlite3.connect("database.db")
     cur=conn.cursor()
     cur.execute("SELECT * FROM units WHERE address=?", (address,))
     rows=cur.fetchall()
     conn.close()
-    return rows
+    return rows[0][1]
 
 def check_unit_status(address):
     conn=sqlite3.connect("database.db")

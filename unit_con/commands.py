@@ -1,17 +1,23 @@
 import socket
 import time
 
-from control import servo_con, cpu_con
+from control import servo_con, cpu_con, cam_con
 
 label = "[" + socket.gethostname().upper() + "]"
 
-def command_router(command):
+def command_router(command, hub_addr):
     
     if command[0] == "<SERVO_MOVE>":
         servo_command(command)
         
     elif command[0] == "<CPU_COMD>":
         cpu_comd(command)
+        
+    elif command[0] == "<SEND_FILE>":
+        if command[1] == "image":
+            cam_con.capt_img(hub_addr)
+        else:
+            print("not ready yet")
 
 def servo_command(command):
     

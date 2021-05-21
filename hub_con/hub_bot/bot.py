@@ -46,6 +46,8 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('axis', move_servo))
     dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     
+    dispatcher.add_handler(CommandHandler('send', send_comd))
+    
     updater.start_polling()
     updater.idle()
     
@@ -113,6 +115,26 @@ def cpu_comd(update, context):
 
     except Exception as e:
         update.message.reply_text(f"{e}")
+        
+def send_comd(update, context):
+    pic_comd = ['pic','picture','img','image','photo','photograph']
+    
+    name = context.args[0]
+    unit_address = dbcontrol.get_unit_address(name)
+    filetype = context.args[1]
+    
+    if filetype == any(pic_comd):
+        filetype = "image"
+        vid_length = "n/a"
+    else:
+        print("error not ready yet, will send image for now")
+        filetype = "image"
+        vid_length = "n/a"
+
+    try:
+        commands.send_file(unit_address, command_channel, filetype, vid_length)
+    except Exception as e:
+        update.message.reply_text(f"Unable to complete: {e}")
         
     
 
