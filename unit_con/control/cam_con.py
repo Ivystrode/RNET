@@ -37,7 +37,7 @@ def send_file(hub_addr, file):
     print(f"{label} Sending file: {file}")
     s.send(f"{file}{SEPARATOR}{filesize}".encode())
     try:
-        progress = tqdm.tqdm(range(filesize), f"{label} Sending {file}", unit="B", unit_scale=True, unit_divisor=1024)
+        progress = tqdm(range(filesize), f"{label} Sending {file}", unit="B", unit_scale=True, unit_divisor=1024)
         with open(file, "rb") as f:
             for _ in progress:
                 try:
