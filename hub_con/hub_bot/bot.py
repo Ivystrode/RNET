@@ -33,6 +33,7 @@ updater = Updater(keys.tbot_key, use_context=True)
 dispatcher = updater.dispatcher
 
 command_channel = 7502
+file_root = "/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/"
 
 
 def start_bot():
@@ -60,6 +61,15 @@ def start(update, context):
     
 def help(update, context):
     reply = "work in progress"
+    reply = """
+    COMMANDS:\n
+/address [unit name]: Gets the IP address of the specified unit\n
+/status [unit name]: Gets the status of the specificed unit\n
+/axis [unit name] [axis] [position (2.6-12.6/centre]: rotates the X or Y axis to the specified position, or centres one or both. If centering both, send "/axis [unitname] centre both"\n
+/cpu [unit name] [command]: Orders the onboard computer of the specified unit to carry out the directed command (ie reboot, shutdown)\n
+/send [unit name] [file type]: Orders the specified unit to send a file (if a media file is requested, the on board camera actives to capture the requested content)\n
+    """
+    
     update.message.reply_text(reply)
     
 def get_unit_address(update, context):
@@ -138,7 +148,7 @@ def send_comd(update, context):
         filetype = "image"
         vid_length = "n/a"
         
-    requested_filename = "/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/" + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + name + ".jpg"
+    requested_filename = file_root + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + name + ".jpg"
     print(f"Searching for {requested_filename}")
     try:
         commands.send_file(unit_address, command_channel, filetype, vid_length)

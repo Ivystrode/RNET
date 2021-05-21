@@ -1,7 +1,7 @@
 import socket
 import time
 
-from control import servo_con, cpu_con, cam_con
+from control import servo_con, cpu_con, cam_con, wifi_con, rad_con
 
 label = "[" + socket.gethostname().upper() + "]"
 
