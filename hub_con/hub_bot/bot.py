@@ -71,9 +71,15 @@ def get_unit_address(update, context):
 def get_unit_status(update, context):
     name = context.args[0]
     unit_address = dbcontrol.get_unit_address(name)
-    update.message.reply_text(f"Checking status of {name}...")
+    update.message.reply_text(f"Checking...")
     time.sleep(0.5)
-    commands.get_unit_status(name, unit_address)
+    unit_status = commands.get_unit_status(name, unit_address)
+    
+    if unit_status == "no_connection":
+        update.message.reply_text(f"Cannot connect to {name}")
+    else:
+        update.message.reply_text(f"{name.upper()} status: {unit_status[0]}")
+        update.message.reply_text(f"Latest STATREP: {unit_status[1]}")
 
     
     

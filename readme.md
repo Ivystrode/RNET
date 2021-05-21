@@ -9,10 +9,15 @@ Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
 - Status channel = 7501
 - Command channel = 7502
 
+CURRENT STATE
+Connection over same network functional. Servo move and CPU commands work. Status updates work (STATREPs). Hub tracks units in a local db file.
+
+Next - test camera functions and sending pictures/videos to hub over the network
+
 NOTES
 
 - May get stuck on a process continuing to listen on a port even after application (hub or unit) is closed, but machine stays on. In order not to get Errno 98 - Address already in use, will need to kill the process:
-    - sudo netstat -nlp | grep 8069
+    - sudo netstat -nlp | grep [port number]
     - cp        0      0 0.0.0.0:8069            0.0.0.0:*               LISTEN      10869/python2 
     - or a line to that effect...the process number is 10869
     - sudo kill -9 10869

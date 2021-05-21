@@ -18,10 +18,11 @@ def get_unit_status(unitname):
     result = cur.fetchall()
     
     if result:
-        print(f"[HUB - DATABASE] {unitname} found, status: {result}")
-        return result
+        # print(f"[HUB - DATABASE] {unitname} found, status: {result}")
+        return result[0][4], result[0][5]
     else:
         print(f"{unitname} not found, it may not have checked in recently")
+        return "Not found"
     
 def get_unit_address(unitname):
     unitname = unitname.lower()
