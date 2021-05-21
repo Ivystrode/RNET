@@ -16,6 +16,7 @@ class Hub():
         self.SERVER_HOST = SERVER_HOST
         self.STATUS_PORT = 7501
         self.COMMAND_PORT = 7502
+        self.FILE_PORT = 7503
         self.BUFFER_SIZE = 1024
         self.SEPARATOR = "<SEPARATOR>"
         
@@ -29,6 +30,8 @@ class Hub():
         threading.Thread(target=self.status_channel).start()
         # check active status/check for lost connection
         threading.Thread(target=self.track_active_units).start()
+        # port to receive files on
+        threading.Thread(target=self.file_receiver).start()
         # threading.Thread(target=self.command_channel).start()
         
         
@@ -79,32 +82,7 @@ class Hub():
                         dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Idle", str(datetime.now().strftime("%Y%m%d%H%M")))
                     except Exception as e:
                         print(f"[HUB] Database error: {e}")
-                        
-                elif cleaned_received[0] == "<FILE_TRANSFER>":
-                    try:
-                        unit_name = dbcontrol.get_unit_name(unit_address[0])
-                        
-                        if unit_name is not None:
-                            
-                            print(f"[HUB] Receiving file from {unit_name}")
-                            file = cleaned_received[1]
-                            filesize = int(cleaned_received[2])
-                            
-                            progress = tqdm(range(filesize), f"Receiving {file}", unit="B", unit_scale=True, unit_divisor=1024)
-                            with open(file, "wb") as f: 
-                                for _ in progress:
-                                    bytes_read = unit_socket.recv(self.BUFFER_SIZE)
-                                    if not bytes_read:
-        
-                                        break
-                                    f.write(bytes_read)
-                                    progress.update(len(bytes_read))
-                                    
-                        else:
-                            print("[HUB] File send attempt from unknown sender, file not accepted")
-                    except Exception as e:
-                        print(f"[HUB] {e}")
-                    
+
                 else:
                     pass
                 
@@ -140,6 +118,44 @@ class Hub():
             else:
                 print("[HUB] All active units online")
             time.sleep(60)
+            
+    def file_receiver(self):
+        file_socket = socket.socket()
+        file_socket.bind((self.SERVER_HOST, self.FILE_PORT))
+        file_socket.listen(5)
+        
+        while True:
+        
+            try:
+                unit_socket, unit_address = s.accept()
+                unit_name = dbcontrol.get_unit_name(unit_address[0])
+                print(f"[HUB] Incoming file from {unit_name}")
+                
+                try:
+                    received = unit_socket.recv(self.BUFFER_SIZE).decode()
+                except:
+                    received = unit_socket.recv(self.BUFFER_SIZE).decode("iso-8859-1")
+                
+                if unit_name is not None:
+                    
+                    print(f"[HUB] Receiving file from {unit_name}")
+                    file = cleaned_received[1]
+                    filesize = int(cleaned_received[2])
+                    
+                    progress = tqdm(range(filesize), f"[HUB] Progress {file}", unit="B", unit_scale=True, unit_divisor=1024)
+                    with open(file, "wb") as f: 
+                        for _ in progress:
+                            bytes_read = unit_socket.recv(self.BUFFER_SIZE)
+                            if not bytes_read:
+
+                                break
+                            f.write(bytes_read)
+                            progress.update(len(bytes_read))
+                            
+                else:
+                    print("[HUB] File send attempt from unknown sender, file not accepted")
+            except Exception as e:
+                print(f"[HUB] {e}")
         
                 
     def unit_message(self, name, status):
