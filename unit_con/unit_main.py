@@ -75,21 +75,7 @@ class Unit():
         # make regular status reports
         while True:
             time.sleep(60)
-            print(f"{self.label} STATUS: Idle")
-            
-            s=socket.socket()
-            
-            print(f"{self.label} Connecting to hub...")
-            s.connect((self.HUB_ADDRESS, self.STATUS_PORT))
-            print(f"{self.label} Connected to hub at {self.HUB_ADDRESS}")
-            
-            message = f"<STATREP>{self.SEPARATOR}{self.unit_details['unit_name'].upper()}{self.SEPARATOR}{self.status}"
-            
-            s.send(message.encode())
-            
-            print(f"{self.label} Status update to hub: {self.status}\n")
-            
-            s.close()
+            self.statrep()
             
     def command_listener(self):
         while True:
@@ -106,7 +92,11 @@ class Unit():
                 cleaned_receive = received.split(self.SEPARATOR)
                 
                 print(f"{self.label} Signal from hub: {cleaned_receive}")
-                commands.command_router(cleaned_receive)
+                
+                if cleaned_receive[0] == "<SEND_STATREP>":
+                    self.statrep()
+                else:                
+                    commands.command_router(cleaned_receive)
   
             except Exception as e:
                 print(f"{self.label} Connection error: {e}")
@@ -115,7 +105,22 @@ class Unit():
             s.close()
             time.sleep(0.5)
         
-
+    def statrep():
+        print(f"{self.label} STATUS: Idle")
+        
+        s=socket.socket()
+        
+        print(f"{self.label} Connecting to hub...")
+        s.connect((self.HUB_ADDRESS, self.STATUS_PORT))
+        print(f"{self.label} Connected to hub at {self.HUB_ADDRESS}")
+        
+        message = f"<STATREP>{self.SEPARATOR}{self.unit_details['unit_name'].upper()}{self.SEPARATOR}{self.status}"
+        
+        s.send(message.encode())
+        
+        print(f"{self.label} Status update to hub: {self.status}\n")
+        
+        s.close()
 
     def get_name(self, requested_name):
         """

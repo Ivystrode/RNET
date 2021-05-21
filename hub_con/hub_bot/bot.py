@@ -38,7 +38,11 @@ def start_bot():
     global dispatcher
     
     dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('help', help))
+    
     dispatcher.add_handler(CommandHandler('status', get_unit_status))
+    dispatcher.add_handler(CommandHandler('address', get_unit_address))
+    
     dispatcher.add_handler(CommandHandler('axis', move_servo))
     dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     
@@ -49,18 +53,29 @@ def start(update, context):
     users_name=update['message']['chat']['first_name']
     reply = "Hi " + users_name + ". I am RNet Bot. I will help you control RNet when the system and myself are up and running."
     update.message.reply_text(reply)
-    active.test()
     
-def test():
-    print("bot import test")
+def help(update, context):
+    reply = "work in progress"
+    update.message.reply_text(reply)
     
 def get_unit_address(update, context):
     """
     Get the address of a unit in order to send commands
     """
     name = context.args[0]
+    update.message.reply_text(f"Checking database...")
+    time.sleep(0.5)
     unit_address = dbcontrol.get_unit_address(name)
-    update.message.reply_text(f"{name} address: {unit_address}")
+    update.message.reply_text(f"Stored address for {name.upper()}: {unit_address}")
+    
+def get_unit_status(update, context):
+    name = context.args[0]
+    unit_address = dbcontrol.get_unit_address(name)
+    update.message.reply_text(f"Checking status of {name}...")
+    time.sleep(0.5)
+    
+    
+    
     
 def move_servo(update, context):
     """
@@ -70,7 +85,6 @@ def move_servo(update, context):
     axis = context.args[1]
     posn = context.args[2]
     unit_address = dbcontrol.get_unit_address(name)
-    # update.message.reply_text(f"{name} address: {unit_address}")
     
     try:
         commands.servo_move(unit_address, command_channel, axis, posn)
@@ -94,13 +108,7 @@ def cpu_comd(update, context):
         update.message.reply_text(f"{e}")
         
     
-    
-def get_unit_status(update, context):
-    """
-    Get status of a unit
-    """
-    print(context.args)
-    # update.message.reply_text(unit_main.unit.get_name(context.args[0]))
+
 
 
     

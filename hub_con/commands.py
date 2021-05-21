@@ -9,8 +9,14 @@ import dbcontrol
 
 SEPARATOR = "<SEPARATOR>"
 
-def get_unit_name(requested_name):
-    pass
+def get_unit_status(name, addr):
+    print(f"[HUB - COMMANDS] Check status of {name} ({addr})")
+    s = socket.socket()
+    s.connect((unit_addr, command_channel))
+    s.send(f"<SEND_STATREP>".encode())
+    print(f"[HUB - COMMANDS] STATREP request sent to {name}: {addr}")
+    s.close()
+    dbcontrol.get_unit_status(name)
 
 def servo_move(unit_addr, command_channel, axis, position):
     """Sends custom or centre move commands to one or all servos"""

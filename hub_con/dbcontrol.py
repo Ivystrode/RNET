@@ -9,6 +9,7 @@ def connect():
     conn.close()
     
 def get_status(unitname):
+    unitname = unitname.lower()
     print(f"[HUB - DATABASE] checking status of {unitname}")
     conn=sqlite3.connect("database.db")
     cur = conn.cursor()
@@ -23,6 +24,7 @@ def get_status(unitname):
         print(f"{unitname} not found, it may not have checked in recently")
     
 def get_unit_address(unitname):
+    unitname = unitname.lower()
     # print(f"Storage: checking address of {unitname}")
     conn=sqlite3.connect("database.db")
     cur = conn.cursor()
@@ -32,7 +34,7 @@ def get_unit_address(unitname):
     conn.close()
     
     if result:
-        print(f"{unitname} found: {result}")
+        # print(f"{unitname} found: {result}")
         return result[0][2]
     else:
         print(f"[HUB - DATABASE] {unitname} not found, it may not have checked in recently")
@@ -69,7 +71,7 @@ def check_unit_status(address):
 def insert(id, name, address, type, status, last_statrep):
     conn=sqlite3.connect("database.db")
     cur=conn.cursor()
-    cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?)", (id, name, address, type, status, last_statrep))
+    cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep))
     conn.commit()
     conn.close()
     
