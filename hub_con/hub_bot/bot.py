@@ -6,6 +6,7 @@ I would also like units to be able to send pictures, even videos to the bot.
 import sys
 sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/") # stop module import error ffs
 
+from datetime import datetime
 import json
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Dispatcher, ConversationHandler
@@ -118,21 +119,27 @@ def cpu_comd(update, context):
         
 def send_comd(update, context):
     pic_comd = ['pic','picture','img','image','photo','photograph']
+    chat_id = update['message']['chat']['chat_id']
     
     name = context.args[0]
     unit_address = dbcontrol.get_unit_address(name)
     filetype = context.args[1]
     
-    if filetype == any(pic_comd):
+    if filetype in pic_comd:
         filetype = "image"
         vid_length = "n/a"
+        update.message.reply_text(f"Requesting camera shot from {name}...")
     else:
         print("error not ready yet, will send image for now")
         filetype = "image"
         vid_length = "n/a"
+        
+    requested_filename = datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + name + ".jpg"
 
     try:
         commands.send_file(unit_address, command_channel, filetype, vid_length)
+        updater.bot.sendPhoto(chat_id, requested_filename)
+        update.message.reply_text(f"Image from {name}: {requested_filename}")
     except Exception as e:
         update.message.reply_text(f"Unable to complete: {e}")
         
