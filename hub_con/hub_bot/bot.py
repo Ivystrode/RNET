@@ -30,17 +30,17 @@ updater = Updater(keys.tbot_key, use_context=True)
 
 dispatcher = updater.dispatcher
 
+command_channel = 7502
 
-    
 
 def start_bot():
     global updater
     global dispatcher
     
     dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('name', get_unit_name))
     dispatcher.add_handler(CommandHandler('status', get_unit_status))
     dispatcher.add_handler(CommandHandler('axis', move_servo))
+    dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     
     updater.start_polling()
     updater.idle()
@@ -61,7 +61,6 @@ def get_unit_address(update, context):
     name = context.args[0]
     unit_address = dbcontrol.get_unit_address(name)
     update.message.reply_text(f"{name} address: {unit_address}")
-    commands.servo_test(unit_address, 7502, 12)
     
 def move_servo(update, context):
     """
@@ -71,10 +70,10 @@ def move_servo(update, context):
     axis = context.args[1]
     posn = context.args[2]
     unit_address = dbcontrol.get_unit_address(name)
-    update.message.reply_text(f"{name} address: {unit_address}")
+    # update.message.reply_text(f"{name} address: {unit_address}")
     
     try:
-        commands.servo_move(unit_address, 7502, axis, posn)
+        commands.servo_move(unit_address, command_channel, axis, posn)
         time.sleep(0.5)
         update.message.reply_text(f"[{axis.upper()}: {posn}] servo command sent to {name}")
     except Exception as e:
@@ -82,14 +81,19 @@ def move_servo(update, context):
         time.sleep(0.5)
         update.message.reply_text(f"{e}")
         
+def cpu_comd(update, context):
+    name = context.args[0]
+    command = context.args[1]
+    unit_address = dbcontrol.get_unit_address(name)
+
+    try:
+        command.cpu_comd(unit_address, command_channel, command)
+        update.message.reply_text(f"[CPU: {command.upper}] command sent to {name}")
+
+    except Exception as e:
+        update.message.reply_text(f"{e}")
+        
     
-def get_unit_name(update, context):
-    """
-    Eventually want to replace this with a direct communication to the hostname/IP of the unit
-    Not a CC1 asking this particular unit to respond/comply... 
-    """
-    print(context.args)
-    # update.message.reply_text(unit_main.unit.get_name(context.args[0]))
     
 def get_unit_status(update, context):
     """

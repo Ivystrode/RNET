@@ -13,6 +13,8 @@ def get_unit_name(requested_name):
     pass
 
 def servo_move(unit_addr, command_channel, axis, position):
+    """Sends custom or centre move commands to one or all servos"""
+    
     print("[HUB - COMMANDS] Servo command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))
@@ -20,8 +22,10 @@ def servo_move(unit_addr, command_channel, axis, position):
     print(f"[HUB - COMMANDS] Servo position {position} command sent to {unit_addr}")
     s.close()
     
-# centre elevate command
-
-# centre rotate command
-
-# shutdown/reboot command? maybe only reboot from remote...
+def cpu_command(unit_addr, command_channel, command):
+    print("[HUB - COMMANDS] CPU Command")
+    s = socket.socket()
+    s.connect((unit_addr, command_channel))
+    s.send(f"<CPU_COMD>{SEPARATOR}{command}".encode())
+    print(f"[HUB - COMMANDS] CPU command '{command}' sent to {unit_addr}")
+    s.close()
