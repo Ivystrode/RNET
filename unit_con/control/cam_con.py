@@ -11,6 +11,7 @@ name = socket.gethostname()
 file_channel = 7503 # same as status channel which hub is listening on. make a third channel if necessary/possible
 
 SEPARATOR = "<SEPARATOR>"
+BUFFER_SIZE = 1024
 
 # Take a picture
 def capt_img(hub_addr):
@@ -41,7 +42,7 @@ def send_file(hub_addr, file):
         with open(file, "rb") as f:
             for _ in progress:
                 try:
-                    bytes_read = f.read(self.BUFFER_SIZE)
+                    bytes_read = f.read(BUFFER_SIZE)
                     
                     if not bytes_read:
                         break
