@@ -45,6 +45,6 @@ def send_file(unit_addr, command_channel, filetype, vid_length):
     print("[HUB - COMMANDS] File send command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))
-    s.send(f"<SEND_FILE>{SEPARATOR}{filetype}{SEPARATOR}{vid_length}")
-    print(f"[HUB - COMMANDS] {filetype.upper} command sent to {unit_addr}")
+    s.send(f"<SEND_FILE>{SEPARATOR}{filetype}{SEPARATOR}{vid_length}".encode())
+    print(f"[HUB - COMMANDS] {filetype.upper()} command sent to {unit_addr}")
     s.close()

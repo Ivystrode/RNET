@@ -13,7 +13,7 @@ SEPARATOR = "<SEPARATOR>"
 # Take a picture
 def capt_img(hub_addr):
     print(f"{label} Capture image")
-    img_name = datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + str(name)
+    img_name = datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + str(name) + ".jpg"
     camera = PiCamera()
     camera.resolution = (1024, 768)
     camera.start_preview()
