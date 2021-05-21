@@ -22,7 +22,7 @@ def servo_move(unit_addr, command_channel, axis, position):
     print(f"[HUB - COMMANDS] Servo position {position} command sent to {unit_addr}")
     s.close()
     
-def cpu_command(unit_addr, command_channel, command):
+def cpu_comd(unit_addr, command_channel, command):
     print("[HUB - COMMANDS] CPU Command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))

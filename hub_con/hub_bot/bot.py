@@ -87,7 +87,7 @@ def cpu_comd(update, context):
     unit_address = dbcontrol.get_unit_address(name)
 
     try:
-        command.cpu_comd(unit_address, command_channel, command)
+        commands.cpu_comd(unit_address, command_channel, command)
         update.message.reply_text(f"[CPU: {command.upper}] command sent to {name}")
 
     except Exception as e:
