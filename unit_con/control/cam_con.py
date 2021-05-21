@@ -6,7 +6,7 @@ import time
 
 label = "[" + socket.gethostname().upper() + "]"
 name = socket.gethostname()
-send_channel = 7501 # same as status channel which hub is listening on. make a third channel if necessary/possible
+file_channel = 7503 # same as status channel which hub is listening on. make a third channel if necessary/possible
 
 SEPARATOR = "<SEPARATOR>"
 
@@ -29,7 +29,7 @@ def capt_img(hub_addr):
 def send_file(hub_addr, file):
     s = socket.socket()
     print(f"{label} Connecting to hub...")
-    s.connect((hub_addr, send_channel))
+    s.connect((hub_addr, file_channel))
     filesize = os.path.getsize(file)
 
     print(f"{label} Sending file: {file}")

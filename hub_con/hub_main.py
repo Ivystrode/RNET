@@ -127,7 +127,7 @@ class Hub():
         while True:
         
             try:
-                unit_socket, unit_address = s.accept()
+                unit_socket, unit_address = file_socket.accept()
                 unit_name = dbcontrol.get_unit_name(unit_address[0])
                 print(f"[HUB] Incoming file from {unit_name}")
                 
