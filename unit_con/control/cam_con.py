@@ -48,11 +48,11 @@ def send_file(hub_addr, file):
                     
                     s.sendall(bytes_read)
                     progress.update(len(bytes_read))
-                except:
-                    print(f"{label} FILE SEND ERROR")
+                except Exception as e:
+                    print(f"{label} FILE SEND ERROR: {e}")
                     break
-    except:
-        print(f"{label} FILE SEND ERROR")
+    except Exception as e:
+        print(f"{label} FILE SEND ERROR - outside - {e}")
     print(f"{label} {file} sent to hub")
     s.close()
 
