@@ -36,14 +36,22 @@ sleep(1)
 
 
 def rotate(posn, axis):
-	print(f"Move {axis} to position {posn}")
-	# print(f"Rotating to {posn}")
 	if axis == "rotate":
 		rotate_servo.ChangeDutyCycle(float(posn))
 	elif axis == "elevate":
 		elevate_servo.ChangeDutyCycle(float(posn))
 	else:
 		print(f"[{socket.gethostname().upper()} - Servo Control] Error")
+
+def centre_both():
+    rotate_servo.ChangeDutyCycle(7.1)
+    elevate_servo.ChangeDutyCycle(7.1)
+    
+def centre_rotate():
+    rotate_servo.ChangeDutyCycle(7.1)
+    
+def centre_elevate():
+    elevate_servo.ChangeDutyCycle(7.1)
      
 	
 rotate(1.5, "rotate")

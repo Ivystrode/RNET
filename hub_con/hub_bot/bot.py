@@ -74,7 +74,7 @@ def move_servo(update, context):
     update.message.reply_text(f"{name} address: {unit_address}")
     
     try:
-        commands.servo_test(unit_address, 7502, axis, posn)
+        commands.servo_move(unit_address, 7502, axis, posn)
         time.sleep(0.5)
         update.message.reply_text(f"[{axis.upper()}: {posn}] servo command sent to {name}")
     except Exception as e:

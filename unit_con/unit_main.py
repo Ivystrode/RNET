@@ -106,14 +106,42 @@ class Unit():
                 
                 print(f"{self.label} Signal from hub: {cleaned_receive}")
                 if cleaned_receive[0] == "<SERVO_MOVE>":
-                    try:
-                        axis = cleaned_receive[1]
-                        position = cleaned_receive[2]
-                        print(f"{self.label} {axis.upper()} servo move to {position}")
-                        servo.rotate(position, axis)
-                        print(f"{self.label} Command complete")
-                    except:
-                        print(f"{self.label} Invalid servo move command")
+                    
+                    # CUSTOM/NORMAL SERVO MOVE
+                    if cleaned_receive[1] != "centre":
+                        
+                        try:
+                            axis = cleaned_receive[1]
+                            position = cleaned_receive[2]
+                            print(f"{self.label} {axis.upper()} servo move to {position}")
+                            servo.rotate(position, axis)
+                            print(f"{self.label} Command complete")
+                        except:
+                            print(f"{self.label} Invalid servo move command")
+                        
+                    # CENTRE ONE OR BOTH SERVOS
+                    elif cleaned_receive[1] == "centre" or cleaned_receive[1] == "center":
+                        if cleaned_receive[2] == "rotate" or cleaned_receive[2] == "x":
+                            try:
+                                servo.centre_rotate()
+                                print(f"{self.label} Centred X and Y servo axis")
+                            except Exception as e:
+                                print(f"{self.label} Servo error: {e}")
+                                
+                        elif cleaned_receive[2] == "elevate" or cleaned_receive[2] == "y":
+                            try:
+                                servo.centre_elevate()()
+                                print(f"{self.label} Centred X servo axis")
+                            except Exception as e:
+                                print(f"{self.label} Servo error: {e}")
+                                
+                        elif cleaned_receive[2] == "both" or not cleaned_receive[2]:
+                            try:
+                                servo.centre_both()
+                                print(f"{self.label} Centred Y servo axis")
+                            except Exception as e:
+                                print(f"{self.label} Servo error: {e}")
+                            
                 
             except Exception as e:
                 print(f"{self.label} Connection error: {e}")
