@@ -48,3 +48,11 @@ def send_file(unit_addr, command_channel, filetype, vid_length):
     s.send(f"<SEND_FILE>{SEPARATOR}{filetype}{SEPARATOR}{vid_length}".encode())
     print(f"[HUB - COMMANDS] {filetype.upper()} command sent to {unit_addr}")
     s.close()
+    
+def wifi_comd(unit_addr, command_channel, command, time):
+    print("[HUB - COMMANDS] File send command")
+    s = socket.socket()
+    s.connect((unit_addr, command_channel))
+    s.send(f"<WIFI>{SEPARATOR}{command}{SEPARATOR}{time}".encode())
+    print(f"[HUB - COMMANDS] Wifi {command} command sent to {unit_addr}")
+    s.close()

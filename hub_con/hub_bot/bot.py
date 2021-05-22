@@ -46,9 +46,12 @@ def start_bot():
     
     dispatcher.add_handler(CommandHandler('axis', move_servo))
     dispatcher.add_handler(CommandHandler('autorotate', move_servo))
-    dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     
+    dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     dispatcher.add_handler(CommandHandler('send', send_comd))
+    
+    dispatcher.add_handler(CommandHandler('wifi', wifi_comd))
+    dispatcher.add_handler(CommandHandler('stopwscan', stop_wifi_scan))
     
     updater.start_polling()
     updater.idle()
@@ -67,6 +70,7 @@ def help(update, context):
 /axis [unit name] [axis] [position (2.6-12.6/centre]: rotates the X or Y axis to the specified position, or centres one or both. If centering both, send "/axis [unitname] centre both"\n
 /cpu [unit name] [command]: Orders the onboard computer of the specified unit to carry out the directed command (ie reboot, shutdown)\n
 /send [unit name] [file type]: Orders the specified unit to send a file (if a media file is requested, the on board camera actives to capture the requested content)\n
+/wifi [unit name] [command] [time (optional)]: Perform a wifi based action, i.e. "/wifi [unit name] scan" does a continuous wifi scan. Adding a number specifies in seconds how long to scan for.\n
     """
     
     update.message.reply_text(reply)
@@ -185,6 +189,37 @@ def send_comd(update, context):
     except Exception as e:
         update.message.reply_text(f"Unable to complete: {e}")
         
+
+def wifi_comd(update, context):
+    name = context.args[0]
+    command = context.args[1]
+    if context.args[2]:
+        scan_time = context.args[2]
+    else:
+        scan_time = "continuous"
+    unit_address = dbcontrol.get_unit_address(name)
+    
+    try:
+        commands.wifi_comd(unit_address, command_channel, command, scan_time)
+        update.message.reply_text(f"Wifi scan command sent to {name}")
+    except Exception as e:
+        update.message.reply_text(f"Unable to initiate wifi scan. {e}")
+    
+    
+def stop_wifi_scan(update, context):
+    name = context.args[0]
+    command = "STOP_SCAN"
+    time = "n/a"
+    unit_address = dbcontrol.get_unit_address(name)
+    
+    try:
+        commands.wifi_comd(unit_address, command_channel, command, scan_time)
+        update.message.reply_text(f"Terminate wifi scan command sent to {name}")
+    except Exception as e:
+        update.message.reply_text(f"Unable to terminate wifi scan. {e}")
+    
+    
+    
     
 
 

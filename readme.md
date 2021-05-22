@@ -8,9 +8,8 @@ Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
 - Command channel = 7502
 
 CURRENT STATE
-Connection over same network functional. Servo move and CPU commands work. Status updates work (STATREPs). Hub tracks units in a local db file.
+Connection over same network functional. Servo move and CPU commands work. Status updates work (STATREPs). Camera command can send pictures from selected unit back to hub/telegram bot. Wifi scan functions in progress. Hub tracks units in a local db file.
 
-Next - test camera functions and sending pictures/videos to hub over the network
 
 NOTES
 
@@ -23,3 +22,4 @@ NOTES
 - Make an error handling file that kills all active port listening processes and re-starts them...?
 - "Sleep" function - the unit_main script that is running gets stopped, and instead, a "listener" is activated in another port waiting for the wake up call from the hub...
 - Autorotate function...need new thread? or can it be done by the command listener checking a boolean and activating/deactivating as necessary?
+- GO SILENT command - specify a number of minutes to not emit any RF (so WIFI IS SHUT OFF and lose connection to the unit). During this time the unit scans the wifiband (and RF sweep when figured out), and logs any optically detected objects, and once it reaches the end of the silent period it sends the report back to the hub

@@ -19,6 +19,9 @@ def command_router(command, hub_addr):
         else:
             print("not ready yet")
             
+    elif command[0] == "<WIFI>":
+        wifi_con.wifi_control(command)
+            
 def servo_command(command):
     
     # CUSTOM/NORMAL SERVO MOVE
