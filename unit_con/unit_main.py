@@ -159,5 +159,5 @@ class Unit():
 
 # Try this, if doesn't work, use the above
 unit=socket.gethostname()
-unit = Unit(unit_id.hub_address)
+unit = Unit(unit_id.unit_details['hub_address'])
 print(unit)
