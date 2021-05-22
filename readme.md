@@ -1,5 +1,3 @@
-Nascent watchers in the weeds
-
 Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
 
 - The UNIT directory is what will be installed on each static/rover unit. This will contain control code for the individual unit (inc for motion if a rover), communication code for talking to the hub, and a unique unit_id file
@@ -22,3 +20,6 @@ NOTES
     - or a line to that effect...the process number is 10869
     - sudo kill -9 10869
 - May need to disable or add exception to firewall to communicate
+- Make an error handling file that kills all active port listening processes and re-starts them...?
+- "Sleep" function - the unit_main script that is running gets stopped, and instead, a "listener" is activated in another port waiting for the wake up call from the hub...
+- Autorotate function...need new thread? or can it be done by the command listener checking a boolean and activating/deactivating as necessary?

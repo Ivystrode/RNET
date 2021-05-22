@@ -25,12 +25,12 @@ def get_unit_status(name, addr):
 
 def servo_move(unit_addr, command_channel, axis, position):
     """Sends custom or centre move commands to one or all servos"""
-    
+
     print("[HUB - COMMANDS] Servo command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))
     s.send(f"<SERVO_MOVE>{SEPARATOR}{axis}{SEPARATOR}{position}".encode())
-    print(f"[HUB - COMMANDS] Servo position {position} command sent to {unit_addr}")
+    print(f"[HUB - COMMANDS] Servo {axis.upper()} command sent to {unit_addr}")
     s.close()
     
 def cpu_comd(unit_addr, command_channel, command):

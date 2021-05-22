@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 label = "[" + socket.gethostname().upper() + "]"
 name = socket.gethostname()
-file_channel = 7503 # same as status channel which hub is listening on. make a third channel if necessary/possible
+file_channel = 7503 # same as status channel which hub is listening on. make a third channel if necessary/possible (i think it was necessary)
 
 SEPARATOR = "<SEPARATOR>"
 BUFFER_SIZE = 1024

@@ -33,6 +33,7 @@ sleep(1)
 elevate_servo.ChangeDutyCycle(12.6) # FURTHEST LEFT
 sleep(1)
 
+autorotate = False
 
 
 def rotate(posn, axis):
@@ -53,6 +54,10 @@ def centre_rotate():
     
 def centre_elevate():
     elevate_servo.ChangeDutyCycle(7.1)
+    
+def autorotate():
+    # autorotate = False
+    print(f"autorotate: {autorotate}")
      
 
 # pwm.stop()

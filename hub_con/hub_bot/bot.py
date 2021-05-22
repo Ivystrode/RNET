@@ -18,8 +18,6 @@ import socket
 import commands
 import dbcontrol
 from rnet.keys import keys
-# from unit import unit_main
-from rnet.unit_con.sdr import active
 
 # logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.DEBUG) # change to DEBUG for more info inc user id etc
 
@@ -47,6 +45,7 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('address', get_unit_address))
     
     dispatcher.add_handler(CommandHandler('axis', move_servo))
+    dispatcher.add_handler(CommandHandler('autorotate', move_servo))
     dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     
     dispatcher.add_handler(CommandHandler('send', send_comd))
@@ -103,18 +102,38 @@ def move_servo(update, context):
     Get the address of a unit in order to send commands
     """
     name = context.args[0]
-    axis = context.args[1]
-    posn = context.args[2]
     unit_address = dbcontrol.get_unit_address(name)
     
-    try:
-        commands.servo_move(unit_address, command_channel, axis, posn)
-        time.sleep(0.5)
-        update.message.reply_text(f"[{axis.upper()}: {posn}] servo command sent to {name}")
-    except Exception as e:
-        update.message.reply_text(f"Unable to send command to {name}")
-        time.sleep(0.5)
-        update.message.reply_text(f"{e}")
+    if len(context.args) > 1: # if more than one argument, it is a specific move command, not autorotate
+        axis = context.args[1]
+        posn = context.args[2]
+        
+        try:
+            commands.servo_move(unit_address, command_channel, axis, posn)
+            time.sleep(0.5)
+            update.message.reply_text(f"[{axis.upper()}: {posn}] servo command sent to {name}")
+        except Exception as e:
+            update.message.reply_text(f"Unable to send command to {name}")
+            time.sleep(0.5)
+            update.message.reply_text(f"{e}")
+            
+    else: # if just one argument - which is the name of the unit - it is an autorotate command
+        print("[HUB - BOT] Move servo function; autorotate command")
+        axis = "<AUTOROTATE>"
+        position = "n/a"
+
+        try:
+            commands.servo_move(unit_address, command_channel, axis, position)
+            time.sleep(0.5)
+            update.message.reply_text(f"[{axis.upper()}] servo command sent to {name}")
+        except Exception as e:
+            update.message.reply_text(f"Unable to send command to {name}")
+            time.sleep(0.5)
+            update.message.reply_text(f"{e}")
+        
+# def autorotate(update, context):
+#     """Pan/scan with the camera"""
+#     name = con
         
 def cpu_comd(update, context):
     name = context.args[0]

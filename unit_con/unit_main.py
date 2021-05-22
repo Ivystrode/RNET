@@ -23,6 +23,7 @@ class Unit():
         self.HUB_ADDRESS = HUB_ADDRESS
         self.STATUS_PORT = 7501
         self.COMMAND_PORT = 7502
+        self.FILE_PORT = 7503
         self.UNIT_ADDRESS = "0.0.0.0"
         self.BUFFER_SIZE = 1024
         
@@ -34,6 +35,7 @@ class Unit():
         
         # status variable is used to inform hub of status of this unit
         self.status = "Idle"
+        self.autorotate = False
         
         self.unit_details = unit_id.unit_details
         
@@ -149,5 +151,13 @@ class Unit():
             print(f"{self.label} Hub pinged for {requested_name}. I'm {self.unit_details['unit_name']}, that's not me.")
         
         
+# Decided against making this a function, just instantiate the Unit class
 # activate()
-unit = Unit("192.168.1.64")
+
+
+# unit = Unit("192.168.1.64")
+
+# Try this, if doesn't work, use the above
+unit=socket.gethostname()
+unit = Unit(unit_id.hub_address)
+print(unit)

@@ -18,7 +18,7 @@ def command_router(command, hub_addr):
             cam_con.capt_img(hub_addr)
         else:
             print("not ready yet")
-
+            
 def servo_command(command):
     
     # CUSTOM/NORMAL SERVO MOVE
@@ -55,6 +55,10 @@ def servo_command(command):
                 print(f"{label} Centred X and Y servo axis")
             except Exception as e:
                 print(f"{label} Servo error: {e}")
+                
+    # AUTOROTATE - SCAN CAMERA BACK AND FORTH
+    elif command[1] == "<AUTOROTATE>":
+        servo_con.autorotate()
                 
 def cpu_comd(command):
     
