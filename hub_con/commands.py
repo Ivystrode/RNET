@@ -50,7 +50,7 @@ def send_file(unit_addr, command_channel, filetype, vid_length):
     s.close()
     
 def wifi_comd(unit_addr, command_channel, command, time):
-    print("[HUB - COMMANDS] File send command")
+    print("[HUB - COMMANDS] Wifi command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))
     s.send(f"<WIFI>{SEPARATOR}{command}{SEPARATOR}{time}".encode())

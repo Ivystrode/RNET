@@ -26,6 +26,7 @@ def activate_monitor_mode(scan_time):
     subprocess.Popen(f"sudo airmon-ng start wlan1", shell=True)
     print(f"{label} Wifi monitor mode active")
     scanning = True
+    time.sleep(5)
     threading.Thread(target=scan).start()
     if scan_time != "continuous":
         time.sleep(int(scan_time))
