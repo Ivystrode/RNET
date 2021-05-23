@@ -20,6 +20,7 @@ def capt_img(hub_addr):
     camera = PiCamera()
     camera.resolution = (1024, 768)
     camera.vflip = True
+    camera.hflip = True
     camera.start_preview()
     time.sleep(2) # apparently camera has to "warm up"
     camera.capture(img_name)
