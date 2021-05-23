@@ -12,7 +12,7 @@ label = "[" + socket.gethostname().upper() + "]"
 scanning = False
 
 hub_address = ""
-file_port = 7503
+file_channel = 7503
 
 def wifi_control(command, hub_addr):
     global hub_address
