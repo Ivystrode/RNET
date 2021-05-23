@@ -11,7 +11,13 @@ import time
 label = "[" + socket.gethostname().upper() + "]"
 scanning = False
 
-def wifi_control(command):
+hub_address = ""
+file_port = 7503
+
+def wifi_control(command, hub_addr):
+    global hub_address
+    hub_addr = hub_address
+    
     scan_time = command[2]
     if command[1].lower() == "scan":
         activate_monitor_mode(scan_time)
@@ -58,7 +64,35 @@ def scan():
             wifi_scanner.terminate()
             subprocess.Popen("sudo airmon-ng stop wlan1mon", shell=True)
             print(f"{label} Wifi scanner deactivated")
+            send_file(hub_address, filename)
             break
 
+def send_file(hub_addr, file):
+    s = socket.socket()
+    print(f"{label} Connecting to hub...")
+    s.connect((hub_addr, file_channel))
+    filesize = os.path.getsize(file)
+
+    print(f"{label} Sending scan report: {file}")
+    s.send(f"{file}{SEPARATOR}{filesize}".encode())
+    try:
+        progress = tqdm(range(filesize), f"{label} Sending {file}", unit="B", unit_scale=True, unit_divisor=1024)
+        with open(file, "rb") as f:
+            for _ in progress:
+                try:
+                    bytes_read = f.read(BUFFER_SIZE)
+                    
+                    if not bytes_read:
+                        break
+                    
+                    s.sendall(bytes_read)
+                    progress.update(len(bytes_read))
+                except Exception as e:
+                    print(f"{label} FILE SEND ERROR: {e}")
+                    break
+    except Exception as e:
+        print(f"{label} FILE SEND ERROR - outside - {e}")
+    print(f"{label} {file} sent to hub")
+    s.close()
 # Testing only
 # activate_monitor_mode()

@@ -20,7 +20,7 @@ def command_router(command, hub_addr):
             print("not ready yet")
             
     elif command[0] == "<WIFI>":
-        wifi_con.wifi_control(command)
+        wifi_con.wifi_control(command, hub_addr)
             
 def servo_command(command):
     
