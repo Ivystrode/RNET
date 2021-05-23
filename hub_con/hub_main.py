@@ -122,6 +122,7 @@ class Hub():
             
     def file_receiver(self):
         file_socket = socket.socket()
+        file_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # make socket re-usable...
         file_socket.bind((self.SERVER_HOST, self.FILE_PORT))
         file_socket.listen(5)
         

@@ -19,6 +19,7 @@ def capt_img(hub_addr):
     img_name = datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + str(name) + ".jpg"
     camera = PiCamera()
     camera.resolution = (1024, 768)
+    camera.vflip = True
     camera.start_preview()
     time.sleep(2) # apparently camera has to "warm up"
     camera.capture(img_name)
