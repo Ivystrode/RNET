@@ -82,6 +82,7 @@ class Unit():
     def command_listener(self):
         while True:
             s = socket.socket()
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # make socket re-usable...
             s.bind((self.UNIT_ADDRESS, 7502))
             s.listen(5)
             print(f"{self.label} {self.unit_details['unit_name']} listening for commands")
