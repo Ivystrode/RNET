@@ -124,12 +124,12 @@ class Hub():
         file_socket = socket.socket()
         file_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # make socket re-usable...
         file_socket.bind((self.SERVER_HOST, self.FILE_PORT))
-        file_socket.listen(5)
+        file_socket.listen(5) # should this go in the while loop...?
         
         while True:
         
             try:
-                unit_socket, unit_address = file_socket.accept()
+                unit_socket, unit_address = file_socket.accept() # did i close this??
                 unit_name = dbcontrol.get_unit_name(unit_address[0])
                 print(f"[HUB] Incoming file from {unit_name}")
                 
