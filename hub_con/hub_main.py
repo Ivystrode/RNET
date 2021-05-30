@@ -43,6 +43,7 @@ class Hub():
     
         while True:
             s = socket.socket()
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # make socket re-usable...
             s.bind((self.SERVER_HOST, self.STATUS_PORT))
             s.listen(5)
             print("[HUB] Listening for connections")
@@ -144,7 +145,7 @@ class Hub():
                     # filedata = received.split(self.SEPARATOR)
                     # file = filedata[1]
                     # filesize = int(filedata[2])
-                    file, filesize = received.split(self.SEPARATOR)
+                    file, filesize, file_description = received.split(self.SEPARATOR)
                     filesize = int(filesize)
                     filename = ntpath.basename(file)
                     
@@ -157,6 +158,16 @@ class Hub():
                                 break
                             f.write(bytes_read)
                             progress.update(len(bytes_read))
+
+                    if file_description[0:4] != "IMREQ":
+                        try:
+                            print(f"[HUB] Unsolicited file, sending to bot")
+                            bot.send_unrequested_file(unit_name, filename, file_description)
+                            print(f"[HUB] File sent by bot")
+                        except Exception as e:
+                            print(f"[HUB] Unable to send file: {e}")
+                    else:
+                        print(f"[HUB] Bot image request - file thread ignoring file")
                             
                 else:
                     print("[HUB] File send attempt from unknown sender, file not accepted")

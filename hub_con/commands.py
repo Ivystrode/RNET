@@ -34,6 +34,8 @@ def servo_move(unit_addr, command_channel, axis, position):
     s.close()
     
 def cpu_comd(unit_addr, command_channel, command):
+    """Issue commands to the on board computer such as reboot etc"""
+    
     print("[HUB - COMMANDS] CPU Command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))
@@ -42,6 +44,8 @@ def cpu_comd(unit_addr, command_channel, command):
     s.close()
     
 def send_file(unit_addr, command_channel, filetype, vid_length):
+    """Command unit to send file (such as picture) to the hub"""
+    
     print("[HUB - COMMANDS] File send command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))
@@ -49,7 +53,16 @@ def send_file(unit_addr, command_channel, filetype, vid_length):
     print(f"[HUB - COMMANDS] {filetype.upper()} command sent to {unit_addr}")
     s.close()
     
+def receive_file(unit_name, filename, filetype):
+    """
+    On receipt of a file from a unit, decide what to do with it
+    if return is True, the bot sends it to the/a user
+    """
+    pass
+    
 def wifi_comd(unit_addr, command_channel, command, time):
+    """Currently issue monitor mode commands to the unit"""
+    
     print("[HUB - COMMANDS] Wifi command")
     s = socket.socket()
     s.connect((unit_addr, command_channel))

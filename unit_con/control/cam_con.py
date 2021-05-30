@@ -27,18 +27,18 @@ def capt_img(hub_addr):
     time.sleep(0.5)
     camera.close()
     print(f"{label} Image saved as {img_name}")
-    send_file(hub_addr, img_name)
+    send_file(hub_addr, img_name, f"IMREQRequested image taken at {datetime.now().strftime('%H%M%S')}")
     
     
 # Send a file to the hub
-def send_file(hub_addr, file):
+def send_file(hub_addr, file, file_description):
     s = socket.socket()
     print(f"{label} Connecting to hub...")
     s.connect((hub_addr, file_channel))
     filesize = os.path.getsize(file)
 
     print(f"{label} Sending file: {file}")
-    s.send(f"{file}{SEPARATOR}{filesize}".encode())
+    s.send(f"{file}{SEPARATOR}{filesize}{SEPARATOR}{file_description}".encode())
     try:
         progress = tqdm(range(filesize), f"{label} Sending {file}", unit="B", unit_scale=True, unit_divisor=1024)
         with open(file, "rb") as f:

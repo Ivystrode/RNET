@@ -33,6 +33,8 @@ dispatcher = updater.dispatcher
 command_channel = 7502
 file_root = "/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/"
 
+users = []
+
 
 def start_bot():
     global updater
@@ -57,8 +59,11 @@ def start_bot():
     updater.idle()
     
 def start(update, context):
+    global users
     users_name=update['message']['chat']['first_name']
     reply = "Hi " + users_name + ". I am RNet Bot. I will help you control RNet when the system and myself are up and running."
+    chat_id = update['message']['chat']['id']
+    users.append(chat_id)
     update.message.reply_text(reply)
     
 def help(update, context):
@@ -188,6 +193,14 @@ def send_comd(update, context):
             
     except Exception as e:
         update.message.reply_text(f"Unable to complete: {e}")
+        
+def send_unrequested_file(unitname, filename, file_description):
+    try:
+        for user in users:
+            updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
+            print(f"[HUB - BOT] File sent: {filename} to {user}")
+    except Exception as e:
+        print(f"[HUB - BOT] Unable to send file {filename} - {e}")
         
 
 def wifi_comd(update, context):
