@@ -195,9 +195,10 @@ def send_comd(update, context):
         update.message.reply_text(f"Unable to complete: {e}")
         
 def send_unrequested_file(unitname, filename, file_description):
+    print("[HUB - BOT] UNSOLICITED FILE SEND")
     try:
         for user in users:
-            updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
+            updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description[5:]}")
             print(f"[HUB - BOT] File sent: {filename} to {user}")
     except Exception as e:
         print(f"[HUB - BOT] Unable to send file {filename} - {e}")

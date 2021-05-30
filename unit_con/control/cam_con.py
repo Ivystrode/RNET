@@ -27,7 +27,7 @@ def capt_img(hub_addr):
     time.sleep(0.5)
     camera.close()
     print(f"{label} Image saved as {img_name}")
-    send_file(hub_addr, img_name, f"IMREQRequested image taken at {datetime.now().strftime('%H%M%S')}")
+    send_file(hub_addr, img_name, f"FIREQRequested image taken at {datetime.now().strftime('%H:%M:%S')}")
     
     
 # Send a file to the hub
