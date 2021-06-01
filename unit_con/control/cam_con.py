@@ -1,4 +1,4 @@
-from cv2 import cv2
+import cv2
 
 from picamera import PiCamera
 from datetime import datetime
