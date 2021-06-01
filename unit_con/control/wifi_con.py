@@ -64,10 +64,10 @@ def scan():
             wifi_scanner.terminate()
             subprocess.Popen("sudo airmon-ng stop wlan1mon", shell=True)
             print(f"{label} Wifi scanner deactivated")
-            send_file(hub_address, filename)
+            send_report(hub_address, filename)
             break
 
-def send_file(hub_addr, file):
+def send_report(hub_addr, file):
     s = socket.socket()
     print(f"{label} Connecting to hub...")
     s.connect((hub_addr, file_channel))

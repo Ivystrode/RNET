@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import ntpath
+import shutil
 import socket
 import threading
 import time
@@ -159,16 +160,18 @@ class Hub():
                             f.write(bytes_read)
                             progress.update(len(bytes_read))
                             
-                    if file_description[0:5] != "FIREQ": # if this is a file the unit decided to send of its own accord
-                        try:
-                            print(f"[HUB] Unsolicited file, sending to bot")
-                            bot.send_unrequested_file(unit_name, filename, file_description)
-                            print(f"[HUB] File sent by bot")
-                        except Exception as e:
-                            print(f"[HUB] Unable to send file: {e}")
+                    # if file_description[0:5] != "FIREQ": # if this is a file the unit decided to send of its own accord
+                    try:
+                        print(f"[HUB] Unsolicited file, sending to bot")
+                        bot.send_unrequested_file(unit_name, filename, file_description)
+                        print(f"[HUB] File sent by bot")
+                        shutil.move(filename, 'files/')
+                        print(f"[HUB] {filename} moved to files directory")
+                    except Exception as e:
+                        print(f"[HUB] Unable to send file: {e}")
                             
-                    else: # if this is a file requested by the user
-                        print(f"[HUB] Bot file request - file thread ignoring file")
+                    # else: # if this is a file requested by the user
+                    #     print(f"[HUB] Bot file request - file thread ignoring file")
                             
                 else:
                     print("[HUB] File send attempt from unknown sender, file not accepted")

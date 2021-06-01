@@ -180,9 +180,9 @@ def send_comd(update, context):
     print(f"Searching for {requested_filename}")
     try:
         commands.send_file(unit_address, command_channel, filetype, vid_length)
-        for attempt in range(1,6):
+        for attempt in range(1,12):
             try:
-                updater.bot.sendPhoto(chat_id, photo=open(requested_filename, "rb"), timeout=20, caption=f"Image from {name}")
+                updater.bot.sendPhoto(chat_id, photo=open(requested_filename, "rb"), timeout=50, caption=f"Image from {name}")
                 file_sent = True
                 break
             except:

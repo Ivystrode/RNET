@@ -13,6 +13,7 @@ Connection over same network functional. Servo move and CPU commands work. Statu
 
 NOTES
 
+- NEED TO GET UNITS TO SYNC TIME TO SERVER. NTP & timedatectl are being a pain.
 - May get stuck on a process continuing to listen on a port even after application (hub or unit) is closed, but machine stays on. In order not to get Errno 98 - Address already in use, will need to kill the process:
     - sudo netstat -nlp | grep [port number]
     - cp        0      0 0.0.0.0:8069            0.0.0.0:*               LISTEN      10869/python2 
