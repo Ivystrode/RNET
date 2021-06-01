@@ -22,7 +22,7 @@ camera_active = False
 config_file = "ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt"
 frozen_model="frozen_inference_graph.pb"
 labels = []
-with open("Labels", "r") as f:
+with open("unit_con/unit_main/Labels", "r") as f:
     labels = [line.strip() for line in f.readlines()]
 
 model = cv2.dnn_DetectionModel(frozen_model, config_file)
