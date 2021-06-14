@@ -70,7 +70,7 @@ def check_unit_status(address):
     return result[0][4] # status
     
 def insert(id, name, address, type, status, last_statrep):
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("database.db", timeout=5)
     cur=conn.cursor()
     cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep))
     conn.commit()
@@ -84,9 +84,13 @@ def delete(address):
     conn.close()
 
 def update_unit(address, status, last_statrep):
-    conn=sqlite3.connect("database.db")
+    print("UPDATING UNIT1")
+    conn=sqlite3.connect("database.db", timeout=10)
+    print("UPDATING UNIT2")
     cur=conn.cursor()
+    print("UPDATING UNIT3")
     cur.execute(f"UPDATE units SET status=?, last_statrep=? WHERE address=?", (status, last_statrep, address)) 
+    print("UPDATING UNIT4")
     conn.commit()
     conn.close()
     

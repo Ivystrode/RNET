@@ -72,7 +72,7 @@ class Hub():
                         dbcontrol.update_unit(unit_address[0], cleaned_received[2], str(datetime.now().strftime("%Y%m%d%H%M")))
                         
                     except Exception as e:
-                        if "UNIQUE constrained failed" in e:
+                        if "UNIQUE constraint failed" in e:
                             print(f"[HUB] Unit already activated")
                         else:
                             print(f"[HUB] Database error: {e}")
@@ -82,9 +82,18 @@ class Hub():
                 elif cleaned_received[0] == "<UNIT_ACTIVATED>":
                     print(f"[HUB] Message received: {cleaned_received}")
                     try:
+                        print("try to add new unit...")
                         dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Idle", str(datetime.now().strftime("%Y%m%d%H%M")))
+                        print(f"[HUB] {cleaned_received[2]} added to database")
                     except Exception as e:
-                        print(f"[HUB] Database error: {e}")
+                        print(f"{e} --- ok try to update the unit now...")
+                        try:
+                            print("trying to update...")
+                            time.sleep(2)
+                            dbcontrol.update_unit(unit_address[0], cleaned_received[2], str(datetime.now().strftime("%Y%m%d%H%M")))
+                            print(f"[HUB] {cleaned_received[2]} re-activated")
+                        except Exception as e:
+                            print(f"[HUB] Database error: {e}")
 
                 else:
                     pass
@@ -123,12 +132,12 @@ class Hub():
             time.sleep(60)
             
     def file_receiver(self):
-        file_socket = socket.socket()
-        file_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # make socket re-usable...
-        file_socket.bind((self.SERVER_HOST, self.FILE_PORT))
-        file_socket.listen(5) # should this go in the while loop...?
         
         while True:
+            file_socket = socket.socket()
+            file_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # make socket re-usable...
+            file_socket.bind((self.SERVER_HOST, self.FILE_PORT))
+            file_socket.listen(5) # should this go in the while loop...?
         
             try:
                 unit_socket, unit_address = file_socket.accept() # did i close this??

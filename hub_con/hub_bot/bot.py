@@ -1,6 +1,8 @@
 """
 This bot will run on the hub/VPN server and can be used to send commands to the units and check their status
 I would also like units to be able to send pictures, even videos to the bot.
+
+Store authorised users in a table in the database file...
 """
 
 import sys
@@ -34,6 +36,7 @@ command_channel = 7502
 file_root = "/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/"
 
 users = []
+awaiting_file = False
 
 
 def start_bot():
@@ -164,7 +167,7 @@ def send_comd(update, context):
     file_sent = False
     
     name = context.args[0]
-    unit_address = dbcontrol.get_unit_address(name)
+    unit_address = dbcontrol.get_unit_address(name)#maybe add an if unit address is None "unit not found"
     filetype = context.args[1]
     
     if filetype in pic_comd:
@@ -176,29 +179,29 @@ def send_comd(update, context):
         filetype = "image"
         vid_length = "n/a"
         
-    requested_filename = file_root + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + name + ".jpg"
-    print(f"Searching for {requested_filename}")
+    # requested_filename = file_root + datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + name + ".jpg"
+    # print(f"Searching for {requested_filename}")
     try:
         commands.send_file(unit_address, command_channel, filetype, vid_length)
-        for attempt in range(1,12):
-            try:
-                updater.bot.sendPhoto(chat_id, photo=open(requested_filename, "rb"), timeout=50, caption=f"Image from {name}")
-                file_sent = True
-                break
-            except:
-                time.sleep(attempt)
+        # for attempt in range(1,12):
+        #     try:
+        #         updater.bot.sendPhoto(chat_id, photo=open(requested_filename, "rb"), timeout=50, caption=f"Image from {name}")
+        #         file_sent = True
+        #         break
+        #     except:
+        #         time.sleep(attempt)
                 
-        if not file_sent:
-            update.message.reply_text(f"Nothing received from {name}")
+        # if not file_sent:
+        #     update.message.reply_text(f"Nothing received from {name}")
             
     except Exception as e:
         update.message.reply_text(f"Unable to complete: {e}")
         
 def send_unrequested_file(unitname, filename, file_description):
-    print("[HUB - BOT] UNSOLICITED FILE SEND")
+    print(f"[HUB - BOT] FILE SEND, users: {users}")
     try:
         for user in users:
-            updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description[5:]}")
+            updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
             print(f"[HUB - BOT] File sent: {filename} to {user}")
     except Exception as e:
         print(f"[HUB - BOT] Unable to send file {filename} - {e}")
