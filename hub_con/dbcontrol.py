@@ -8,6 +8,9 @@ def connect():
     conn.commit()
     conn.close()
     
+    
+# ==========UNIT MANAGEMENT DATABASE COMMANDS==========
+    
 def get_unit_status(unitname):
     unitname = unitname.lower()
     print(f"[HUB - DATABASE] checking status of {unitname}")
@@ -93,6 +96,8 @@ def update_unit(address, status, last_statrep):
     print("UPDATING UNIT4")
     conn.commit()
     conn.close()
+    
+# ==========AUTHORISED USER DATABASE COMMANDS==========
     
 connect()
 

@@ -13,6 +13,7 @@ import threading
 
 import commands
 # from actions import servo
+import unit_dbcontrol
 import unit_id
 
 class Unit():
@@ -34,7 +35,7 @@ class Unit():
         self.SEPARATOR = "<SEPARATOR>"
         
         # status variable is used to inform hub of status of this unit
-        self.status = "Idle"
+        self.status = unit_dbcontrol.get_own_status()
         self.autorotate = False
         
         self.unit_details = unit_id.unit_details
@@ -109,7 +110,7 @@ class Unit():
             time.sleep(0.5)
         
     def statrep(self):
-        print(f"{self.label} STATUS: Idle")
+        print(f"{self.label} STATUS: {self.status}")
         
         s=socket.socket()
         
