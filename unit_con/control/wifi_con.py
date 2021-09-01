@@ -3,10 +3,12 @@ This file will control the wifi band passive and active measures, like the DDO f
 """
 
 from datetime import datetime
+import os
 import socket
 import subprocess
 import threading
 import time
+from tqdm import tqdm
 
 label = "[" + socket.gethostname().upper() + "]"
 scanning = False
@@ -14,9 +16,13 @@ scanning = False
 hub_address = ""
 file_channel = 7503
 
+SEPARATOR = "<SEPARATOR>"
+BUFFER_SIZE = 1024
+
 def wifi_control(command, hub_addr):
     global hub_address
-    hub_addr = hub_address
+    hub_address = hub_addr
+    # hub_addr = hub_address dont change this!!
     
     scan_time = command[2]
     if command[1].lower() == "scan":
@@ -68,13 +74,15 @@ def scan():
             break
 
 def send_report(hub_addr, file):
+    file = file + "-01.csv"
     s = socket.socket()
     print(f"{label} Connecting to hub...")
     s.connect((hub_addr, file_channel))
     filesize = os.path.getsize(file)
+    file_description = f"wifi_scan_report {file}"
 
     print(f"{label} Sending scan report: {file}")
-    s.send(f"{file}{SEPARATOR}{filesize}".encode())
+    s.send(f"{file}{SEPARATOR}{filesize}{SEPARATOR}{file_description}".encode())
     try:
         progress = tqdm(range(filesize), f"{label} Sending {file}", unit="B", unit_scale=True, unit_divisor=1024)
         with open(file, "rb") as f:

@@ -1,8 +1,10 @@
 project_env
+files
 res
 key.py
 keys
 __pycache__
+*.csv
 *.sqlite3
 *.db
 *.jpg

@@ -25,3 +25,12 @@ NOTES
 - Autorotate function...need new thread? or can it be done by the command listener checking a boolean and activating/deactivating as necessary?
 - GO SILENT command - specify a number of minutes to not emit any RF (so WIFI IS SHUT OFF and lose connection to the unit). During this time the unit scans the wifiband (and RF sweep when figured out), and logs any optically detected objects, and once it reaches the end of the silent period it sends the report back to the hub
 - change STATREPs to use a unit db file to get unit status, that way don't have to store it as a variable in any file and so cana easily be accessed/changed from any file.
+
+error fixes
+
+wifi monitor mode not activating:
+The boot scripts softblock the wlan when you haven't entered your country in
+
+raspi-config -> localisation options -> Change WLAN Country
+
+I would REALLY like to know what file this changes, as I wasted a lot of time trying to bring up a raspberry pi that was supposed to be doing wlan. I imaged the SD card, edited /boot/ssh and /etc/wpa_supplicant/wpa_supplicant.conf expecting the pi to boot and join my network....

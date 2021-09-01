@@ -181,6 +181,7 @@ class Hub():
                             
                     # else: # if this is a file requested by the user
                     #     print(f"[HUB] Bot file request - file thread ignoring file")
+                    file_socket.close()
                             
                 else:
                     print("[HUB] File send attempt from unknown sender, file not accepted")

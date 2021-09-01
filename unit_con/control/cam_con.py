@@ -31,8 +31,8 @@ model.setInputScale(1.0/127.5)
 model.setInputMean((127.5,127.5,127.5))
 model.setInputSwapRB(True)
 
-stream = cv2.VideoCapture(0)
-stream.set(cv2.CAP_PROP_FPS, 30)
+# stream = cv2.VideoCapture(0) do not activate until im recog is on other camera is used up
+# stream.set(cv2.CAP_PROP_FPS, 30)
 
 font_scale = 2
 font = cv2.FONT_HERSHEY_PLAIN

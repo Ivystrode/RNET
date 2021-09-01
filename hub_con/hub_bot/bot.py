@@ -201,8 +201,22 @@ def send_unrequested_file(unitname, filename, file_description):
     print(f"[HUB - BOT] FILE SEND, users: {users}")
     try:
         for user in users:
-            updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
-            print(f"[HUB - BOT] File sent: {filename} to {user}")
+            sent = False
+            try:
+                updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
+                sent = True
+            except Exception as e:
+                print(f"[HUB - BOT] Not a photo...send as file?")
+            try:
+                updater.bot.sendDocument(user, document=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
+                sent = True
+            except Exception as e:
+                print(f"[HUB - BOT] Unable to send file (neither a photo or a document recognised) {filename} - {e}")
+            if sent == True:
+                print(f"[HUB - BOT] File sent: {filename} to {user}")
+            else:
+                print(f"[HUB - BOT] Unable to send {filename} to user: {user}")
+                
     except Exception as e:
         print(f"[HUB - BOT] Unable to send file {filename} - {e}")
         
