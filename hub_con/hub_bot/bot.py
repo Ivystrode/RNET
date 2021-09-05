@@ -44,6 +44,7 @@ def start_bot():
     global dispatcher
     
     dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('check', check))
     dispatcher.add_handler(CommandHandler('help', help))
     
     dispatcher.add_handler(CommandHandler('status', get_unit_status))
@@ -67,7 +68,15 @@ def start(update, context):
     reply = "Hi " + users_name + ". I am RNet Bot. I will help you control RNet when the system and myself are up and running."
     chat_id = update['message']['chat']['id']
     users.append(chat_id)
-    update.message.reply_text(reply)
+    try:
+        dbcontrol.add_authorised_user(int(chat_id), users_name, "regular")
+        update.message.reply_text(reply)
+        time.sleep(0.5)
+        update.message.reply_text(f"I have added you to the authorised users database, {users_name}")
+        print(f"[HUB - BOT] Added user {users_name}, ID: {chat_id} to authorised users database")
+    except Exception as e:
+        update.message.reply_text(f"You're already on the authorised users list, {users_name}, or for some reason I can't add you")
+        print(f"[HUB - BOT] Add authorised user error: {e}")
     
 def help(update, context):
     reply = "work in progress"
@@ -79,6 +88,7 @@ def help(update, context):
 /cpu [unit name] [command]: Orders the onboard computer of the specified unit to carry out the directed command (ie reboot, shutdown)\n
 /send [unit name] [file type]: Orders the specified unit to send a file (if a media file is requested, the on board camera actives to capture the requested content)\n
 /wifi [unit name] [command] [time (optional)]: Perform a wifi based action, i.e. "/wifi [unit name] scan" does a continuous wifi scan. Adding a number specifies in seconds how long to scan for.\n
+/check Check if you are an authorised user\n
     """
     
     update.message.reply_text(reply)
@@ -146,6 +156,17 @@ def move_servo(update, context):
 # def autorotate(update, context):
 #     """Pan/scan with the camera"""
 #     name = con
+
+def check(update, context):
+    chat_id = update['message']['chat']['id']
+    user_status = dbcontrol.check_user(chat_id)
+    if user_status == "regular":
+        update.message.reply_text(f"You are authorised as a {user_status} user")
+    elif user_status == None:
+        update.message.reply_text(f"You are not in the database of authorised users")
+    else:
+        update.message.reply_text(f"Your authorisation status is: {user_status}")
+        
         
 def cpu_comd(update, context):
     name = context.args[0]
@@ -198,6 +219,9 @@ def send_comd(update, context):
         update.message.reply_text(f"Unable to complete: {e}")
         
 def send_unrequested_file(unitname, filename, file_description):
+    # since i added the user data base i need to change how  this works
+    #users = dbcontrol.get_all_users()
+    #print(users)
     print(f"[HUB - BOT] FILE SEND, users: {users}")
     try:
         for user in users:

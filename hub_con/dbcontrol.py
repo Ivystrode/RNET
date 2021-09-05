@@ -4,6 +4,7 @@ def connect():
     conn = sqlite3.connect("database.db")
     cur = conn.cursor()
     cur.execute(f"CREATE TABLE IF NOT EXISTS units (id INTEGER PRIMARY KEY, Name text, Address text, Type text, Status text, last_statrep text)")
+    cur.execute(f"CREATE TABLE IF NOT EXISTS authorised_users (id INTEGER PRIMARY KEY, Name text, Type text)") # where id should be telegram chat id or USER id? probably user
     print("[HUB] Database created")
     conn.commit()
     conn.close()
@@ -98,9 +99,47 @@ def update_unit(address, status, last_statrep):
     conn.close()
     
 # ==========AUTHORISED USER DATABASE COMMANDS==========
+
+def add_authorised_user(id, name, type):
+    conn=sqlite3.connect("database.db", timeout=5)
+    cur=conn.cursor()
+    cur.execute("INSERT INTO authorised_users VALUES (?, ?, ?)", (id, name.lower(), type))
+    conn.commit()
+    conn.close()
     
+def check_user(id):
+    conn=sqlite3.connect("database.db")
+    cur=conn.cursor()
+    cur.execute("SELECT * FROM authorised_users WHERE id=?", (id,))
+    result=cur.fetchall()
+    conn.close()
+    
+    print(result)
+    
+    if result != []:
+        return result[0][2]
+    else:
+        return None
+    
+def get_all_users():    
+    conn=sqlite3.connect("database.db")
+    cur=conn.cursor()
+    
+    try:
+        cur.execute(f"SELECT * FROM authorised_users")
+        users=cur.fetchall()
+        conn.close()
+        return users
+    except:
+        print("not found...")
+        return "not found"
+    
+
+# if __name__ == '__main__':
 connect()
 
+# if I add "ifname=main" and only run "connect()" in it...can i then import this file in multiple files and avoid circular import error? then many files can use dbcontrol and it wont fuck things up
+# because i want the bot.py file to be able to also use functions in this file to add/remove from the authorised users table of the database which i need to create...
 
 
 
