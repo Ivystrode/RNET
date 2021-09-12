@@ -3,6 +3,14 @@ from datetime import datetime
 
 unit_name = socket.gethostname()
 
+def set_status():
+    conn=sqlite3.connect("database.db", timeout=5)
+    cur=conn.cursor()
+    cur.execute("INSERT INTO unit_details VALUES (?)", ('Idle'))
+    conn.commit()
+    conn.close()
+    
+
 def connect():
     conn = sqlite3.connect(f"{unit_name}_database.db")
     cur = conn.cursor()
@@ -11,6 +19,7 @@ def connect():
     print(f"[{unit_name.upper()}] Database created")
     conn.commit()
     conn.close()
+    set_status()
     
 def get_own_status():
     
