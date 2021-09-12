@@ -2,26 +2,19 @@ import sqlite3, webbrowser, socket
 from datetime import datetime
 
 unit_name = socket.gethostname()
-
-def set_status():
-    conn=sqlite3.connect(f"{unit_name}_database.db", timeout=5)
-    cur=conn.cursor()
-    cur.execute("INSERT INTO unit_details VALUES (?, ?)", (f'{unit_name}', 'Idle'))
-    conn.commit()
-    conn.close()
     
 
 def connect():
     conn = sqlite3.connect(f"{unit_name}_database.db")
     cur = conn.cursor()
     cur.execute(f"CREATE TABLE IF NOT EXISTS unit_details (Unit_Name text, Unit_Status text)")
-    # cur.execute(f"CREATE TABLE IF NOT EXISTS units (id INTEGER PRIMARY KEY, Name text, Address text, Type text, Status text, last_statrep text)")
+    cur.execute("INSERT INTO unit_details VALUES (?, ?)", (f'{unit_name}', 'Idle'))
     print(f"[{unit_name.upper()}] Database created")
     conn.commit()
     conn.close()
-    set_status()
     print(get_own_status())
-    update_status(("Idle",))
+    update_status(("gfd",))
+    print(get_own_status())
     
 def get_own_status():
     
