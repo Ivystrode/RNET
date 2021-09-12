@@ -33,7 +33,7 @@ def get_own_status():
     result = cur.fetchall()
     
     if result:
-        print("[{unit_name.upper()} - DATABASE] STATUS:")
+        print(f"[{unit_name.upper()} - DATABASE] STATUS:")
         print(result[0][0])
         return result[0][0] # this may need playing with...
     else:
