@@ -57,6 +57,8 @@ class Unit():
         # listen for command signals from hub
         threading.Thread(target=self.command_listener).start()
         
+        unit_dbcontrol.update_status("Idle")
+        
 
     def report_in(self):
         """
