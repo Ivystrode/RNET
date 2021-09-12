@@ -31,7 +31,7 @@ def get_own_status():
     
 def update_status(new_status):
     print(f"[{unit_name.upper()} - DATABASE] updating status")
-    conn=sqlite3.connect(f"{unit_name}database.db", timeout=10)
+    conn=sqlite3.connect(f"{unit_name}_database.db", timeout=10)
     cur=conn.cursor()
     cur.execute(f"UPDATE unit_details SET status=?", (new_status)) 
     conn.commit()
