@@ -13,18 +13,22 @@ Connection over same network functional. Servo move and CPU commands work. Statu
 
 NOTES
 
+- All future units use raspbian-lite. NO NEED for gui on units!!!
+
 - NEED TO GET UNITS TO SYNC TIME TO SERVER. NTP & timedatectl are being a pain.
-- May get stuck on a process continuing to listen on a port even after application (hub or unit) is closed, but machine stays on. In order not to get Errno 98 - Address already in use, will need to kill the process:
+- Sort out imports with __main__ and __init__.py (ehh I'll do this later)
+- May get stuck on a process continuing to listen on a port even after application (hub or unit) is closed, but machine stays on. In order not to get Errno 98 - Address already in use, will need to kill the process (automate this?):
     - sudo netstat -nlp | grep [port number]
     - cp        0      0 0.0.0.0:8069            0.0.0.0:*               LISTEN      10869/python2 
     - or a line to that effect...the process number is 10869
-    - sudo kill -9 10869
+    - sudo kill -9 [processNum]
 - May need to disable or add exception to firewall to communicate
 - Make an error handling file that kills all active port listening processes and re-starts them...?
 - "Sleep" function - the unit_main script that is running gets stopped, and instead, a "listener" is activated in another port waiting for the wake up call from the hub...
 - Autorotate function...need new thread? or can it be done by the command listener checking a boolean and activating/deactivating as necessary?
 - GO SILENT command - specify a number of minutes to not emit any RF (so WIFI IS SHUT OFF and lose connection to the unit). During this time the unit scans the wifiband (and RF sweep when figured out), and logs any optically detected objects, and once it reaches the end of the silent period it sends the report back to the hub
 - change STATREPs to use a unit db file to get unit status, that way don't have to store it as a variable in any file and so cana easily be accessed/changed from any file.
+- design case that can hold the Li-Ion shield
 
 error fixes
 
