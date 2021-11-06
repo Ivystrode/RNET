@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import ntpath
+import os
 import shutil
 import socket
 import threading
@@ -174,7 +175,9 @@ class Hub():
                         print(f"[HUB] Unsolicited file, sending to bot")
                         bot.send_unrequested_file(unit_name, filename, file_description)
                         print(f"[HUB] File sent by bot")
-                        shutil.move(filename, 'files/')
+                        if not os.path.exists(f"media/{unit_name}"):
+                            os.mkdir(f"media/{unit_name}")
+                        shutil.move(filename, f'media/{unit_name}/')
                         print(f"[HUB] {filename} moved to files directory")
                     except Exception as e:
                         print(f"[HUB] Unable to send file: {e}")

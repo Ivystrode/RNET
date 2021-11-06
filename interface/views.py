@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 
 
-from .models import Units, AuthorisedUsers
+from .models import Unit, AuthorisedUser
 # from .forms import NoticeCreationForm, NoticeCommentForm, DeleteNoticeForm, EditNoticeForm, CustomEmailForm
 
 
@@ -16,8 +16,8 @@ def home(request):
 
     context = {
         'user': request.user,
-        'units':Units.objects.all(),
-        'users':AuthorisedUsers.objects.all()
+        'units':Unit.objects.all(),
+        'users':AuthorisedUser.objects.all()
     }
     print(request.user)
 
@@ -28,7 +28,7 @@ def home(request):
 @login_required()
 def dashboard(request):
     # if request.user.profile.approved:
-    units = Units.objects.all()
+    units = Unit.objects.all()
     context = {'units':units}
     return render(request, "interface/dashboard.html", context)
     # else:

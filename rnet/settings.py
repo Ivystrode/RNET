@@ -142,3 +142,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4' # when I set this to semanticui it breaks so
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#LOGIN STUFF
+LOGIN_REDIRECT_URL = "home"
+LOGIN_URL = "login"

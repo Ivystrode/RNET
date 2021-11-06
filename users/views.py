@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, ProfileForm, UserUpdateForm, ProfileUpdateForm
-from interface.models import Units, AuthorisedUsers
+from interface.models import Unit, AuthorisedUser
 
 import requests, json
 from ua_parser import user_agent_parser
@@ -123,7 +123,24 @@ def register(request):
         
         elif 'message' in ip_content.keys():
             if ip_content['message'] == "127.0.0.1 is a private IP address":
-                print("TESTING ENVIRONMENT - VISITOR IP WILL BE FAKED")
+                visinfo['ISP'] = "N/A"
+                visinfo['Provider'] ="N/A"
+                visinfo['Provider_site'] = "N/A"
+                visinfo['Region'] = "N/A"
+                visinfo['Country'] = "N/A"
+                visinfo['City'] = "N/A"
+                visinfo['Latitude'] ="N/A"
+                visinfo['Longitude'] ="N/A"
+                visinfo['OS'] = "N/A"
+                visinfo['User_Agent'] ="N/A"
+                visinfo['Client'] ="N/A"
+                visinfo['Device_Data'] = "N/A"
+                visinfo['Device'] = "N/A"
+                visinfo['Visit_Time_Local'] ="N/A"
+                visinfo['Tor'] ="N/A"
+                visinfo['Proxy'] = "N/A"
+                visinfo['Anonymous'] ="N/A"
+                visinfo['Is_threat'] = "N/A"
                 
         try:
             print("Activating Emailer (disabled for rnet---for now)")
@@ -154,32 +171,18 @@ def register(request):
             user = form.save()
             new_user = d_form.save(commit=False)
             new_user.user = user
-
-
-            if new_user.ip_address:
-                new_user.ip_address = visinfo['IP']
-                new_user.isp = visinfo['ISP']
-                new_user.provider = visinfo['Provider']
-                new_user.region = visinfo['Region']
-                new_user.country = visinfo['Country']
-                new_user.city = visinfo['City']
-                new_user.latitude = str(visinfo['Latitude'])
-                new_user.longitude = str(visinfo['Longitude'])
-                new_user.os = visinfo['OS']
-                new_user.client = visinfo['Client']
-                new_user.device = visinfo['Device']
-            else: # probably in testing environment
-                new_user.ip_address = "N/A"
-                new_user.isp = "N/A"
-                new_user.provider = "N/A"
-                new_user.region = "N/A"
-                new_user.country = "N/A"
-                new_user.city = "N/A"
-                new_user.latitude = "N/A"
-                new_user.longitude = "N/A"
-                new_user.os = "N/A"
-                new_user.client = "N/A"
-                new_user.device = "N/A"
+            
+            new_user.ip_address = "N/A"
+            new_user.isp = "N/A"
+            new_user.provider = "N/A"
+            new_user.region = "N/A"
+            new_user.country = "N/A"
+            new_user.city = "N/A"
+            new_user.latitude = "N/A"
+            new_user.longitude = "N/A"
+            new_user.os = "N/A"
+            new_user.client = "N/A"
+            new_user.device = "N/A"
                 
 
             new_user.save()
