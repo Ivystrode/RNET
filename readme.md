@@ -1,4 +1,5 @@
-Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
+LMT-Desktop: Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
+LMT-Desktop-2: use project_env dir for virtual env
 
 - The UNIT directory is what will be installed on each static/rover unit. This will contain control code for the individual unit (inc for motion if a rover), communication code for talking to the hub, and a unique unit_id file
 

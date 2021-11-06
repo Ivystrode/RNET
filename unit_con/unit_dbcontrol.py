@@ -13,7 +13,7 @@ def connect():
     conn.commit()
     conn.close()
     print(get_own_status())
-    update_status(("gfd",))
+    update_status(("Activated",))
     print(get_own_status())
     
 def get_own_status():

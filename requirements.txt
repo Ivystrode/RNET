@@ -15,4 +15,5 @@ scipy==1.6.3
 six==1.16.0
 sqlparse==0.4.1
 tornado==6.1
+tqdm==4.62.3
 tzlocal==2.1

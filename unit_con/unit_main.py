@@ -64,7 +64,7 @@ class Unit():
         """
         Upon activation, the first thing the unit should do is report to the hub that it is active so that commands can be sent.
         Eventually THIS WILL REQUIRE VPN ACTIVATION.
-        Should this be done on a regular basis ie every minute? Then it can run in separate thread and avoids complicated checking arrangements...
+        This then runs every 60 seconds and sends the status from the unit db to the hub
         """
         
         # Report to the hub what this unit is (ie static or rover and name)
@@ -83,6 +83,9 @@ class Unit():
             self.statrep()
             
     def command_listener(self):
+        """"
+        Runs constantly to listen for commands from the hub
+        """
         while True:
             s = socket.socket()
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # make socket re-usable...
@@ -103,6 +106,7 @@ class Unit():
                     self.statrep()
                 else:                
                     commands.command_router(cleaned_receive, self.HUB_ADDRESS)
+                    unit_dbcontrol.update_status(str(cleaned_receive[1]))
   
             except Exception as e:
                 print(f"{self.label} Connection error: {e}")

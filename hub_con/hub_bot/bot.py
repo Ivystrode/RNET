@@ -6,7 +6,7 @@ Store authorised users in a table in the database file...
 """
 
 import sys
-sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/") # stop module import error ffs
+sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/") # stop module import error ffs
 
 from datetime import datetime
 import json
@@ -19,7 +19,10 @@ import socket
 
 import commands
 import dbcontrol
-from rnet.keys import keys
+# from rnet.keys import keys
+from decouple import config
+
+tbot_key=config('tbot_key')
 
 # logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.DEBUG) # change to DEBUG for more info inc user id etc
 
@@ -28,7 +31,7 @@ from rnet.keys import keys
 updater = None
 dispatcher = None
 
-updater = Updater(keys.tbot_key, use_context=True)
+updater = Updater(tbot_key, use_context=True)
 
 dispatcher = updater.dispatcher
 
