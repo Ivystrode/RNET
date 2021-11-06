@@ -2,6 +2,8 @@ LMT-Desktop: Local bash alias is annoying. Use activate-rnet in home alias (for 
 
 LMT-Desktop-2: use project_env dir for virtual env
 
+Make sure all PCs have git config set to match github account email address, otherwise commits will appear to come from some random user (FFS!)
+
 - The UNIT directory is what will be installed on each static/rover unit. This will contain control code for the individual unit (inc for motion if a rover), communication code for talking to the hub, and a unique unit_id file
 
 - The HUB directory is what will run on the server. This will contain a web interface and a telegram bot to control and check the status of all units.
