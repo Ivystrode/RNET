@@ -116,6 +116,7 @@ class Unit():
             time.sleep(0.5)
         
     def statrep(self):
+        self.status = unit_dbcontrol.get_own_status()
         print(f"{self.label} STATUS: {self.status}")
         
         s=socket.socket()
