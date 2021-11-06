@@ -1,0 +1,206 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+<head>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block title %}Profile - {{user.username}}{% endblock %}
+{% block page_title %}{{user.username}}{% if user.profile.role == 'BC' %} - Battery Commander{% elif user.profile.role == 'BSM' %} - Battery Sergeant Major{% endif %}{% endblock %}
+{% block subtitle %}{{user.email}}{% endblock %}
+</head>
+{% block content %}     
+
+    <body>
+        <div class="page-body">
+            {% if request.user.username == user.username %}
+            <button id="editbutton" class="ui secondary button" onclick="hideUpdateForm()">Edit Profile</button>
+            {% endif %}
+
+            <div class = "ui stackable two column grid">
+
+                <div class="column profile-info">
+
+
+                        <h3>Profile Information</h3>
+
+                        <div class="profilepic">
+                            <p><strong>{{user.username}} - {{user.profile.role}}</strong></p>
+                            <img class="ui small circular image" src="{{ user.profile.image.url }}">
+                            <p></p>
+                        </div>
+
+                        <div class="user-bio">
+                            <p>{{user.profile.bio | linebreaks}}</p>
+                        </div>
+
+                        <hr>
+            
+                        <div class="user-form">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{u_form|crispy}}
+                                {{p_form|crispy}}
+                                <p></p>
+                                <button type="submit" class="ui secondary button">Update</button>
+                            </form>
+                            <hr>
+                        </div>
+
+
+                        <div class="user-media">
+
+                            <h3>Media</h3>
+
+
+
+
+                            {% if albums %}
+                            <h4>Albums</h4>
+
+                            {% for album in albums %}
+
+                            <div class="container">
+                                <div class="user-album">
+                                    <div class="user-album profile-link" onclick="goToAlbum('{{album.slug}}')">
+                                        <span><strong>{{album.title}}</strong> - {{album.photos.all|length}} pictures</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+
+                            {% endif %}
+
+                            {% if photos %}
+
+                            <h4>Pictures</h4>
+
+                            <div class="ui stackable three column grid container">
+
+                                {% for photo in photos %}
+
+                                <div class="pic-column column">
+
+                                    <div class="user-photo profile-link" onclick="goToMedia('/albums/{{photo.album.slug}}/', '{{photo.id}}')"">
+                                        <img id="userpic" class="ui small rounded image" src="{{photo.photo.thumbnail.url}}">
+                                        <span><strong>{{photo.album.title}}</strong> - {{photo.caption}}</span>
+                                    </div>
+
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+
+                            {% else %}
+
+                            <p>User has not uploaded any media</p>
+
+                            {% endif %}
+
+
+                        </div>
+
+                </div>
+
+                <div class="column activity-info">
+
+                    <h3>Activity</h3>
+
+                    <h4>Ideas</h4>
+
+                    {% for idea in ideas %}
+                    {% if idea.created_by.username == user.username %}
+                    <div class="idea-item-container rounded profile-link" onclick="goToIdea('{{idea.id}}')">
+
+                        <div class="idea-title profile-link">
+                            <h2>{{idea.title}}</h2>
+                        </div>
+                        <div class="idea-author">
+                            <p>{{idea.time}}<br>Comments: {{idea.ideacomments.all|length}}</p>
+                        </div>
+
+                        <div class="idea-image ui small rounded image">
+                            {% if idea.image %}
+                            <img src="{{idea.image.url}}">
+                            {% else %}
+                            <img src="https://joburg.org.za/Campaigns/PublishingImages/idea.png">
+                            {% endif %}
+                        </div>
+
+                        <div class="idea-body profile-link" >
+                            {{idea.body|linebreaks}}
+                        </div>
+
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    <h4>Comments</h4>
+
+                    {% for comment in ideacomments %}
+                    <div class="comment-container profile-link" onclick="goToComment('/ideas/', '{{comment.parent.id}}')">
+
+                        <div class="parent-comment rounded">
+                            <div class="comment-author">
+                                <p>Commented on <strong><a class="profile-link" href="/ideas/{{comment.parent.id}}">{{comment.parent.title}}</a></strong> at {{comment.time}}</p> 
+                            </div>
+
+                            <div class="comment-body">
+                                <p>{{comment.body | linebreaks}}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+
+                    {% for comment in albumcomments %}
+                    <div class="comment-container profile-link" onclick="goToComment('/albums/{{comment.parent.album.slug}}/', '{{comment.parent.id}}')">
+
+                    <div class="parent-comment rounded">
+                        <div class="comment-author">
+                            <p>Commented on <strong><a class="profile-link" href="/albums/{{comment.parent.album.slug}}/{{comment.parent.id}}">{{comment.parent.caption}}</a></strong> at {{comment.time}}</p>                          
+                        </div>
+                        <div class="comment-body">
+                            <p>{{comment.body | linebreaks}}</p>
+                        </div>
+                    </div>
+
+                </div>
+                    {% endfor %}
+
+                    {% for comment in noticecomments %}
+                    <div class="comment-container profile-link" onclick="goToComment('/notices/', '{{comment.parent.id}}')">
+
+                    <div class="parent-comment rounded">
+                        <div class="comment-author">
+                            <p>Commented on <strong><a class="profile-link" href="/notices/{{comment.parent.id}}">{{comment.parent.title}}</a></strong> at {{comment.time}}</p>                           
+                        </div>
+                        <div class="comment-body">
+                            <p>{{comment.body | linebreaks}}</p>
+                        </div>
+                    </div>
+
+                </div>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+        </div>
+        
+    </body>
+    
+
+{% endblock %}
+{% block script %}<script src="{% static 'scripts/js/profile.js' %}"></script>{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'interface/base.html' %}
+{% load static %}
+<head>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/unit_styles.css' %}">
+{% endblock %}
+
+{% block title %}RNET{% endblock %}
+{% block page_title %}Unit Dashboard{% endblock %}
+{% block subtitle %}All Units will appear here with a summary{% endblock %}
+</head>
+{% block content %}     
+
+    <body>
+        <div class="page-body">
+
+            <div class="ui doubling stackable five column grid">
+                {% for unit in units %}
+                <div class="column">                    
+                    <div class="unit_item_container">
+                        <h3 onclick="goTounit('{{unit.slug}}')">{{unit.name}}</h3>
+                        <div class="unit_image" onclick="goTounit('{{unit.slug}}')">
+                            {% if unit.coverpic %}
+                            <img class="ui rounded image" src="{{unit.coverpic.thumbnail.url}}">
+                            {% else %}
+                                <img class="ui rounded image" src="https://www.silicon.co.uk/wp-content/uploads/2014/08/Spy-c-Kar-Shutterstock-2014.jpg">
+                            {% endif %}
+                        </div>
+
+                        <div class="unit_title">
+                            <p>{{unit.title}}</p>
+                            Type: {{unit.type}}
+                            <br>
+                            Status: {{unit.status}}
+                            <br>
+                            Last statrep: {{unit.last_statrep}}Z
+                            <br>
+                            <div class="ui inverted compact menu">
+                                <div class="ui simple dropdown item">
+                                  Commands
+                                  <i class="dropdown icon"></i>
+                                  <div class="menu black">
+                                    <div class="item">Send Image</div>
+                                    <div class="item">Send Video</div>
+                                    <div class="item">Image detection</div>
+                                    <div class="item">Wifi Scan</div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+    </body>
+    
+
+{% endblock %}
+{% block script %}<script src="{% static 'scripts/js/units.js' %}"></script>{% endblock %}

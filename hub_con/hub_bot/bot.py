@@ -277,7 +277,7 @@ def stop_wifi_scan(update, context):
     unit_address = dbcontrol.get_unit_address(name)
     
     try:
-        commands.wifi_comd(unit_address, command_channel, command, scan_time)
+        commands.wifi_comd(unit_address, command_channel, command, time)
         update.message.reply_text(f"Terminate wifi scan command sent to {name}")
     except Exception as e:
         update.message.reply_text(f"Unable to terminate wifi scan. {e}")

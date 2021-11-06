@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        
+        {% block css %}
+        {% endblock %}
+
+        {% block headscript %}{% endblock %}
+
+    </head>
+    <body>
+
+        {% if request.user.profile.approved %}
+        <div class="sidenav" id="sidenav">
+            <div class="sidenav-links">
+                <a class="sidebutton normal" href="/dashboard">Dashboard</a>
+                <a class="sidebutton normal" href="/profile/{{request.user.username}}">Profile</a>
+                <div class="dropdown">
+                    <a class="sidebutton" id="dropdownbuttonmain">Options</a>
+                    <div id="mydropdown" class="dropdown-content">
+                        <a class="sidebutton unused_dropbutton" href="#">Hide Menu</a>
+                        <a class="sidebutton unused_dropbutton" href="#">Light Mode</a>
+                        <a class="sidebutton normal" href="/contact">Contact</a>
+                        <a class="sidebutton dropbutton" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="sidenav">
+            <div class="sidenav-links">
+                <a class="sidebutton normal" href="/logout">Logout</a>
+            </div>
+        </div>
+
+
+        {% endif %}
+
+        <div id="topbar">
+            <div id="sitetitle">
+                <h1 id="main-title">RNET</h1>
+            </div>
+            <p id="sitesubtitle">
+                Logged in as: <a id="userloggedin" href="/profile/{{request.user.username}}">{{request.user.username}} - {{request.user.profile.role}}</a>
+            </p>
+        </div>
+
+
+        <div id="content">
+
+            <div class="bg-image">
+                <img class="bg-img" src="/static/media/landing2.jpg">
+            </div>
+
+
+            <div id="mainbody">
+                <h3>{% block page_title %}{% endblock %}</h3>
+                <p id="pagesubtitle">{% block subtitle %}{% endblock %}</p>
+            </div>
+            <hr id="header-divider">
+
+
+            <div id="msgbox" class="ui segment" style="display: flex; flex-wrap: wrap">
+                <div class="thumbnail">
+                    <h4>MESSAGE</h4>
+                </div>
+                <div class="caption">
+                    <p>{% block msgbox_msg %}This functionality has not been added yet. But it is coming soon!{% endblock %}</p>
+                </div>
+                <button class="ui secondary button" id="hideButton">Hide</button>
+            </div>
+
+
+                    
+            {% if messages %}
+            {% for message in messages %}
+            <div class="ui black message flashmessage">
+                <div class="header">
+                  INFO
+                </div>
+                <p>{{message}}</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}   
+
+
+
+        </div>
+    </body>
+    {% block script %}{% endblock %}
+    <script src="{% static 'scripts/js/base.js' %}"></script>
+
+</html>

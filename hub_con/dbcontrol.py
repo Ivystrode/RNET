@@ -1,7 +1,7 @@
 import sqlite3, webbrowser
 
 def connect():
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect("hub_database.db")
     cur = conn.cursor()
     cur.execute(f"CREATE TABLE IF NOT EXISTS units (id INTEGER PRIMARY KEY, Name text, Address text, Type text, Status text, last_statrep text)")
     cur.execute(f"CREATE TABLE IF NOT EXISTS authorised_users (id INTEGER PRIMARY KEY, Name text, Type text)") # where id should be telegram chat id or USER id? probably user
@@ -15,7 +15,7 @@ def connect():
 def get_unit_status(unitname):
     unitname = unitname.lower()
     print(f"[HUB - DATABASE] checking status of {unitname}")
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur = conn.cursor()
 
     cur.execute("SELECT * from units WHERE Name=?", (unitname,))
@@ -31,7 +31,7 @@ def get_unit_status(unitname):
 def get_unit_address(unitname):
     unitname = unitname.lower()
     # print(f"Storage: checking address of {unitname}")
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur = conn.cursor()
 
     cur.execute("SELECT * from units WHERE name=?", (unitname,))
@@ -45,7 +45,7 @@ def get_unit_address(unitname):
         print(f"[HUB - DATABASE] {unitname} not found, it may not have checked in recently")
         
 def get_all_units():    
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur=conn.cursor()
     
     try:
@@ -58,7 +58,7 @@ def get_all_units():
         return "not found"
     
 def get_unit_name(address):    
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur=conn.cursor()
     cur.execute("SELECT * FROM units WHERE address=?", (address,))
     rows=cur.fetchall()
@@ -66,7 +66,7 @@ def get_unit_name(address):
     return rows[0][1]
 
 def check_unit_status(address):
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur=conn.cursor()
     cur.execute("SELECT * FROM units WHERE address=?", (address,))
     result=cur.fetchall()
@@ -74,14 +74,14 @@ def check_unit_status(address):
     return result[0][4] # status
     
 def insert(id, name, address, type, status, last_statrep):
-    conn=sqlite3.connect("database.db", timeout=5)
+    conn=sqlite3.connect("hub_database.db", timeout=5)
     cur=conn.cursor()
     cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep))
     conn.commit()
     conn.close()
     
 def delete(address):
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur=conn.cursor()
     cur.execute("DELETE FROM units WHERE address=?", (address,)) 
     conn.commit()
@@ -89,7 +89,7 @@ def delete(address):
 
 def update_unit(address, status, last_statrep):
     print("UPDATING UNIT1")
-    conn=sqlite3.connect("database.db", timeout=10)
+    conn=sqlite3.connect("hub_database.db", timeout=10)
     print("UPDATING UNIT2")
     cur=conn.cursor()
     print("UPDATING UNIT3")
@@ -101,14 +101,14 @@ def update_unit(address, status, last_statrep):
 # ==========AUTHORISED USER DATABASE COMMANDS==========
 
 def add_authorised_user(id, name, type):
-    conn=sqlite3.connect("database.db", timeout=5)
+    conn=sqlite3.connect("hub_database.db", timeout=5)
     cur=conn.cursor()
     cur.execute("INSERT INTO authorised_users VALUES (?, ?, ?)", (id, name.lower(), type))
     conn.commit()
     conn.close()
     
 def check_user(id):
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur=conn.cursor()
     cur.execute("SELECT * FROM authorised_users WHERE id=?", (id,))
     result=cur.fetchall()
@@ -122,7 +122,7 @@ def check_user(id):
         return None
     
 def get_all_users():    
-    conn=sqlite3.connect("database.db")
+    conn=sqlite3.connect("hub_database.db")
     cur=conn.cursor()
     
     try:
@@ -138,20 +138,3 @@ def get_all_users():
 # if __name__ == '__main__':
 connect()
 
-# if I add "ifname=main" and only run "connect()" in it...can i then import this file in multiple files and avoid circular import error? then many files can use dbcontrol and it wont fuck things up
-# because i want the bot.py file to be able to also use functions in this file to add/remove from the authorised users table of the database which i need to create...
-
-
-
-
-
-    #==========HOW TO CHECK ALL TABLES IN DATABASE==========
-    # cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    # print(f"\nENTRY CHECK - Searching tables for: {story}")
-    # for tablerow in cur.fetchall():
-    #     table = tablerow[0]
-    #     cur.execute(f"SELECT * FROM {table} where story=?", (story,))
-    #     result = cur.fetchall()
-    #     if result:
-    #         print(f"Already exists in {table.upper()}")
-    #         return True

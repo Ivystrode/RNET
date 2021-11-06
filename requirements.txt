@@ -9,6 +9,7 @@ PyQt5-sip==12.9.0
 pyqtgraph==0.12.1
 pyrtlsdr==0.2.92
 pysdr==1.2
+python-decouple==3.5
 python-telegram-bot==13.5
 pytz==2021.1
 scipy==1.6.3
@@ -17,3 +18,4 @@ sqlparse==0.4.1
 tornado==6.1
 tqdm==4.62.3
 tzlocal==2.1
+ua-parser==0.10.0

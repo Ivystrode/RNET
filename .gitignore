@@ -1,7 +1,6 @@
-project_env
 files
 res
-key.py
+keys.py
 keys
 __pycache__
 *.csv
@@ -10,3 +9,13 @@ __pycache__
 *.jpg
 *.jpeg
 .env
+project_env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+media/
+img/
+vscode/

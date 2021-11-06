@@ -1,0 +1,40 @@
+#aboutme {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.page-body {
+    margin: 1%;
+    text-align: center;
+}
+
+.welcome-banner {
+    margin-bottom: 30px;
+}
+
+/* .column {
+    border: 1px solid white;
+} */
+
+.table-container {
+    overflow-x: scroll;
+    scrollbar-width: None;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.table-container::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+}
+
+.unapproved-user {
+    border: 1px solid white;
+    border-radius: 20%;
+    margin-left: 40%;
+    margin-right: 40%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.774);
+}
+.unapproved-user:hover {
+    background: rgb(0, 0, 0);
+
+}

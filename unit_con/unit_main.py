@@ -1,9 +1,5 @@
 """
 This is the central node of the individual unit. This is the "brain" that will communicate between the remote hub, and local functions of the unit.
-Obviously this will eventually need to be done over a VPN...and sockets I guess
-
-In fact in the networked version this can be done with sockets communicating directly to the hostname/IP address of the machine rather than
-sending out a CC1 asking "name" to respond. Why call everyone to ask for one person?
 """
 
 import json
