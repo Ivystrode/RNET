@@ -36,9 +36,10 @@ updater = Updater(tbot_key, use_context=True)
 dispatcher = updater.dispatcher
 
 command_channel = 7502
-file_root = "/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/"
+file_root = "/home/main/Documents/Main/Code/Projects/rnet/rnet/"
 
-users = []
+users = [user[0] for user in dbcontrol.get_all_users()]
+print(f"[HUB - BOT] Authorised users by ID: {users}")
 awaiting_file = False
 
 
@@ -73,6 +74,8 @@ def start(update, context):
     users.append(chat_id)
     try:
         dbcontrol.add_authorised_user(int(chat_id), users_name, "regular")
+        users = [user[0] for user in dbcontrol.get_all_users()]
+        print(f"[HUB - BOT] User added to authorised users: {str(chat_id)}")
         update.message.reply_text(reply)
         time.sleep(0.5)
         update.message.reply_text(f"I have added you to the authorised users database, {users_name}")

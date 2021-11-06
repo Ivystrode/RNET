@@ -9,7 +9,34 @@ LMT-Desktop-2: use project_env dir for virtual env
 - Command channel = 7502
 
 CURRENT STATE
-Connection over same network functional. Servo move and CPU commands work. Status updates work (STATREPs). Camera command can send pictures from selected unit back to hub/telegram bot. Wifi scan functions in progress. Hub tracks units in a local db file.
+- Connect over VPN (via 4G) or local network (if testing in rural Devon with no 4G!!)
+- File/photo sending, wifi scanning, servo moving all functioning
+- Telegram bot functioning and can receive files to my phone
+- Hub tracks units in a db file
+
+TODO
+- Django interface/app
+- Run object recognition model/recognition alerts
+- RF silent mode
+- Units/authorised users will have to be translated to "the django way" ie django models...? Dammit django
+- Mavlink testing
+
+How to use:
+1. Set up a new wireguard VPN on host machine - if you don't know how to do this then...google it
+2. Clone repository
+3. run "pip3 install -r requirements.txt" from the cloned directory
+4. run "python3 hub_con/hub_main.py" from the top level of the cloned directory
+5. open telegram, send "/start" to RNET Bot to add yourself to the table of authorised users
+
+6. Install RNET OS image on SD card
+7. Insert SD card into raspberry pi (preferable 4B+)
+8. Switch on RPi - VPN will attempt to connect automatically (should see a blue or green light on the 4G stick)
+9. It probably won't work - see #1 - you will need to change the .conf file and add the server endpoint and public key
+10. If red light on 4G stick try to find somewhere with better cellular reception
+11. Depending on whether I get this done in time, it should start the unit_main script right away (via crontab)
+    - If not, either ssh into it or do via monitor & keyboard, and start the script
+    - I need to create an up-to-date OS image but I probably won't until I have created a fresh install with raspian-lite (desktop version is bigger than necessary)
+12. Unit should now send activation report to the hub
 
 
 NOTES

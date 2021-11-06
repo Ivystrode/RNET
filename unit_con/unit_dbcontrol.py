@@ -13,7 +13,7 @@ def connect():
     conn.commit()
     conn.close()
     print(get_own_status())
-    update_status(("Activated",))
+    update_status(("Activated"))
     print(get_own_status())
     
 def get_own_status():
@@ -37,7 +37,7 @@ def update_status(new_status):
     print(f"[{unit_name.upper()} - DATABASE] updating status")
     conn=sqlite3.connect(f"{unit_name}_database.db", timeout=10)
     cur=conn.cursor()
-    cur.execute(f"UPDATE unit_details SET Unit_Status=?", (new_status)) 
+    cur.execute(f"UPDATE unit_details SET Unit_Status=?", (new_status,)) 
     conn.commit()
     print(f"[{unit_name.upper()} - DATABASE] Status set to {new_status[0]}")
     conn.close()
