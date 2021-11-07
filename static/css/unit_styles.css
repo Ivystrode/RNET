@@ -2,3 +2,9 @@
     color: aliceblue;
     text-decoration: none;
 }
+
+.welcome-banner {
+    /* margin-bottom: 30px; */
+    text-align: center;
+    align-items: center;
+}

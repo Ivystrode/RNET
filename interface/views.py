@@ -51,6 +51,11 @@ def dashboard(request):
     if request.user.profile.approved:
         units = Unit.objects.all()
         context = {'units':units}
+        try:
+            hub = Control_Hub.objects.get(name="Hub")
+            context['hub'] = hub
+        except:
+            print("NO HUB YET")
         return render(request, "interface/dashboard.html", context)
     else:
         messages.success(request, f'Your account is not authorised yet. Please contact an administrator.')

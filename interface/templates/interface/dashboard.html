@@ -11,8 +11,19 @@
 </head>
 {% block content %}     
 
-    <body>
+        <div class="welcome-banner">
+            {% if not hub.activated == True %}  
+            <button class="ui red button"><a href="/">HUB DEACTIVATED</a></button>
+            <br>
+            <h4>No data will be received until the Control Hub is activated</h4>
+            
+            {% else %}
+            <button class="ui primary button">HUB ACTIVE</button>
+            {% endif %}
+            
+        </div>
         <div class="page-body">
+            <hr>
 
             <div class="ui doubling stackable five column grid">
                 {% for unit in units %}
@@ -36,6 +47,8 @@
                             <br>
                             Last statrep: {{unit.last_statrep}}Z
                             <br>
+                            Files received: {{unit.photos.all|length}}
+                            <br>
                             <div class="ui inverted compact menu">
                                 <div class="ui simple dropdown item">
                                   Commands
@@ -56,7 +69,6 @@
             </div>
         </div>
         
-    </body>
     
 
 {% endblock %}
