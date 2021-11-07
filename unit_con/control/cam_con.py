@@ -10,6 +10,8 @@ import os
 import time
 from unit_id import unit_details
 
+import vid_stream
+
 from tqdm import tqdm
 
 label = "[" + socket.gethostname().upper() + "]"
@@ -92,34 +94,35 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 def stream_video():
+    vid_stream.stream()
 
-    app=Flask(__name__)
-    camera=PiCamera()
+    # app=Flask(__name__)
+    # camera=PiCamera()
 
-    def generate_frames():
-        while True:
+    # def generate_frames():
+    #     while True:
                 
-            ## read the camera frame
-            success,frame=camera.read()
-            if not success:
-                break
-            else:
-                ret,buffer=cv2.imencode('.jpg',frame)
-                frame=buffer.tobytes()
+    #         ## read the camera frame
+    #         success,frame=camera.read()
+    #         if not success:
+    #             break
+    #         else:
+    #             ret,buffer=cv2.imencode('.jpg',frame)
+    #             frame=buffer.tobytes()
 
-            yield(b'--frame\r\n'
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    #         yield(b'--frame\r\n'
+    #                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
-    @app.route('/')
-    def index():
-        return render_template('index.html')
+    # @app.route('/')
+    # def index():
+    #     return render_template('index.html')
 
-    @app.route('/video')
-    def video():
-        return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    # @app.route('/video')
+    # def video():
+    #     return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
-    app.run(host='0.0.0.0', debug=True, threaded=True)
+    # app.run(host='0.0.0.0', debug=True, threaded=True)
 
 def stream_video_worksButNotToBrowser():
     client_socket = socket.socket()
