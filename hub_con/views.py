@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from units.models import Unit, UnitPhoto, UnitFile
+from units.models import Unit, UnitPhoto, UnitFile, UnitActivity
 
 # def save_photo(unitname, photo_name, caption):
 #     sending_unit = Unit.objects.get(name=unitname)
@@ -19,3 +19,6 @@ def save_file(unitname, file_name, caption, file_type):
         new_file = UnitFile(unit=sending_unit, file=file_name, caption=caption)
         new_file.save()
         
+def record_activity(unitname, detail):
+    sending_unit = Unit.objects.get(name=unitname)
+    new_activity_record = UnitActivity(unit=sending_unit, detail=detail)

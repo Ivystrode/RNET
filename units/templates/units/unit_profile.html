@@ -34,12 +34,12 @@
 
                         <div class="user-media">
 
-                            <h3>Media</h3>
+                            <h3>DATA</h3>
 
-
-                            {% if unit.photos.all|length > 0 %}
 
                             <h4>Pictures</h4>
+                            {% if unit.photos.all|length > 0 %}
+
 
                             <div class="ui stackable three column grid container">
 
@@ -56,13 +56,40 @@
 
                             </div>
 
-
-
                             {% else %}
 
                             <p>Unit has not uploaded any media</p>
 
                             {% endif %}
+
+                            <h4>Wifi Scans</h4>
+                            {% if unit.files.all|length > 0 %}
+
+
+                            <div class="ui stackable three column grid container">
+
+                                {% for file in unit.files.all %}
+
+                                <div class="pic-column column">
+                                    <div class="user-photo profile-link">
+                                        <img id="userpic" class="ui small rounded image" src="https://i.ytimg.com/vi/NhtCv86PWmE/maxresdefault.jpg">
+                                        <span><strong>Wifi Report</strong> - {{file.time}}</span>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                            {% else %}
+
+                            <p>Unit has not uploaded any scan reports</p>
+
+                            {% endif %}
+
+
+
+
 
 
                         </div>

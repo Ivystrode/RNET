@@ -17,7 +17,7 @@ sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/") 
 
 from units.models import UnitPhoto
 from .models import Control_Hub
-from .views import save_file
+from .views import save_file, record_activity
 
 from hub_con import commands
 from hub_con import dbcontrol
@@ -210,7 +210,8 @@ class Hub():
 
                         print("[HUB] Saving file...")
                         save_file(unit_name, filename, file_description, file_type)
-
+                        print("[HUB] Recording unit activity...")
+                        record_activity(unit_name, file_description)
                         print("[HUB] Saved")
                         
                     except Exception as e:

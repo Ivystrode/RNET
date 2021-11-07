@@ -53,7 +53,7 @@ def capt_img(hub_addr):
     time.sleep(0.5)
     camera.close()
     print(f"{label} Image saved as {img_name}")
-    send_photo(hub_addr, img_name, f"Requested image taken at {datetime.now().strftime('%H:%M:%S')}")
+    send_photo(hub_addr, img_name, f"Camera shot")
     
 def im_recog():
     while True:
