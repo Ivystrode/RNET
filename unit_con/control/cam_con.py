@@ -94,7 +94,7 @@ def send_photo(hub_addr, file, file_description):
 def stream_video():
     print("streaming1")
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((sys.argv[1], int(sys.argv[2])))
+    client_socket.connect((unit_details['hub_address'], 8081)))
     print("streaming2")
     connection = client_socket.makefile('wb')
     print("streaming3")
