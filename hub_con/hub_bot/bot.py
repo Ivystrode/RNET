@@ -38,9 +38,9 @@ dispatcher = updater.dispatcher
 
 command_channel = 7502
 file_root = "/home/main/Documents/Main/Code/Projects/rnet/rnet/"
+users = []
 
-users = [user[0] for user in dbcontrol.get_all_users()]
-print(f"[HUB - BOT] Authorised users by ID: {users}")
+
 awaiting_file = False
 
 
@@ -289,8 +289,13 @@ def stop_wifi_scan(update, context):
 
 
 
+def activate_hub_bot():
+    global users
+    users = [user[0] for user in dbcontrol.get_all_users()]
+    print(f"[HUB - BOT] Authorised users by ID: {users}")
+    bot_thread = threading.Thread(name='bot', target=start_bot)
+    bot_thread.start()
+    print("[HUB - BOT] Hub bot started")
     
-
-bot_thread = threading.Thread(name='bot', target=start_bot)
-
-bot_thread.start()
+# if __name__ == '__main__':
+#     start_bot()

@@ -207,16 +207,6 @@ def profile(request, username):
         except:
             raise Http404
 
-        # ideas = Idea.objects.filter(created_by=user)
-        # albums = Album.objects.filter(created_by=user)
-        # photos = AlbumPhoto.objects.filter(created_by=user)
-
-        # ideacomments = IdeaComment.objects.filter(author=user)
-        # albumcomments = Comment.objects.filter(author=user)
-        # noticecomments = NoticeComment.objects.filter(author=user)
-
-        # editable = False
-
         if request.user.is_authenticated and request.user.username == user.username:
             editable = True
         else:

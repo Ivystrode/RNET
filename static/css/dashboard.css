@@ -1,5 +1,5 @@
 /* =====ALBUMS===== */
-
+/*
 .album_item_container {
     display: inline-table;
     background-color: black;
@@ -9,8 +9,8 @@
     opacity: 65%;
     height: 22rem;
     /* height: 22rem; */
-    width: 100%;
-}
+    /*width: 100%;/*
+}/*
 .album_item_container:hover {
     cursor: pointer;
     opacity: 100%;
@@ -27,7 +27,7 @@
 .album_title {
     overflow: hidden;
     text-overflow: ellipsis;
-}
+}/*
 
 /* =====PICTURES===== */
 

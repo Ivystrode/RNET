@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from .models import AuthorisedUser
 from units.models import Unit
 from hub_con import hub_main
+from hub_con.hub_bot import bot
 from hub_con.models import Control_Hub
 # from .forms import NoticeCreationForm, NoticeCommentForm, DeleteNoticeForm, EditNoticeForm, CustomEmailForm
 
@@ -27,7 +28,7 @@ def home(request):
         messages.success(request, f'The unit control hub is now activated.')
         return redirect("/")
     
-    else:            
+    else:         
         context = {
                 'user': request.user,
                 'units':Unit.objects.all(),

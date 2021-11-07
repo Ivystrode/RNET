@@ -44,6 +44,8 @@ class Hub():
         self.lost_connection_units = {} # units that have missed a statrep
         
         self.initialise()
+        bot.activate_hub_bot()
+        dbcontrol.connect()
     
     def initialise(self):
         # receive status updates from units and update list of active units
@@ -227,3 +229,4 @@ class Hub():
 
 if __name__ == '__main__':
     main_hub = Hub("0.0.0.0")
+    bot.activate_hub_bot()

@@ -12,7 +12,10 @@ from stdimage import StdImageField
 # ==========MODEL FUNCTIONS==========
 
 def unit_folder(instance, filename):
-    print("ALBUM DIRECTORY FUNCTION")
+    """
+    I think this is redundant now
+    """
+    print("UNIT DIRECTORY FUNCTION")
 
     base_filename, file_extension = os.path.splitext(filename)
     dt = datetime.now().strftime("%Y%m%d%H%M")
@@ -30,7 +33,7 @@ def unit_folder(instance, filename):
     print(new_filename)
     print("to")
     print(unit_name)
-    return '/'.join(['albums/', unit_name, new_filename + file_extension])
+    return '/'.join(['units/', unit_name, new_filename + file_extension])
     
 # ==========MODELS==========
 
@@ -41,6 +44,7 @@ class Unit(models.Model):
     type = models.TextField(db_column='Type', blank=True, null=True)
     status = models.TextField(db_column='Status', blank=True, null=True)
     last_statrep = models.TextField(blank=True, null=True)
+    location = models.TextField(default="51.183862090545, -4.669410763157165", blank=True, null=True)
     # slug = models.SlugField()
 
     class Meta:
@@ -53,7 +57,6 @@ class Unit(models.Model):
 class UnitPhoto(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='photos')
-    # photo = models.ImageField(upload_to=album_folder)
 
     # thumb = models.ImageField(upload_to=thumb_folder)
 
@@ -81,7 +84,7 @@ class UnitObjectDetection(models.Model):
         ordering = ['-time']
 
     def __str__(self):
-        return str(self.id) + ": " + str(self.caption)
+        return str(self.object_detected) + ": " + str(self.time)
     
     
 # ==========MODEL ADMIN==========
@@ -92,7 +95,3 @@ class UnitAdmin(admin.ModelAdmin):
     search_fields = ['name', 'type']
     list_display = ['name', 'type']
     inlines = [UnitPhotoInline]
-
-# class UnitPhotoAdmin(admin.ModelAdmin):
-#     search_fields = ['album', 'caption', 'time', 'created_by']
-#     list_display = ['album', 'time', 'created_by']

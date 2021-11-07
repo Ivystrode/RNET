@@ -53,26 +53,6 @@
 
                             <h3>Media</h3>
 
-
-
-
-                            {% if albums %}
-                            <h4>Albums</h4>
-
-                            {% for album in albums %}
-
-                            <div class="container">
-                                <div class="user-album">
-                                    <div class="user-album profile-link" onclick="goToAlbum('{{album.slug}}')">
-                                        <span><strong>{{album.title}}</strong> - {{album.photos.all|length}} pictures</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% endfor %}
-
-                            {% endif %}
-
                             {% if photos %}
 
                             <h4>Pictures</h4>
@@ -83,9 +63,9 @@
 
                                 <div class="pic-column column">
 
-                                    <div class="user-photo profile-link" onclick="goToMedia('/albums/{{photo.album.slug}}/', '{{photo.id}}')"">
+                                    <div class="user-photo profile-link">
                                         <img id="userpic" class="ui small rounded image" src="{{photo.photo.thumbnail.url}}">
-                                        <span><strong>{{photo.album.title}}</strong> - {{photo.caption}}</span>
+                                        <span><strong>{{photo.title}}</strong> - {{photo.caption}}</span>
                                     </div>
 
                                 </div>
@@ -158,35 +138,7 @@
                     </div>
                     {% endfor %}
 
-                    {% for comment in albumcomments %}
-                    <div class="comment-container profile-link" onclick="goToComment('/albums/{{comment.parent.album.slug}}/', '{{comment.parent.id}}')">
 
-                    <div class="parent-comment rounded">
-                        <div class="comment-author">
-                            <p>Commented on <strong><a class="profile-link" href="/albums/{{comment.parent.album.slug}}/{{comment.parent.id}}">{{comment.parent.caption}}</a></strong> at {{comment.time}}</p>                          
-                        </div>
-                        <div class="comment-body">
-                            <p>{{comment.body | linebreaks}}</p>
-                        </div>
-                    </div>
-
-                </div>
-                    {% endfor %}
-
-                    {% for comment in noticecomments %}
-                    <div class="comment-container profile-link" onclick="goToComment('/notices/', '{{comment.parent.id}}')">
-
-                    <div class="parent-comment rounded">
-                        <div class="comment-author">
-                            <p>Commented on <strong><a class="profile-link" href="/notices/{{comment.parent.id}}">{{comment.parent.title}}</a></strong> at {{comment.time}}</p>                           
-                        </div>
-                        <div class="comment-body">
-                            <p>{{comment.body | linebreaks}}</p>
-                        </div>
-                    </div>
-
-                </div>
-                    {% endfor %}
 
                 </div>
 

@@ -35,6 +35,7 @@ class Unit():
         self.autorotate = False
         
         self.unit_details = unit_id.unit_details
+        self.location = "51.183862090545, -4.669410763157165"
         
         self.label = "[" + self.unit_details['unit_name'].upper() + "]"
         
@@ -64,7 +65,7 @@ class Unit():
         """
         
         # Report to the hub what this unit is (ie static or rover and name)
-        unit_overview = f"_{self.unit_details['unit_id']}_{self.unit_details['unit_name']}_{self.unit_details['type']}"
+        unit_overview = f"_{self.unit_details['unit_id']}_{self.unit_details['unit_name']}_{self.unit_details['type']}_{self.location}"
         s = socket.socket()
         s.connect((self.HUB_ADDRESS, self.STATUS_PORT))
         activation_msg = "<UNIT_ACTIVATED>" + unit_overview.replace("_", self.SEPARATOR)
@@ -121,7 +122,9 @@ class Unit():
         s.connect((self.HUB_ADDRESS, self.STATUS_PORT))
         print(f"{self.label} Connected to hub at {self.HUB_ADDRESS}")
         
-        message = f"<STATREP>{self.SEPARATOR}{self.unit_details['unit_name'].upper()}{self.SEPARATOR}{self.status}"
+        # self.location = self.get_location()
+        
+        message = f"<STATREP>{self.SEPARATOR}{self.unit_details['unit_name'].upper()}{self.SEPARATOR}{self.status}{self.SEPARATOR}{self.location}"
         
         s.send(message.encode())
         

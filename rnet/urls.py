@@ -19,6 +19,7 @@ from django.urls import include, path
 from users import views as user_views
 from units import views as unit_views
 from hub_con.models import Control_Hub
+from hub_con import dbcontrol
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -40,4 +41,10 @@ urlpatterns = [
 
 
 # ==========Initialise model/s==========
-hub = Control_Hub.objects.all().delete()
+try:
+    hub = Control_Hub.objects.all().delete()
+    dbcontrol.connect()
+    print("Refreshed DB")
+except:
+    print("Fresh DB")
+    dbcontrol.connect()
