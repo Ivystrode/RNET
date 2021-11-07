@@ -92,15 +92,23 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 def stream_video():
+    print("STREAMING1")
     sender = imagezmq.ImageSender(connect_to=f"tcp://{unit_details['hub_address']}:{unit_details['video_port']}")
+
+    print("STREAMING2")
     rpiName = unit_details['unit_name']
+    print("STREAMING3")
     vs = VideoStream(usePiCamera=True).start()
+    print("STREAMING4")
     # vs = VideoStream(usePiCamera=True, resolution=(320,240)).start() # use if res is too high with above
     time.sleep(2)
+    print("STREAMING5")
 
     while True:
+        print("STREAMING6")
         frame = vs.read()
         sender.send_image(rpiName, frame)
+        print("STREAMING7")
         
 def stop_stream():
     pass

@@ -6,6 +6,7 @@ from control import servo_con, cpu_con, cam_con, wifi_con, rad_con
 label = "[" + socket.gethostname().upper() + "]"
 
 def command_router(command, hub_addr):
+    print("command router")
     
     if command[0] == "<SERVO_MOVE>":
         servo_command(command)
@@ -23,6 +24,7 @@ def command_router(command, hub_addr):
         wifi_con.wifi_control(command, hub_addr)
         
     elif command[0] == "<VIDEO>":
+        print("VIDEO COMD")
         cam_con.stream_video()
             
 def servo_command(command):

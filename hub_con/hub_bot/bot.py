@@ -274,12 +274,12 @@ def wifi_comd(update, context):
 
 def stream_comd(update, context):
     name = context.args[0]
-    command = context.args[1]
-    if context.args[2]:
-        stream_time = context.args[2]
-    else:
-        stream_time = "continuous"
+    # if context.args[1]:
+    #     stream_time = context.args[1]
+    # else:
+    stream_time = "continuous"
     unit_address = dbcontrol.get_unit_address(name)
+    command="stream"
     
     try:
         commands.vid_comd(unit_address, command_channel, command, stream_time)
