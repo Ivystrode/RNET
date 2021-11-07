@@ -10,8 +10,6 @@ import os
 import time
 from unit_id import unit_details
 
-from unit_con import vid_stream
-
 from tqdm import tqdm
 
 label = "[" + socket.gethostname().upper() + "]"
