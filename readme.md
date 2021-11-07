@@ -1,41 +1,39 @@
 LMT-Desktop: Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
 
-LMT-Desktop-2: use project_env dir for virtual env
+LMT-Desktop-2: use project_env dir for virtual env (same alias as LMT DT 1)
 
 Make sure all PCs have git config set to match github account email address, otherwise commits will appear to come from some random user (FFS!)
 
-- The UNIT directory is what will be installed on each static/rover unit. This will contain control code for the individual unit (inc for motion if a rover), communication code for talking to the hub, and a unique unit_id file
+- The UNIT directory is what will be running on each static/rover unit. This will contain control code for the individual unit (inc for motion if a rover), communication code for talking to the hub, etc
 
-- The HUB directory is what will run on the server. This will contain a web interface and a telegram bot to control and check the status of all units.
+- The other files will run on the server. This is the web interface, control hub and a telegram bot to help control and check the status of all units. Bot will get grumpy.
 
 - Status channel = 7501
 - Command channel = 7502
 
-CURRENT STATE
-- Connect over VPN (via 4G) or local network (if testing in rural Devon with no 4G!!)
-- File/photo sending, wifi scanning, servo moving all functioning
-- Telegram bot functioning and can receive files to my phone
-- Hub tracks units in a db file
+
 
 TODO
-- Django interface/app
 - Run object recognition model/recognition alerts
 - RF silent mode
-- Units/authorised users will have to be translated to "the django way" ie django models...? Dammit django
 - Mavlink testing
 
 How to use:
+IMPORTANT - You will need to create your own telegram bot and use its key. For obvious reason I'm not letting anyone else have my bot key! Same goes for the django settings key. Store them as environment variables or however you want.
+
 1. Set up a new wireguard VPN on host machine - if you don't know how to do this then...google it
 2. Clone repository
-3. run "pip3 install -r requirements.txt" from the cloned directory
-4. run "python3 hub_con/hub_main.py" from the top level of the cloned directory
-5. open telegram, send "/start" to RNET Bot to add yourself to the table of authorised users
+3. Install from requirements.txt into a virtual env
+4. Create a superuser ("python manage.py createsuperuser)
+5. Run server ("django manage.py runserver"), go to /admin and set your account status to authorised (custom user attribute that allows you to use the interface)
+5. Add yourself to the authorised users of the telegram bot by sending "/start" to the bot. You will see an "activate hub" button...press that and the hub will start, the telegram bot will run
+
 
 6. Install RNET OS image on SD card
 7. Insert SD card into raspberry pi (preferable 4B+)
 8. Switch on RPi - VPN will attempt to connect automatically (should see a blue or green light on the 4G stick)
 9. It probably won't work - see #1 - you will need to change the .conf file and add the server endpoint and public key
-10. If red light on 4G stick try to find somewhere with better cellular reception
+10. If red light on 4G stick try to find somewhere with better cellular reception. Or connect to ethernet to simulate it if that's not possible - it will not work well on wifi as it has to disconnect the second wifi antenna to use the other one in monitor mode.
 11. Depending on whether I get this done in time, it should start the unit_main script right away (via crontab)
     - If not, either ssh into it or do via monitor & keyboard, and start the script
     - I need to create an up-to-date OS image but I probably won't until I have created a fresh install with raspian-lite (desktop version is bigger than necessary)
@@ -67,5 +65,3 @@ wifi monitor mode not activating:
 The boot scripts softblock the wlan when you haven't entered your country in
 
 raspi-config -> localisation options -> Change WLAN Country
-
-I would REALLY like to know what file this changes, as I wasted a lot of time trying to bring up a raspberry pi that was supposed to be doing wlan. I imaged the SD card, edited /boot/ssh and /etc/wpa_supplicant/wpa_supplicant.conf expecting the pi to boot and join my network....

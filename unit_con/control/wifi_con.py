@@ -79,7 +79,7 @@ def send_report(hub_addr, file):
     print(f"{label} Connecting to hub...")
     s.connect((hub_addr, file_channel))
     filesize = os.path.getsize(file)
-    file_description = f"wifi_scan_report"
+    file_description = f"Wifi scan"
     file_type = "file"
 
     print(f"{label} Sending scan report: {file}")
