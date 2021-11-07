@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Unit
 
 @login_required()
-def other_profile(request, name):
-    unit = Unit.objects.get(name=name)
+def unit_profile(request, unitname):
+    unit = Unit.objects.get(name=unitname)
     context = {
         'unit':unit
     }

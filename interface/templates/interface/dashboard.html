@@ -18,10 +18,11 @@
                 {% for unit in units %}
                 <div class="column">                    
                     <div class="unit_item_container">
-                        <h3 onclick="goToUnit('{{unit.name}}')">{{unit.name}}</h3>
-                        <div class="unit_image" onclick="goToUnit('{{unit.name}}')">
+                        <!-- <h3 onclick="goToUnit('{{unit.name}}')">{{unit.name}}</h3> -->
+                        <h3><a class="unit_name_link" href="/units/{{unit.name}}">{{unit.name}}</a></h3>
+                        <div class="unit_image">
                             {% if unit.coverpic %}
-                            <img class="ui rounded image" src="{{unit.coverpic.thumbnail.url}}">
+                            <img href="/units/{{unit.name}}" class="ui rounded image" src="{{unit.coverpic.thumbnail.url}}">
                             {% else %}
                                 <img class="ui rounded image" src="https://www.silicon.co.uk/wp-content/uploads/2014/08/Spy-c-Kar-Shutterstock-2014.jpg">
                             {% endif %}
