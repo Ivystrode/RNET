@@ -30,6 +30,7 @@ def receive_video():
             
             if img is None:
                 img = pl.imshow(image)
+                pass
             else:
                 img.set_data(image)
 

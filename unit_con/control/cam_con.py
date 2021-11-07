@@ -1,7 +1,7 @@
 import io
 import socket
 import struct
-import sys
+from flask import Flask,render_template,Response
 import cv2
 
 from picamera import PiCamera
@@ -92,6 +92,36 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 def stream_video():
+
+    app=Flask(__name__)
+    camera=PiCamera()
+
+    def generate_frames():
+        while True:
+                
+            ## read the camera frame
+            success,frame=camera.read()
+            if not success:
+                break
+            else:
+                ret,buffer=cv2.imencode('.jpg',frame)
+                frame=buffer.tobytes()
+
+            yield(b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+
+    @app.route('/video')
+    def video():
+        return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
+
+    app.run(debug=True)
+
+def stream_video_worksButNotToBrowser():
     client_socket = socket.socket()
 
     client_socket.connect(('192.168.1.79', 8081))  # ADD IP HERE
