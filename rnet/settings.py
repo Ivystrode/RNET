@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'interface',
+    'hub_con',
     'users',
+    'units',
 ]
 
 MIDDLEWARE = [
@@ -133,7 +135,7 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 
 # FORMS
 CRISPY_TEMPLATE_PACK = 'bootstrap4' # when I set this to semanticui it breaks some of the forms

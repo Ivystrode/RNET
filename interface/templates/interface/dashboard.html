@@ -18,8 +18,8 @@
                 {% for unit in units %}
                 <div class="column">                    
                     <div class="unit_item_container">
-                        <h3 onclick="goTounit('{{unit.slug}}')">{{unit.name}}</h3>
-                        <div class="unit_image" onclick="goTounit('{{unit.slug}}')">
+                        <h3 onclick="goToUnit('{{unit.name}}')">{{unit.name}}</h3>
+                        <div class="unit_image" onclick="goToUnit('{{unit.name}}')">
                             {% if unit.coverpic %}
                             <img class="ui rounded image" src="{{unit.coverpic.thumbnail.url}}">
                             {% else %}
@@ -59,4 +59,4 @@
     
 
 {% endblock %}
-{% block script %}<script src="{% static 'scripts/js/units.js' %}"></script>{% endblock %}
+{% block script %}<script src="{% static 'scripts/js/dashboard.js' %}"></script>{% endblock %}

@@ -3,7 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, ProfileForm, UserUpdateForm, ProfileUpdateForm
-from interface.models import Unit, AuthorisedUser
+from interface.models import AuthorisedUser
+from units.models import Unit
 
 import requests, json
 from ua_parser import user_agent_parser
@@ -199,6 +200,7 @@ def register(request):
 
 @login_required()
 def profile(request, username):
+    print("user profile")
     if request.user.profile.approved:
         try:
             user = User.objects.get(username=username)
@@ -247,22 +249,10 @@ def profile(request, username):
                 'u_form':u_form,
                 'p_form':p_form,
                 'user':request.user,
-                'ideas':ideas,
-                'albums':albums,
-                'photos':photos,
-                'ideacomments':ideacomments,
-                'albumcomments':albumcomments,
-                'noticecomments':noticecomments
             }
         else:
             context = {
                 'user':user,
-                'ideas':ideas,
-                'albums':albums,
-                'photos':photos,
-                'ideacomments':ideacomments,
-                'albumcomments':albumcomments,
-                'noticecomments':noticecomments
             }
         print("logged in user:")
         print(request.user.username)

@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.core.mail import send_mail
 
 
-from .models import Unit, AuthorisedUser
+from .models import AuthorisedUser
+from units.models import Unit
 # from .forms import NoticeCreationForm, NoticeCommentForm, DeleteNoticeForm, EditNoticeForm, CustomEmailForm
 
 
@@ -27,10 +28,13 @@ def home(request):
 
 @login_required()
 def dashboard(request):
-    # if request.user.profile.approved:
-    units = Unit.objects.all()
-    context = {'units':units}
-    return render(request, "interface/dashboard.html", context)
+    if request.user.profile.approved:
+        units = Unit.objects.all()
+        context = {'units':units}
+        return render(request, "interface/dashboard.html", context)
+    else:
+        messages.success(request, f'Your account is not authorised yet. Please contact an administrator.')
+        return redirect(f'/')
     # else:
     #     messages.success(request, f'You cannot access this page until your account has been approved.')
     #     return redirect('/')

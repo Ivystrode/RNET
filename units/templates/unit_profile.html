@@ -1,0 +1,91 @@
+{% extends 'interface/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+<head>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block title %}RNET{% endblock %}
+{% block page_title %}{{unit.name}}{% endblock %}
+{% block subtitle %}{{unit.type}}{% endblock %}
+</head>
+{% block content %}     
+
+    <body>
+        <div class="page-body">
+
+            <div class = "ui stackable two column grid">
+
+                <div class="column profile-info">
+
+
+                        <h3>Profile Information</h3>
+
+                        <div class="profilepic">
+                            <p><strong>{{unit.name}} - {{unit.status}}</strong></p>
+                            <img class="ui small circular image" src="{{ user.profile.image.url }}">
+                            <p></p>
+                        </div>
+
+                        <hr>
+
+
+
+                        <div class="user-media">
+
+                            <h3>Media</h3>
+
+
+                            {% if photos %}
+
+                            <h4>Pictures</h4>
+
+                            <div class="ui stackable three column grid container">
+
+                                {% for photo in photos %}
+
+                                <div class="pic-column column">
+
+                                    <div class="user-photo profile-link" onclick="goToMedia('/albums/{{photo.album.slug}}/', '{{photo.id}}')"">
+                                        <img id="userpic" class="ui small rounded image" src="{{photo.photo.thumbnail.url}}">
+                                        <span><strong>{{photo.album.title}}</strong> - {{photo.caption}}</span>
+                                    </div>
+
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+
+                            {% else %}
+
+                            <p>Unit has not uploaded any media</p>
+
+                            {% endif %}
+
+
+                        </div>
+
+                </div>
+
+                <div class="column activity-info">
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+        </div>
+        
+    </body>
+    
+
+{% endblock %}
+{% block script %}<script src="{% static 'scripts/js/profile.js' %}"></script>{% endblock %}
