@@ -22,7 +22,7 @@ def gen():
 def video_feed(): 
    """Video streaming route. Put this in the src attribute of an img tag.""" 
    print("feed")
-   return Response(gen(), 
+   return Response(gen(vc), 
                    mimetype='multipart/x-mixed-replace; boundary=frame') 
 
 def run():
