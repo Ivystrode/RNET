@@ -119,7 +119,7 @@ def stream_video():
     def video():
         return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True, threaded=True)
 
 def stream_video_worksButNotToBrowser():
     client_socket = socket.socket()
