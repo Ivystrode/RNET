@@ -1,4 +1,4 @@
-import pickle
+import io
 import socket
 import struct
 import sys
@@ -92,32 +92,45 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 def stream_video():
-# create socket
-    client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    host_ip = '192.168.1.79' # paste your server ip address here
-    port = 8081
-    client_socket.connect((host_ip,port)) # a tuple
-    data = b""
-    payload_size = struct.calcsize("Q")
-    while True:
-        while len(data) < payload_size:
-            packet = client_socket.recv(4*1024) # 4K
-            if not packet: break
-            data+=packet
-        packed_msg_size = data[:payload_size]
-        data = data[payload_size:]
-        msg_size = struct.unpack("Q",packed_msg_size)[0]
-        
-        while len(data) < msg_size:
-            data += client_socket.recv(4*1024)
-        frame_data = data[:msg_size]
-        data  = data[msg_size:]
-        frame = pickle.loads(frame_data)
-        cv2.imshow("RECEIVING VIDEO",frame)
-        key = cv2.waitKey(1) & 0xFF
-        if key  == ord('q'):
-            break
-    client_socket.close()
+    client_socket = socket.socket()
+
+    client_socket.connect(('192.168.1.79', 8081))  # ADD IP HERE
+
+    # Make a file-like object out of the connection
+    connection = client_socket.makefile('wb')
+    try:
+        camera = PiCamera()
+        camera.vflip = True
+        camera.resolution = (500, 480)
+        # Start a preview and let the camera warm up for 2 seconds
+        camera.start_preview()
+        time.sleep(2)
+
+        # Note the start time and construct a stream to hold image data
+        # temporarily (we could write it directly to connection but in this
+        # case we want to find out the size of each capture first to keep
+        # our protocol simple)
+        start = time.time()
+        stream = io.BytesIO()
+        for foo in camera.capture_continuous(stream, 'jpeg'):
+            # Write the length of the capture to the stream and flush to
+            # ensure it actually gets sent
+            connection.write(struct.pack('<L', stream.tell()))
+            connection.flush()
+            # Rewind the stream and send the image data over the wire
+            stream.seek(0)
+            connection.write(stream.read())
+            # If we've been capturing for more than 30 seconds, quit
+            if time.time() - start > 60:
+                break
+            # Reset the stream for the next capture
+            stream.seek(0)
+            stream.truncate()
+        # Write a length of zero to the stream to signal we're done
+        connection.write(struct.pack('<L', 0))
+    finally:
+        connection.close()
+        client_socket.close()
 def stop_stream():
     pass
 
