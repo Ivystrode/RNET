@@ -27,4 +27,4 @@ def video_feed():
 
 def run():
     print("whoo")
-    app.run(host='192.168.1.222', port=8081, debug=True, threaded=True)
+    app.run(host='0.0.0.0', port=5555, debug=True, threaded=True)
