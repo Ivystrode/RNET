@@ -4,14 +4,15 @@ This is where they can access commands to send to the unit/s
 This could be refactored to be significantly less DRY but I'll waste my time with that kind of stuff later
 """
 
-import socket
+import socket, threading
+from hub_con import video_receiver
 
 # import dbcontrol
 from hub_con import dbcontrol
 
 SEPARATOR = "<SEPARATOR>"
 command_channel = 7502
-
+video_receive_thread = threading.Thread(target=video_receiver.receive_video)
 
 
 def get_unit_status(name, addr):
@@ -78,8 +79,13 @@ def vid_comd(unit_addr, command_channel, command, time):
     """Tell unit to begin streaming video, detecting motion, or detecting specific objects"""
     
     print("[HUB - COMMANDS] Video command")
+    video_receive_thread.start()
+    # time.sleep(1)
+    print("what")
     s = socket.socket()
+    print("ok")
     s.connect((unit_addr, command_channel))
+    print("go on thens")
     s.send(f"<VIDEO>{SEPARATOR}{command}{SEPARATOR}{time}".encode())
     print(f"[HUB - COMMANDS] Video {command} command sent to {unit_addr}")
     s.close()

@@ -1,22 +1,20 @@
-import socket
-import sys
-import cv2
 import pickle
-import numpy as np
-import struct ## new
+import socket
+import struct
+from PIL import Image
+import cv2
+import numpy
+import sys
 
-def video_receiver():
+def receive_video():
 
     HOST=''
-    PORT=8089
+    PORT=8081
 
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    print 'Socket created'
 
     s.bind((HOST,PORT))
-    print 'Socket bind complete'
     s.listen(10)
-    print 'Socket now listening'
 
     conn,addr=s.accept()
 
@@ -36,5 +34,4 @@ def video_receiver():
         ###
 
         frame=pickle.loads(frame_data)
-        print frame
         cv2.imshow('frame',frame)

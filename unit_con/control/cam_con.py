@@ -1,4 +1,4 @@
-import io
+import pickle
 import socket
 import struct
 import sys
@@ -92,33 +92,13 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 def stream_video():
-    print("streaming1")
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((unit_details['hub_address'], 8081)))
-    print("streaming2")
-    connection = client_socket.makefile('wb')
-    print("streaming3")
-    try:
-        with PiCamera as camera:
-            camera.resolution = (640, 480)
-            print("streaming4")
-        print("starting Camera...........")
-        time.sleep(2)
-        stream = io.BytesIO()        
-        print("streaming5")
-        for foo in camera.capture_continuous(stream, 'jpeg'):
-            connection.write(struct.pack('<L', stream.tell()))
-            connection.flush()
-            stream.seek(0)
-            connection.write(stream.read())
-            stream.seek(0)
-            stream.truncate()
-    except Exception as e:
-        print(f"ARRR {e}")
-    finally:
-        connection.close()
-        client_socket.close()
-        
+    cap=cv2.VideoCapture(0)
+    clientsocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    clientsocket.connect((unit_details['hub_address'],unit_details['video_port']))
+    while True:
+        ret,frame=cap.read()
+        data = pickle.dumps(frame) ### new code
+        clientsocket.sendall(struct.pack("H", len(data))+data) ### new code
 def stop_stream():
     pass
 
