@@ -2,8 +2,6 @@
 from flask import Flask, render_template, Response 
 import picamera 
 import cv2
-import socket 
-import io 
 
 app = Flask(__name__) 
 vc = picamera.PiCamera()
@@ -28,4 +26,5 @@ def video_feed():
                    mimetype='multipart/x-mixed-replace; boundary=frame') 
 
 def run():
-    app.run(host='0.0.0.0', port=8081, debug=True, threaded=True)
+    print("whoo")
+    app.run(host='192.168.1.222', port=8081, debug=True, threaded=True)
