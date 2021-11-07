@@ -23,3 +23,4 @@ def record_activity(unitname, detail):
     sending_unit = Unit.objects.get(name=unitname)
     new_activity_record = UnitActivity(unit=sending_unit, detail=detail)
     new_activity_record.save()
+    print("[HUB] Unit activity record added")

@@ -102,6 +102,7 @@ class Hub():
                     
                 elif cleaned_received[0] == "<UNIT_ACTIVATED>":
                     print(f"[HUB] Message received: {cleaned_received}")
+                    record_activity(cleaned_received[2].lower(), "Unit activated")
                     try:
                         print("try to add new unit...")
                         dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Activated", str(datetime.now().strftime("%Y%m%d%H%M")), cleaned_received[4])
@@ -143,6 +144,7 @@ class Hub():
                     if unit[1] in self.lost_connection_units.keys(): # if it has since made a statrep, report connection regained
                         self.lost_connection_units.pop(unit[1])
                         print(f"[HUB] Connection recovered to {unit[1]}")
+                        record_activity(unit[1], "Connection recovered")
                     
             # print(f"[HUB] Active units: {self.active_units}")
             
@@ -210,7 +212,6 @@ class Hub():
 
                         print("[HUB] Saving file...")
                         save_file(unit_name, filename, file_description, file_type)
-                        print("[HUB] Recording unit activity...")
                         record_activity(unit_name, file_description)
                         print("[HUB] Saved")
                         
