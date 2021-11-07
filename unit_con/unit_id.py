@@ -10,5 +10,5 @@ unit_details = {
     "type": "prototype",
     "description": "Test unit for development",
     "hub_address": "192.168.1.79",
-    "video_port": "8081"
+    "video_port": 8081
 }
