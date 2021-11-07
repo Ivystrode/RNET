@@ -111,7 +111,7 @@ def video_feed():
                    mimetype='multipart/x-mixed-replace; boundary=frame') 
 
 def stream_video():
-	app.run(host='0.0.0.0', debug=True, threaded=True) 
+	app.run(host='192.168.1.222', debug=True, threaded=True) 
 
 # def stream_video():
     
