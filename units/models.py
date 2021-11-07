@@ -74,6 +74,32 @@ class UnitPhoto(models.Model):
     def __str__(self):
         return str(self.id) + ": " + str(self.caption)
     
+class UnitFile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to=unit_folder)
+    caption = models.CharField(max_length=100)
+    time = models.DateTimeField(default=timezone.localtime(timezone.now()))
+
+    class Meta:
+        ordering = ['-time']
+
+    def __str__(self):
+        return str(self.file) + ": " + str(self.caption)
+    
+class UnitActivity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='files')
+    detail = models.TextField(default="Unknown activity recorded")
+    time = models.DateTimeField(default=timezone.localtime(timezone.now()))
+    
+    class Meta:
+        ordering = ['-time']
+
+    def __str__(self):
+        return str(self.detail) + ": " + str(self.time)
+    
+    
 class UnitObjectDetection(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='object_detections')
@@ -91,7 +117,13 @@ class UnitObjectDetection(models.Model):
 
 class UnitPhotoInline(admin.TabularInline):
     model = UnitPhoto
+class UnitFileInline(admin.TabularInline):
+    model = UnitFile
+class UnitActivityInline(admin.TabularInline):
+    model = UnitActivity
+class UnitObjectDetectionInline(admin.TabularInline):
+    model = UnitObjectDetection
 class UnitAdmin(admin.ModelAdmin):
     search_fields = ['name', 'type']
     list_display = ['name', 'type']
-    inlines = [UnitPhotoInline]
+    inlines = [UnitActivityInline, UnitFileInline, UnitPhotoInline, UnitObjectDetectionInline]

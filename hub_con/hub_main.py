@@ -17,7 +17,7 @@ sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/") 
 
 from units.models import UnitPhoto
 from .models import Control_Hub
-from .views import save_photo
+from .views import save_file
 
 from hub_con import commands
 from hub_con import dbcontrol
@@ -104,7 +104,7 @@ class Hub():
                     print(f"[HUB] Message received: {cleaned_received}")
                     try:
                         print("try to add new unit...")
-                        dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Activated", str(datetime.now().strftime("%Y%m%d%H%M")))
+                        dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Activated", str(datetime.now().strftime("%Y%m%d%H%M")), cleaned_received[4])
                         print(f"[HUB] {cleaned_received[2]} added to database")
                     except Exception as e:
                         print(f"{e} --- ok try to update the unit now...")
@@ -176,7 +176,7 @@ class Hub():
                     # filedata = received.split(self.SEPARATOR)
                     # file = filedata[1]
                     # filesize = int(filedata[2])
-                    file, filesize, file_description = received.split(self.SEPARATOR)
+                    file, filesize, file_description, file_type = received.split(self.SEPARATOR)
                     filesize = int(filesize)
                     filename = ntpath.basename(file)
                     
@@ -207,8 +207,11 @@ class Hub():
                         
                         # save as unitphoto object to link to unit in django
                         # new_unit_photo = UnitPhoto.objects.create(caption=file_description, photo=filename)
-                        save_photo(unit_name, filename, file_description)
-                        print("Saved...?")
+
+                        print("[HUB] Saving file...")
+                        save_file(unit_name, filename, file_description, file_type)
+
+                        print("[HUB] Saved")
                         
                     except Exception as e:
                         print(f"[HUB] Unable to send file: {e}")

@@ -90,9 +90,10 @@ def send_photo(hub_addr, file, file_description):
     print(f"{label} Connecting to hub...")
     s.connect((hub_addr, file_channel))
     filesize = os.path.getsize(file)
+    file_type = "photo"
 
     print(f"{label} Sending file: {file}")
-    s.send(f"{file}{SEPARATOR}{filesize}{SEPARATOR}{file_description}".encode())
+    s.send(f"{file}{SEPARATOR}{filesize}{SEPARATOR}{file_description}{SEPARATOR}{file_type}".encode())
     try:
         progress = tqdm(range(filesize), f"{label} Sending {file}", unit="B", unit_scale=True, unit_divisor=1024)
         with open(file, "rb") as f:

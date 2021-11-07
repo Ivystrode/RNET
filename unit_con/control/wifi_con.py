@@ -80,9 +80,10 @@ def send_report(hub_addr, file):
     s.connect((hub_addr, file_channel))
     filesize = os.path.getsize(file)
     file_description = f"wifi_scan_report {file}"
+    file_type = "file"
 
     print(f"{label} Sending scan report: {file}")
-    s.send(f"{file}{SEPARATOR}{filesize}{SEPARATOR}{file_description}".encode())
+    s.send(f"{file}{SEPARATOR}{filesize}{SEPARATOR}{file_description}{SEPARATOR}{file_type}".encode())
     try:
         progress = tqdm(range(filesize), f"{label} Sending {file}", unit="B", unit_scale=True, unit_divisor=1024)
         with open(file, "rb") as f:
