@@ -21,6 +21,9 @@ def command_router(command, hub_addr):
             
     elif command[0] == "<WIFI>":
         wifi_con.wifi_control(command, hub_addr)
+        
+    elif command[0] == "<VIDEO>":
+        cam_con.stream_video()
             
 def servo_command(command):
     
