@@ -115,7 +115,8 @@ def video_feed():
 
 def stream_video():
     print("run")
-	app.run(host='192.168.1.222', port=8081, debug=True, threaded=True) 
+    app.run(host='192.168.1.222', port=8081, debug=True, threaded=True)
+
 
 # def stream_video():
     
