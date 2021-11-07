@@ -11,7 +11,7 @@ vc = picamera.PiCamera()
 def index(): 
    """Video streaming .""" 
    print("index")
-   return render_template('index.html') 
+   return render_template("<p>{{ url_for('video_feed') }}<p>") 
 def gen(): 
    """Video streaming generator function.""" 
    print("gen")
