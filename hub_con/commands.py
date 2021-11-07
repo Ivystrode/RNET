@@ -1,6 +1,7 @@
 """
 hub_main and bot will both link here
 This is where they can access commands to send to the unit/s
+This could be refactored to be significantly less DRY but I'll waste my time with that kind of stuff later
 """
 
 import socket
@@ -10,6 +11,8 @@ from hub_con import dbcontrol
 
 SEPARATOR = "<SEPARATOR>"
 command_channel = 7502
+
+
 
 def get_unit_status(name, addr):
     print(f"[HUB - COMMANDS] Check status of {name} ({addr})")
@@ -69,4 +72,14 @@ def wifi_comd(unit_addr, command_channel, command, time):
     s.connect((unit_addr, command_channel))
     s.send(f"<WIFI>{SEPARATOR}{command}{SEPARATOR}{time}".encode())
     print(f"[HUB - COMMANDS] Wifi {command} command sent to {unit_addr}")
+    s.close()
+    
+def vid_comd(unit_addr, command_channel, command, time):
+    """Tell unit to begin streaming video, detecting motion, or detecting specific objects"""
+    
+    print("[HUB - COMMANDS] Video command")
+    s = socket.socket()
+    s.connect((unit_addr, command_channel))
+    s.send(f"<VIDEO>{SEPARATOR}{command}{SEPARATOR}{time}".encode())
+    print(f"[HUB - COMMANDS] Video {command} command sent to {unit_addr}")
     s.close()

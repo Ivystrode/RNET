@@ -6,7 +6,9 @@ Django==3.2.3
 django-crispy-forms==1.13.0
 django-stdimage==5.3.0
 idna==3.3
+imutils==0.5.4
 numpy==1.20.3
+opencv-python==4.5.4.58
 Pillow==8.4.0
 PyQt5==5.15.4
 PyQt5-Qt5==5.15.2

@@ -1,3 +1,6 @@
+import numpy as np
+import imagezmq
+from imutils.video import VideoStream
 import cv2
 
 from picamera import PiCamera
@@ -5,6 +8,7 @@ from datetime import datetime
 import os
 import socket
 import time
+from unit_id import unit_details
 
 from tqdm import tqdm
 
@@ -37,7 +41,7 @@ model.setInputSwapRB(True)
 font_scale = 2
 font = cv2.FONT_HERSHEY_PLAIN
 
-# ==========end==========
+# ==========Basic image capture & send to hub==========
 
 # Take a picture
 def capt_img(hub_addr):
@@ -55,35 +59,6 @@ def capt_img(hub_addr):
     print(f"{label} Image saved as {img_name}")
     send_photo(hub_addr, img_name, f"Camera shot")
     
-def im_recog():
-    while True:
-        ret, frame = stream.read()
-
-        ClassIndex, confidence, bbox = model.detect(frame, confThreshold=0.55)
-
-        if len(ClassIndex) != 0:
-            for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
-                if ClassInd <= 80:
-                    if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
-                        cv2.rectangle(frame, boxes, (0,255,0), 2)
-                        
-                        # cv2.rectangle(frame,(boxes[0]-1, boxes[1]-30),(boxes[2]+boxes[0], boxes[1]),(0,255,0), -1)
-                        cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
-                        
-                        print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
-                    
-        cv2.imshow("Video detection", frame)
-
-        if cv2.waitKey(5) & 0xFF == ord("c"):
-            break
-
-    stream.release()
-    cv2.destroyAllWindows()
-
-
-
-
-
 # Send a file to the hub
 def send_photo(hub_addr, file, file_description):
     s = socket.socket()
@@ -113,4 +88,104 @@ def send_photo(hub_addr, file, file_description):
         print(f"{label} FILE SEND ERROR - outside - {e}")
     print(f"{label} {file} sent to hub")
     s.close()
+    
+
+# ==========Live video streaming==========
+def stream_video():
+    sender = imagezmq.ImageSender(connect_to=f"tcp://{unit_details['hub_address']}:{unit_details['video_port']}")
+    rpiName = unit_details['unit_name']
+    vs = VideoStream(usePiCamera=True).start()
+    # vs = VideoStream(usePiCamera=True, resolution=(320,240)).start() # use if res is too high with above
+    time.sleep(2)
+
+    while True:
+        frame = vs.read()
+        sender.send_image(rpiName, frame)
+        
+def stop_stream():
+    pass
+
+
+
+# ==========Motion detection==========
+class SingleMotionDetector:
+    def __init__(self, accumWeight=0.5):
+        self.accumWeight = accumWeight # the bigger t his is the less the bg will be factored in; the lower it is the MORE the bg will be factored in
+        # at 0.5 it weighs back and foreground evenly, play with it to adjust if necessary
+        
+    def update(self, image):
+        # take an input frame and compute weighted average
+        if self.bg is None:
+            self.bg = image.copy().astype("float")
+            return
+        
+        # update bg model by accuming the weighted av
+        cv2.accumulateWeighted(image, self.bg, self.accumWeight)
+        
+    def detect(self, image, tVal=25):
+        """
+        compute the absolute diff between bg and image
+        """
+        # tVal/threshold value to mark a pixel as moved/moving
+        delta = cv2.absdiff(self.bg.astype("uint8"), image)
+        thresh = cv2.threshold(delta, tVal, 255, cv2.THRESH_BINARY)[1]
+        
+        # erode/deliate to remove tiny blobs
+        thresh = cv2.erode(thresh, None, iterations=2)
+        thresh = cv2.dilate(thresh, None, iterations=2)
+        
+        # contours to extract motion regions
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        (minX, minY) = (np.inf, np.inf)
+        (maxX, maxY) = (-np.inf, -np.inf)
+        
+        # if no contours found - no motion was detected
+        if len(cnts) == 0:
+            return None
+        
+        # otherwise loop over them and get the coordinates the motion took palce at
+        for c in cnts:
+            # get the boundary box
+            (x,y,w,h) = cv2.boundingRect(c)
+            (minX, minY) = (min(minX, x), min(minY, y))
+            (maxX, maxY) = (max(maxX, x), max(maxY, y))
+            
+        # return thresholded image & bounding box
+        return (thresh, (minX, minY, maxX, maxY))
+
+
+
+
+# ==========Object recognition==========
+def im_recog():
+    while True:
+        ret, frame = stream.read()
+
+        ClassIndex, confidence, bbox = model.detect(frame, confThreshold=0.55)
+
+        if len(ClassIndex) != 0:
+            for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
+                if ClassInd <= 80:
+                    if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
+                        cv2.rectangle(frame, boxes, (0,255,0), 2)
+                        
+                        # cv2.rectangle(frame,(boxes[0]-1, boxes[1]-30),(boxes[2]+boxes[0], boxes[1]),(0,255,0), -1)
+                        cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
+                        
+                        print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
+                    
+        cv2.imshow("Video detection", frame)
+
+        if cv2.waitKey(5) & 0xFF == ord("c"):
+            break
+
+    stream.release()
+    cv2.destroyAllWindows()
+
+
+
+
+
+
 
