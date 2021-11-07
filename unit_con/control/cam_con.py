@@ -1,12 +1,12 @@
-import numpy as np
-import imagezmq
-from imutils.video import VideoStream
+import io
+import socket
+import struct
+import sys
 import cv2
 
 from picamera import PiCamera
 from datetime import datetime
 import os
-import socket
 import time
 from unit_id import unit_details
 
@@ -92,23 +92,32 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 def stream_video():
-    print("STREAMING1")
-    sender = imagezmq.ImageSender(connect_to=f"tcp://{unit_details['hub_address']}:{unit_details['video_port']}")
-
-    print("STREAMING2")
-    rpiName = unit_details['unit_name']
-    print("STREAMING3")
-    vs = VideoStream(usePiCamera=True).start()
-    print("STREAMING4")
-    # vs = VideoStream(usePiCamera=True, resolution=(320,240)).start() # use if res is too high with above
-    time.sleep(2)
-    print("STREAMING5")
-
-    while True:
-        print("STREAMING6")
-        frame = vs.read()
-        sender.send_image(rpiName, frame)
-        print("STREAMING7")
+    print("streaming1")
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((sys.argv[1], int(sys.argv[2])))
+    print("streaming2")
+    connection = client_socket.makefile('wb')
+    print("streaming3")
+    try:
+        with PiCamera as camera:
+            camera.resolution = (640, 480)
+            print("streaming4")
+        print("starting Camera...........")
+        time.sleep(2)
+        stream = io.BytesIO()        
+        print("streaming5")
+        for foo in camera.capture_continuous(stream, 'jpeg'):
+            connection.write(struct.pack('<L', stream.tell()))
+            connection.flush()
+            stream.seek(0)
+            connection.write(stream.read())
+            stream.seek(0)
+            stream.truncate()
+    except Exception as e:
+        print(f"ARRR {e}")
+    finally:
+        connection.close()
+        client_socket.close()
         
 def stop_stream():
     pass
