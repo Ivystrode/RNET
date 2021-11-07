@@ -6,11 +6,27 @@ import shutil
 import socket
 import threading
 import time
+import django
+from django.utils.translation import activate
 from tqdm import tqdm
+from decouple import config
 
-import commands
-import dbcontrol
-from hub_bot import bot
+import sys
+sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/") # stop module import error ffs
+# print(sys.path)
+
+from units.models import UnitPhoto
+from .models import Control_Hub
+
+from hub_con import commands
+from hub_con import dbcontrol
+from hub_con.hub_bot import bot
+
+# from django.db import models
+
+# import commands
+# import dbcontrol
+# from hub_bot import bot
 
 class Hub():
     
@@ -36,6 +52,7 @@ class Hub():
         # port to receive files on
         threading.Thread(target=self.file_receiver).start()
         # threading.Thread(target=self.command_channel).start()
+        print("[HUB] Hub activated")
         
         
     def status_channel(self):
@@ -179,6 +196,12 @@ class Hub():
                             os.mkdir(f"media/{unit_name}")
                         shutil.move(filename, f'media/{unit_name}/')
                         print(f"[HUB] {filename} moved to files directory")
+                        
+                        # save as unitphoto object to link to unit in django
+                        new_unit_photo = UnitPhoto.objects.create(caption=file_description, photo=filename)
+                        new_unit_photo.save()
+                        print("Saved...?")
+                        
                     except Exception as e:
                         print(f"[HUB] Unable to send file: {e}")
                             
@@ -195,5 +218,6 @@ class Hub():
     def unit_message(self, name, status):
         print("[HUB]  Message received:")
         print(f"[HUB]  {name.upper()} status: {status}")
-        
-main_hub = Hub("0.0.0.0")
+
+if __name__ == '__main__':
+    main_hub = Hub("0.0.0.0")

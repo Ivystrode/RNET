@@ -18,6 +18,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import include, path
 from users import views as user_views
 from units import views as unit_views
+from hub_con.models import Control_Hub
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -36,3 +37,7 @@ urlpatterns = [
     path('profile/', include('users.urls')), 
     path('units/', include('units.urls')), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# ==========Initialise model/s==========
+hub = Control_Hub.objects.all().delete()

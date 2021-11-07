@@ -5,7 +5,8 @@ This is where they can access commands to send to the unit/s
 
 import socket
 
-import dbcontrol
+# import dbcontrol
+from hub_con import dbcontrol
 
 SEPARATOR = "<SEPARATOR>"
 command_channel = 7502

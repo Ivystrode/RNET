@@ -17,8 +17,9 @@ import threading
 import time
 import socket
 
-import commands
-import dbcontrol
+# import commands
+# import dbcontrol
+from hub_con import commands, dbcontrol
 # from rnet.keys import keys
 from decouple import config
 

@@ -35,11 +35,11 @@ def unit_folder(instance, filename):
 # ==========MODELS==========
 
 class Unit(models.Model):
-    id = models.TextField(db_column='id', blank=True, primary_key=True)  # Field name made lowercase.
-    name = models.TextField(db_column='Name', blank=True, null=True)  # Field name made lowercase.
-    address = models.TextField(db_column='Address', blank=True, null=True)  # Field name made lowercase.
-    type = models.TextField(db_column='Type', blank=True, null=True)  # Field name made lowercase.
-    status = models.TextField(db_column='Status', blank=True, null=True)  # Field name made lowercase.
+    id = models.TextField(db_column='id', blank=True, primary_key=True)  
+    name = models.TextField(db_column='Name', blank=True, null=True)  
+    address = models.TextField(db_column='Address', blank=True, null=True) 
+    type = models.TextField(db_column='Type', blank=True, null=True)
+    status = models.TextField(db_column='Status', blank=True, null=True)
     last_statrep = models.TextField(blank=True, null=True)
     # slug = models.SlugField()
 
@@ -63,7 +63,6 @@ class UnitPhoto(models.Model):
     # can replace the thumb = models.imagefield above this block
 
     caption = models.CharField(max_length=100)
-    created_by = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit_photos')
     time = models.DateTimeField(default=timezone.localtime(timezone.now()))
 
     class Meta:
@@ -72,9 +71,28 @@ class UnitPhoto(models.Model):
     def __str__(self):
         return str(self.id) + ": " + str(self.caption)
     
+class UnitObjectDetection(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='object_detections')
+    time = models.DateTimeField(default=timezone.localtime(timezone.now()))
+    object_detected = models.CharField(default='Unknown', max_length=200, null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-time']
+
+    def __str__(self):
+        return str(self.id) + ": " + str(self.caption)
+    
+    
 # ==========MODEL ADMIN==========
 
+class UnitPhotoInline(admin.TabularInline):
+    model = UnitPhoto
 class UnitAdmin(admin.ModelAdmin):
     search_fields = ['name', 'type']
     list_display = ['name', 'type']
-    # inlines = [AlbumPhotoInline]
+    inlines = [UnitPhotoInline]
+
+# class UnitPhotoAdmin(admin.ModelAdmin):
+#     search_fields = ['album', 'caption', 'time', 'created_by']
+#     list_display = ['album', 'time', 'created_by']

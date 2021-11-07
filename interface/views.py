@@ -8,22 +8,42 @@ from django.core.mail import send_mail
 
 from .models import AuthorisedUser
 from units.models import Unit
+from hub_con import hub_main
+from hub_con.models import Control_Hub
 # from .forms import NoticeCreationForm, NoticeCommentForm, DeleteNoticeForm, EditNoticeForm, CustomEmailForm
 
 
 # @login_required()
 def home(request):
+    
+    
+    
+    if request.method == "POST":
+        # activate the unit control hub
+        # need to make this happen on a button press on the dashboard
+        main_hub = hub_main.Hub("0.0.0.0")
+        new_hub = Control_Hub(name="Hub", listen_address="0.0.0.0", activated=True)
+        new_hub.save()
+        messages.success(request, f'The unit control hub is now activated.')
+        return redirect("/")
+    
+    else:            
+        context = {
+                'user': request.user,
+                'units':Unit.objects.all(),
+                'users':AuthorisedUser.objects.all(),
+            }
+        try:
+            hub = Control_Hub.objects.get(name="Hub")
+            context['hub'] = hub
+        except:
+            print("NO HUB YET")
 
 
-    context = {
-        'user': request.user,
-        'units':Unit.objects.all(),
-        'users':AuthorisedUser.objects.all()
-    }
-    print(request.user)
+        # print(request.user)
 
 
-    return render(request, "interface/home.html", context)
+        return render(request, "interface/home.html", context)
 
 
 @login_required()

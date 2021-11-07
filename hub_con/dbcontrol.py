@@ -88,13 +88,9 @@ def delete(address):
     conn.close()
 
 def update_unit(address, status, last_statrep):
-    print("UPDATING UNIT1")
     conn=sqlite3.connect("hub_db.sqlite3", timeout=10)
-    print("UPDATING UNIT2")
     cur=conn.cursor()
-    print("UPDATING UNIT3")
     cur.execute(f"UPDATE units SET status=?, last_statrep=? WHERE address=?", (status, last_statrep, address)) 
-    print("UPDATING UNIT4")
     conn.commit()
     conn.close()
     
