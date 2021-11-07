@@ -13,6 +13,7 @@ from hub_con.hub_bot import bot
 from hub_con.models import Control_Hub
 # from .forms import NoticeCreationForm, NoticeCommentForm, DeleteNoticeForm, EditNoticeForm, CustomEmailForm
 
+import random
 
 # @login_required()
 def home(request):
@@ -29,10 +30,23 @@ def home(request):
         return redirect("/")
     
     else:         
+        # quick way to get all units I KNOW ABOUT LIST COMPREHENSION
+        all_units = Unit.objects.all()
+        num_active_units = 0
+        for u in all_units:
+            if u.status != "Disconnected":
+                num_active_units += 1                
+                
+        # until we associate a unit default profile pic to each one (not essential work)
+        unit_type = random.choice(["air", "ground"])
+                
+        print(f"ACTIVE UNITS: {num_active_units}")
         context = {
                 'user': request.user,
                 'units':Unit.objects.all(),
                 'users':AuthorisedUser.objects.all(),
+                'active_units':num_active_units,
+                'unit_type':unit_type,
             }
         try:
             hub = Control_Hub.objects.get(name="Hub")

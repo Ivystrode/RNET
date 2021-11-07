@@ -21,18 +21,26 @@
 
 
                         <h3>Unit Information</h3>
+                        <div class="ui stackable two column grid flex">
+                            <div class="profilepic">
+                                <p><strong>{{unit.name}} - {{unit.status}}</strong></p>
+                                <img class="ui small circular image" src="{{ user.profile.image.url }}">
+                                <p></p>
+                            </div>
+                            <div class="profilepic">
+                                <p></p>
+                                <button class="ui secondary button">TAKEOFF</button>
+                                <button class="ui secondary button">RTH</button>
+                                <button class="ui secondary button">WIFI SCAN</button>
+                                <button class="ui secondary button">CAMERA SHOT</button>
 
-                        <div class="profilepic">
-                            <p><strong>{{unit.name}} - {{unit.status}}</strong></p>
-                            <img class="ui small circular image" src="{{ user.profile.image.url }}">
-                            <p></p>
+                            </div>
                         </div>
-
-                        <hr>
 
 
 
                         <div class="user-media">
+                            <hr>
 
                             <h3>DATA</h3>
 
@@ -86,17 +94,22 @@
                             <p>Unit has not uploaded any scan reports</p>
 
                             {% endif %}
-
-
-
-
-
-
                         </div>
 
                 </div>
 
                 <div class="column activity-info">
+                    <div class="row">
+                        <h3>Video Feed</h3>
+                            <img name="main" id="main" border="0" width="320" height="240" src="http://192.168.1.68:8081/">
+                            <br>
+                            <button class="ui secondary button">STREAM OFF</button>
+                            <button class="ui secondary button">DETECTION</button>
+                    </div>
+
+                    <div class="row">
+                        <hr>
+                        <p></p>
                     <h3>Activity History</h3>
                             {% if unit.activity.all|length > 0 %}
 
@@ -120,6 +133,7 @@
                             <p>No activity to report</p>
 
                             {% endif %}
+                    </div>
                 </div>
 
             </div>

@@ -16,6 +16,7 @@
             <div class="welcome-banner">
                 <h3>RNET INTERFACE</h3>
                 <p></p>           
+                {% if request.user.profile.approved %}
                 {% if not hub.activated == True %}  
                 <form method="POST">
                     {% csrf_token %}
@@ -24,163 +25,97 @@
                 {% else %}
                 <button class="ui primary button">HUB ACTIVE</button>
                 {% endif %}
+                {% endif %}
                 
             </div>
 
             
             {% if request.user.profile.approved %}
             <hr>
-            <div class = "ui stackable four column inverted divided grid">
+            <div class = "ui stackable three column inverted divided grid">
 
                 <div class="row">
 
                     <div class="column">
-
-                        <div class = "">
-                            <h4>Notices</h4>
-                            <p>Staff will post information, updates and announcements in the <a class="profile-link" href="/notices">NOTICES</a> section. Only staff can post notices, but everyone is able to comment.</p>
-                        </div>
-    
-                    </div>
-
-                    <div class="column">
-
-                        <div class = "">
-                            <h4>Ideas</h4>
-                            <p>The <a class="profile-link" href="/ideas">IDEAS</a> section is open to all ranks to post and comment. All ideas, suggestions and requests are welcome - training, food, accommodation, you name it. Be security aware, or the idea may be removed.</p>
-                        </div>
-
-                    </div>
-
-                    <div class="column">
-
-                        <div class = "">
-                            <h4>Albums</h4>
-                            <p>The <a class="profile-link" href="/albums">ALBUMS</a> section is open to all ranks. This is where you can upload photos and create albums for related photos.</p>
-                        </div>
-
-                    </div>
-
-
-    
-                    <div class="column">
-
-                        <div class = "">
-                            <h4>Profiles</h4>
-                            <p>Your <a class="profile-link" href="/profile/{{request.user.username}}">PROFILE</a> page is your page. Here your latest albums, photos, posts and comments will be displayed for others and yourself to see, as well as some personal information you choose to share.</p>
-
-                        </div> 
-                        
-                    </div>
-
-
-                </div>
-
-                <div class="row">
-                    <div class="column">
-                        {% if notices %}
-                        <h5>Latest Notices</h5>
-
-
                         <div class="table-container">
-                            <table class="ui celled inverted table">
-    
-                                <thead>
-                                  <tr>
-                                    <th>Creator</th>
-                                    <th>Title</th>
-                                    <th>Date/Time</th>
-                                  </tr>
-                                </thead>
-        
-                                <tbody>
-    
-                                {% for notice in notices %}
-                                  <tr class="profile-link" onclick="goToNotice('{{notice.id}}')">
-                                    <td>{{notice.created_by}} - {{notice.created_by.profile.role}}</td>
-                                    <td>{{notice.title}}</td>
-                                    <td>{{notice.time}}</td>
-                                  </tr>
-                                  {% endfor %}
-    
-                                </tbody>
-    
-                              </table>
-                        </div>
-
-
-
+                          {% if active_units > 0 %}
+                          <p class="ui inverted segment"><strong>Active units:</strong> {{active_units}}</p>
+                          {% else %}
+                          <p class="ui inverted segment"><strong>Active units:</strong> 0</p>
                           {% endif %}
-                    </div>
-
-                        
-                    <div class="column">
-                        {% if ideas %}
-                        <h5>Latest Ideas</h5>
-
-                        <div class="table-container">
-                            <table class="ui celled inverted table">
+                          <table class="ui celled inverted table">
     
-                                <thead>
-                                  <tr>
-                                    <th>Creator</th>
-                                    <th>Title</th>
-                                    <th>Date/Time</th>
-                                  </tr>
-                                </thead>
-        
-                                <tbody>
-                                {% for idea in ideas %}
-                                  <tr class="profile-link" onclick="goToIdea('{{idea.id}}')">
-                                    <td>{{idea.created_by}}</td>
-                                    <td>{{idea.title}}</td>
-                                    <td>{{idea.time}}</td>
-                                  </tr>
-                                  {% endfor %}
-                                </tbody>
-                              </table>
-                        </div>
-
-                          {% endif %}
-                    </div>
-
-                    <div class="column">
-                        {% if albums %}
-                        <h5>Latest Albums</h5>
-                        <div class="table-container">
-                            <table class="ui celled inverted table">
+                            <thead>
+                              <tr>
+                                <th>Unit</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                              </tr>
+                            </thead>
     
-                                <thead>
-                                  <tr>
-                                    <th>Creator</th>
-                                    <th>Title</th>
-                                    <th>Date/Time</th>
-                                  </tr>
-                                </thead>
-        
-                                <tbody>
-                                {% for album in albums %}
-                                  <tr class="profile-link" onclick="goToAlbum('{{album.slug}}')">
-                                    <td>{{album.created_by}}</td>
-                                    <td>{{album.title}}</td>
-                                    <td>{{album.time}}</td>
-                                  </tr>
-                                  {% endfor %}
-                                </tbody>
-                              </table>
-                        </div>
+                            <tbody>
 
-                          {% endif %}
-    
-                    </div>
+                            {% for unit in units %}
+                              <tr class="profile-link" onclick="goToNotice('{{notice.id}}')">
+                                <td>{{unit.name}}</td>
+                                <td>{{unit.type}}</td>
+                                <td>{{unit.status}}</td>
+                              </tr>
+                              {% endfor %}
 
-                    <div class="column">
-                        <h5>Users</h5>
-                        <div class="table-container">
-                            <p class="ui inverted segment"><strong>Active users:</strong> {{users|length}}</p>
+                            </tbody>
+
+                          </table>
                             
                         </div>
                     </div>
+
+                    <div class="column">
+                        <div class="table-container">
+                            {% if not hub.activated == True  %}
+                            <img src="media/rnet_logo_trans.png">
+                            {% else %}
+                            <img src="media/rnet_logo_trans_activated.png">
+                            {% endif %}
+                            <p>RNET is a network of highly flexible devices capable of carrying out passive surveillance as well as active measures.</p>
+                            <p>Each device securely connects back to the control "hub" over 4G, meaning it can be operated anywhere in the world. The devices are capable of sending images, streaming video, scanning the wifi spectrum and even attacking wifi networks.</p>
+                            <p>Data collected by the radio frequency scanner is sent back to the hub for analysis on demand.</p>
+                            <p>Devices can also be mounted on mobile platforms/drones like quadcopters, fixed wing aircraft, ground rovers or even water-borne platforms, where they interface with the flight controller to send telemetry and command signals over 4G.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="column">
+                      <div class="table-container">
+                        <p class="ui inverted segment"><strong>Recent Activity</strong></p>
+                        <table class="ui celled inverted table">
+  
+                          <thead>
+                            <tr>
+                              <th>Unit</th>
+                              <th>Time</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+  
+                          <tbody>
+
+                          {% for unit in units %}
+                          {% for action in unit.activity.all %}
+                            <tr class="profile-link" onclick="goToNotice('{{notice.id}}')">
+                              <td>{{unit.name}}</td>
+                              <td>{{action.time}}</td>
+                              <td>{{action.detail}}</td>
+                            </tr>
+                            {% endfor %}
+                            {% endfor %}
+
+                          </tbody>
+
+                        </table>
+                          
+                      </div>
+                  </div>
                 </div>
 
                 

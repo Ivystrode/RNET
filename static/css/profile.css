@@ -111,3 +111,7 @@ div.activity-info h4 {
     max-width: 90%;
     height: 10%;
 }
+
+.button {
+    margin-bottom: 10px;
+}
