@@ -4,14 +4,17 @@ import picamera
 import cv2
 import socket 
 import io 
+
 app = Flask(__name__) 
-vc = cv2.VideoCapture(0) 
+vc = picamera.PiCamera()
 @app.route('/') 
 def index(): 
    """Video streaming .""" 
+   print("index")
    return render_template('index.html') 
 def gen(): 
    """Video streaming generator function.""" 
+   print("gen")
    while True: 
        rval, frame = vc.read() 
        cv2.imwrite('pic.jpg', frame) 
@@ -20,7 +23,9 @@ def gen():
 @app.route('/video_feed') 
 def video_feed(): 
    """Video streaming route. Put this in the src attribute of an img tag.""" 
+   print("feed")
    return Response(gen(), 
                    mimetype='multipart/x-mixed-replace; boundary=frame') 
-if __name__ == '__main__': 
-	app.run(host='0.0.0.0', debug=True, threaded=True) 
+
+def run():
+    app.run(host='0.0.0.0', port=8081, debug=True, threaded=True)

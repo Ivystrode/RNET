@@ -1,7 +1,7 @@
 import socket
 import time
 
-from control import servo_con, cpu_con, cam_con, wifi_con, rad_con
+from control import servo_con, cpu_con, cam_con, wifi_con, rad_con, vid_stream
 
 label = "[" + socket.gethostname().upper() + "]"
 
@@ -25,7 +25,7 @@ def command_router(command, hub_addr):
         
     elif command[0] == "<VIDEO>":
         print("VIDEO COMD")
-        cam_con.stream_video()
+        vid_stream.run()
             
 def servo_command(command):
     
