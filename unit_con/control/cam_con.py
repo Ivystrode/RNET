@@ -92,7 +92,7 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 app = Flask(__name__) 
-vc = cv2.VideoCapture(0) 
+vc = PiCamera()
 @app.route('/') 
 def index(): 
    """Video streaming .""" 
@@ -114,6 +114,7 @@ def video_feed():
                    mimetype='multipart/x-mixed-replace; boundary=frame') 
 
 def stream_video():
+    # global vc
     print("run")
     app.run(host='192.168.1.222', port=8081, debug=True, threaded=True)
 
