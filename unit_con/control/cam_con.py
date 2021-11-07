@@ -96,9 +96,11 @@ vc = cv2.VideoCapture(0)
 @app.route('/') 
 def index(): 
    """Video streaming .""" 
+   print("index")
    return render_template('index.html') 
 def gen(): 
    """Video streaming generator function.""" 
+   print("gen")
    while True: 
        rval, frame = vc.read() 
        cv2.imwrite('pic.jpg', frame) 
@@ -107,11 +109,13 @@ def gen():
 @app.route('/video_feed') 
 def video_feed(): 
    """Video streaming route. Put this in the src attribute of an img tag.""" 
+   print("feed")
    return Response(gen(), 
                    mimetype='multipart/x-mixed-replace; boundary=frame') 
 
 def stream_video():
-	app.run(host='192.168.1.222', debug=True, threaded=True) 
+    print("run")
+	app.run(host='192.168.1.222', port=8081, debug=True, threaded=True) 
 
 # def stream_video():
     
