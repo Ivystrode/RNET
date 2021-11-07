@@ -89,7 +89,7 @@ class UnitFile(models.Model):
     
 class UnitActivity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='files')
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='activity')
     detail = models.TextField(default="Unknown activity recorded")
     time = models.DateTimeField(default=timezone.localtime(timezone.now()))
     
