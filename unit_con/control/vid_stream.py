@@ -3,7 +3,7 @@ from flask import Flask, render_template, Response
 import picamera 
 import cv2
 
-app = Flask(__name__) 
+app = Flask(__name__, template_folder='./templates') 
 vc = picamera.PiCamera()
 @app.route('/') 
 def index(): 
