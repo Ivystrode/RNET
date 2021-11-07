@@ -3,13 +3,13 @@ from flask import Flask, render_template, Response
 import picamera 
 import cv2
 
-app = Flask(__name__, template_folder='unit_con/control/templates') 
+app = Flask(__name__, template_folder='/home/pi/Code/rnet/rnet_testing/unit_con/control/templates') 
 vc = picamera.PiCamera()
 @app.route('/') 
 def index(): 
    """Video streaming .""" 
    print("index")
-   return render_template("<p>{{ url_for('video_feed') }}<p>") 
+   return render_template("index.html") 
 def gen(): 
    """Video streaming generator function.""" 
    print("gen")
