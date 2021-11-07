@@ -37,21 +37,19 @@
                             <h3>Media</h3>
 
 
-                            {% if unit.photos %}
+                            {% if unit.photos.all|length > 0 %}
 
                             <h4>Pictures</h4>
 
                             <div class="ui stackable three column grid container">
 
-                                {% for photo in photos %}
+                                {% for photo in unit.photos.all %}
 
                                 <div class="pic-column column">
-
-                                    <div class="user-photo profile-link" onclick="goToMedia('/albums/{{photo.album.slug}}/', '{{photo.id}}')"">
-                                        <img id="userpic" class="ui small rounded image" src="{{photo.photo.thumbnail.url}}">
-                                        <span><strong>{{photo.album.title}}</strong> - {{photo.caption}}</span>
+                                    <div class="user-photo profile-link">
+                                        <img id="userpic" class="ui small rounded image" src="{{photo.photo.url}}">
+                                        <span><strong>{{photo.caption}}</strong> - {{photo.time}}</span>
                                     </div>
-
                                 </div>
 
                                 {% endfor %}
@@ -72,7 +70,7 @@
                 </div>
 
                 <div class="column activity-info">
-
+                    <h3>Activity History</h3>
                 </div>
 
             </div>

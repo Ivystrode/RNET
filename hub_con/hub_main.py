@@ -17,6 +17,7 @@ sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/") 
 
 from units.models import UnitPhoto
 from .models import Control_Hub
+from .views import save_photo
 
 from hub_con import commands
 from hub_con import dbcontrol
@@ -192,14 +193,19 @@ class Hub():
                         print(f"[HUB] Unsolicited file, sending to bot")
                         bot.send_unrequested_file(unit_name, filename, file_description)
                         print(f"[HUB] File sent by bot")
-                        if not os.path.exists(f"media/{unit_name}"):
-                            os.mkdir(f"media/{unit_name}")
-                        shutil.move(filename, f'media/{unit_name}/')
+                        
+                        #Ideally I'd like to save to a subdir in media/
+                        #named after the unit, but for now this doesn't work
+                        # if not os.path.exists(f"media/{unit_name}"):
+                        #     os.mkdir(f"media/{unit_name}")
+                        # shutil.move(filename, f'media/{unit_name}/')
+                        # so I just do this
+                        shutil.move(filename, f'media/')
                         print(f"[HUB] {filename} moved to files directory")
                         
                         # save as unitphoto object to link to unit in django
-                        new_unit_photo = UnitPhoto.objects.create(caption=file_description, photo=filename)
-                        new_unit_photo.save()
+                        # new_unit_photo = UnitPhoto.objects.create(caption=file_description, photo=filename)
+                        save_photo(unit_name, filename, file_description)
                         print("Saved...?")
                         
                     except Exception as e:
