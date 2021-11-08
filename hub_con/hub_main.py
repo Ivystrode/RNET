@@ -105,7 +105,7 @@ class Hub():
                     record_activity(cleaned_received[2].lower(), "Unit activated")
                     try:
                         print("try to add new unit...")
-                        dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Activated", str(datetime.now().strftime("%Y%m%d%H%M")), cleaned_received[4])
+                        dbcontrol.insert(cleaned_received[1], cleaned_received[2], unit_address[0], cleaned_received[3], "Activated", str(datetime.now().strftime("%Y%m%d%H%M")), cleaned_received[4], cleaned_received[5])
                         print(f"[HUB] {cleaned_received[2]} added to database")
                     except Exception as e:
                         print(f"{e} --- ok try to update the unit now...")

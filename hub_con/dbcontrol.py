@@ -3,7 +3,7 @@ import sqlite3, webbrowser
 def connect():
     conn = sqlite3.connect("hub_db.sqlite3")
     cur = conn.cursor()
-    cur.execute(f"CREATE TABLE IF NOT EXISTS units (id INTEGER PRIMARY KEY, Name text, Address text, Type text, Status text, last_statrep text, location text)")
+    cur.execute(f"CREATE TABLE IF NOT EXISTS units (id INTEGER PRIMARY KEY, Name text, Address text, Type text, Status text, last_statrep text, lat text, lng text)")
     cur.execute(f"CREATE TABLE IF NOT EXISTS authorised_users (id INTEGER PRIMARY KEY, Name text, Type text)") # where id should be telegram chat id or USER id? probably user
     print("[HUB - Database] Database created")
     conn.commit()
@@ -73,10 +73,10 @@ def check_unit_status(address):
     conn.close()
     return result[0][4] # status
     
-def insert(id, name, address, type, status, last_statrep, location):
+def insert(id, name, address, type, status, last_statrep, lat, lng):
     conn=sqlite3.connect("hub_db.sqlite3", timeout=5)
     cur=conn.cursor()
-    cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep, location))
+    cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep, lat, lng))
     conn.commit()
     conn.close()
     

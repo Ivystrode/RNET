@@ -1,0 +1,50 @@
+{% extends 'interface/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+<head>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/map.css' %}">
+{% endblock %}
+
+{% block title %}RNET{% endblock %}
+{% block page_title %}Unit Map{% endblock %}
+{% block subtitle %}Last reported location of all units{% endblock %}
+
+
+</head>
+{% block content %}     
+
+    <body>
+        <div class="page-body">
+
+            <div id='map' style='width: 1100px; height: 800px;'></div>
+            <script>
+            // TO MAKE THE MAP APPEAR YOU MUST
+            // ADD YOUR ACCESS TOKEN FROM
+            // https://account.mapbox.com
+            mapboxgl.accessToken = '{{mapbox_token}}';
+            const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/mapbox/streets-v11', // style URL
+            center: [-4.196140356466426, 51.08449293741435], // starting position [lng, lat]
+            zoom: 9 // starting zoom
+            });
+            {% for unit in units %}
+                var marker = new mapboxgl.Marker()
+                .setLngLat([unit.lng, unit.lat])
+                .addTo(map)
+            {% endfor %}
+            </script>
+
+
+
+
+
+
+        </div>
+        
+    </body>
+    
+
+{% endblock %}
+{% block script %}<script src="{% static 'scripts/js/profile.js' %}"></script>{% endblock %}

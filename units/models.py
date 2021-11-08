@@ -44,7 +44,8 @@ class Unit(models.Model):
     type = models.TextField(db_column='Type', blank=True, null=True)
     status = models.TextField(db_column='Status', blank=True, null=True)
     last_statrep = models.TextField(blank=True, null=True)
-    location = models.TextField(default="51.183862090545, -4.669410763157165", blank=True, null=True)
+    lat = models.TextField(default="51.183862090545", blank=True, null=True)
+    lng = models.TextField(default="-4.669410763157165", blank=True, null=True)
     # slug = models.SlugField()
 
     class Meta:

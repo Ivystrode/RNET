@@ -24,13 +24,12 @@
                         <div class="ui stackable two column grid flex">
                             <div class="profilepic">
                                 <p><strong>Status - {{unit.status}}</strong></p>
-                                <img class="ui small circular image" src="{{ user.profile.image.url }}">
+                                <img class="ui small circular image" src="https://mikeshouts.com/wp-content/uploads/2013/08/3DR-Iris-Quadcopter-UAV.jpg">
                                 <p></p>
+                                <br>
                             </div>
                             <div class="profilepic">
                                 <p></p>
-                                <br>
-                                <br>
                                 <br>
                                 <form>
                                     <select class="ui black search dropdown">
@@ -121,7 +120,9 @@
                     </div>
 
                     <div class="row">
+                        <br>
                         <hr>
+                        <br>
                         <p></p>
                     <h3>Activity History</h3>
                             {% if unit.activity.all|length > 0 %}

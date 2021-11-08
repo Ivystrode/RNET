@@ -15,12 +15,13 @@ Make sure all PCs have git config set to match github account email address, oth
 
 TODO
 - Telegram bot keyboard commands & nested options
-- Unique unit-location page - google maps interface with unit location & commands for mobile units
+- Unique unit-location page - google maps interface with unit location & commands for mobile units (geodjango)
 - Video embed on unit page (perhaps even on dashboard if video active) - DONE but barebones
 - Unit control panel on unit profile page (start video stream, take picture, etc) - same commands as telegram bot
 - Run object recognition model/recognition alerts
 - RF silent mode
 - Mavlink testing
+- sqlite3 is rubbish, migrate to postgres
 
 How to use:
 IMPORTANT - You will need to create your own telegram bot and use its key. For obvious reason I'm not letting anyone else have my bot key! Same goes for the django settings key. Store them as environment variables or however you want.

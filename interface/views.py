@@ -14,6 +14,7 @@ from hub_con.models import Control_Hub
 # from .forms import NoticeCreationForm, NoticeCommentForm, DeleteNoticeForm, EditNoticeForm, CustomEmailForm
 
 import random
+from decouple import config
 
 # @login_required()
 def home(request):
@@ -87,6 +88,24 @@ def data(request):
         except:
             print("NO HUB YET")
         return render(request, "interface/data.html", context)
+    else:
+        messages.success(request, f'Your account is not authorised yet. Please contact an administrator.')
+        return redirect(f'/')  
+      
+@login_required()
+def unit_map(request):
+    if request.user.profile.approved:
+        units = Unit.objects.all()
+        context = {
+            'units':units,
+            'mapbox_token':config('mapbox_token')
+            }
+        try:
+            hub = Control_Hub.objects.get(name="Hub")
+            context['hub'] = hub
+        except:
+            print("NO HUB YET")
+        return render(request, "interface/unit_map.html", context)
     else:
         messages.success(request, f'Your account is not authorised yet. Please contact an administrator.')
         return redirect(f'/')
