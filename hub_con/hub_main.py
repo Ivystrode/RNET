@@ -239,4 +239,4 @@ class Hub():
 
 if __name__ == '__main__':
     main_hub = Hub("0.0.0.0")
-    bot.activate_hub_bot()
+    # bot.activate_hub_bot()
