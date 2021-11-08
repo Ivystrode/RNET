@@ -23,6 +23,8 @@ from hub_con import commands
 from hub_con import dbcontrol
 from hub_con.hub_bot import bot
 
+from interface import data
+
 # from django.db import models
 
 # import commands
@@ -205,6 +207,8 @@ class Hub():
                         #     os.mkdir(f"media/{unit_name}")
                         # shutil.move(filename, f'media/{unit_name}/')
                         # so I just do this
+                        if file_description == "Wifi scan":
+                            data.sort(filename)
                         shutil.move(filename, f'media/')
                         print(f"[HUB] {filename} moved to files directory")
                         

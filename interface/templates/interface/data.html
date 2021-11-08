@@ -15,7 +15,41 @@
     <body>
         <div class="page-body">
 
-            <p>This page will display data from the wifi scan reports</p>
+            <div class = "ui stackable two column inverted divided grid">
+                <div class="row">
+                    <div class="column" id="table-column">
+                        <div class="table-container">
+                            <table class="ui celled inverted table">
+                              <thead>
+                                <tr>
+                                  <th>Unit</th>
+                                  <th>Type</th>
+                                  <th>Status</th>
+                                </tr>
+                              </thead>
+      
+                              <tbody>
+  
+                              {% for unit in units %}
+                                <tr class="profile-link">
+                                  <td>{{unit.name}}</td>
+                                  <td>{{unit.type}}</td>
+                                  <td>{{unit.status}}</td>
+                                </tr>
+                                {% endfor %}
+  
+                              </tbody>
+  
+                            </table>
+                              
+                          </div>
+                    </div>
+
+                    <div class="column" id="graph-column---maybe">
+
+                    </div>
+                </div>
+            </div>
 
 
 
