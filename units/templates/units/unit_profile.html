@@ -21,7 +21,7 @@
 
 
                         <h3>Unit Information</h3>
-                        <div class="ui stackable two column grid flex">
+                        <div class="ui stackable three column grid flex">
                             <div class="profilepic">
                                 <p><strong>Status - {{unit.status}}</strong></p>
                                 <img class="ui small circular image" src="https://mikeshouts.com/wp-content/uploads/2013/08/3DR-Iris-Quadcopter-UAV.jpg">
@@ -29,11 +29,11 @@
                                 <br>
                             </div>
                             <div class="profilepic">
-                                <p></p>
+                                <p><strong>Commands</strong></p>
                                 <br>
                                 <form>
                                     <select class="ui black search dropdown">
-                                        <option value="">Commands</option>
+                                        <option value="">{{unit.name}}</option>
                                         <option value="TAKEOFF">TAKEOFF</option>
                                         <option value="RTH">RTH</option>
                                         <option value="PIC">CAMERA SHOT</option>
@@ -43,9 +43,32 @@
                                     <br>
                                     <button type="submit" class="ui secondary button">SEND</button>                                   
                                 </form>
-
-
                             </div>
+                            {% if unit.type == 'quadcopter' or unit.type == 'fixedwing' %}
+                            <div class="profilepic" id="flight-telem">
+                                <p><strong>Flight Telemetry</strong></p>
+                            <table class="ui celled inverted table">
+                                <thead>
+                                  <tr>
+                                    <th>Altitude</th>
+                                    <th>Bearing</th>
+                                    <th>Speed</th>
+                                    <th>Voltage</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr class="profile-link">
+                                    <td>50</td>
+                                    <td>195</td>
+                                    <td>19</td>
+                                    <td>15.9V</td>
+                                  </tr>
+    
+                                </tbody>
+    
+                              </table>
+                            </div>
+                            {% endif %}
                         </div>
 
 
@@ -110,13 +133,34 @@
                 </div>
 
                 <div class="column activity-info">
-                    <div class="row">
-                        <h3>Video Feed</h3>
-                            <img name="main" id="main" border="0" width="320" height="240" src="http://{{unit.address}}:8081/">
-                            <video source="http://{{unit.address}}:8081/"></video>
-                            <br>
-                            <button class="ui secondary button">STREAM OFF</button>
-                            <button class="ui secondary button">DETECTION</button>
+                    <div class="ui stackable two column grid container">
+                        <div class="row">
+                            <div class="column">
+                            <h3>Video Feed</h3>
+                                <img name="main" id="main" border="0" width="320" height="240" src="http://{{unit.address}}:8081/">
+                                <br>
+                                <button class="ui secondary button">STREAM OFF</button>
+                                <button class="ui secondary button">DETECTION</button>
+                            </div>
+                            <div class="column">
+                                <h3>Location</h3>
+                                <div id='map' style='width: 320px; height: 240px;'>
+                                    <script>
+                                        mapboxgl.accessToken = '{{mapbox_token}}';
+                                        const map = new mapboxgl.Map({
+                                        container: 'map', // container ID
+                                        style: 'mapbox://styles/mapbox/streets-v11', // style URL
+                                        center: [{{unit.lng}}, {{unit.lat}}], // starting position [lng, lat]
+                                        zoom: 9 // starting zoom
+                                        });
+                                            var marker = new mapboxgl.Marker()
+                                            .setLngLat([{{unit.lng}}, {{unit.lat}}])
+                                            .setPopup(new mapboxgl.Popup().setHTML("<p><strong>{{unit.name}} - {{unit.status}}</p><p>{{unit.last_statrep}}</strong></p>"))
+                                            .addTo(map)
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">

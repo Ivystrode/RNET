@@ -19,11 +19,13 @@ imutils==0.5.4
 itsdangerous==2.0.1
 Jinja2==3.0.2
 kiwisolver==1.3.2
+lxml==4.6.4
 MarkupSafe==2.0.1
 numpy==1.20.3
 opencv-python==4.5.4.58
 pandas==1.3.4
 Pillow==8.4.0
+pymavlink==2.4.17
 pyparsing==3.0.5
 PyQt5==5.15.4
 PyQt5-Qt5==5.15.2

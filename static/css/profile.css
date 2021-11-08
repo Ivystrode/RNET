@@ -115,3 +115,8 @@ div.activity-info h4 {
 .button {
     margin-bottom: 10px;
 }
+
+@media (max-width: 770px){
+    #flight-telem {
+        display: none;
+    }

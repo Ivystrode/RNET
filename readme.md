@@ -13,6 +13,7 @@ Make sure all PCs have git config set to match github account email address, oth
 
 
 
+
 TODO
 - Telegram bot keyboard commands & nested options
 - Unique unit-location page - google maps interface with unit location & commands for mobile units (geodjango)
@@ -43,6 +44,12 @@ IMPORTANT - You will need to create your own telegram bot and use its key. For o
     - If not, either ssh into it or do via monitor & keyboard, and start the script
     - I need to create an up-to-date OS image but I probably won't until I have created a fresh install with raspian-lite (desktop version is bigger than necessary)
 12. Unit should now send activation report to the hub
+
+13. To use with drones (simulated, unless you have a custom one pre-built):
+    a. Install Mission Planner and SITL &/ sim_vehicle.py -- sim_vehicle.py -v ArduCopter -L devon
+    b. Run sim_vehicle.py (as quad/plane/anything)
+    c. Open MP and then control as you would a real drone using RNET
+    d. For a physical drone you will need one built to house RNET (ie an RPi in it with mountings for peripherals) and a means of telemetry (3DR/SiK radio)
 
 
 NOTES

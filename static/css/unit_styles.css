@@ -8,3 +8,7 @@
     text-align: center;
     align-items: center;
 }
+
+.column {
+    margin: 0 50px 50px 0;
+}
