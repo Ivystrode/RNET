@@ -5,7 +5,6 @@ import subprocess
 import cv2
 import os
 import time
-from hub_con.hub_bot.bot import stop_stream_comd
 
 from picamera import PiCamera
 from datetime import datetime
