@@ -14,8 +14,9 @@ Make sure all PCs have git config set to match github account email address, oth
 
 
 TODO
+- Telegram bot keyboard commands & nested options
 - Unique unit-location page - google maps interface with unit location & commands for mobile units
-- Video embed on unit page (perhaps even on dashboard if video active)
+- Video embed on unit page (perhaps even on dashboard if video active) - DONE but barebones
 - Unit control panel on unit profile page (start video stream, take picture, etc) - same commands as telegram bot
 - Run object recognition model/recognition alerts
 - RF silent mode

@@ -12,6 +12,7 @@ from datetime import datetime
 import json
 import logging
 import os
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Dispatcher, ConversationHandler
 import threading
 import time
@@ -49,6 +50,7 @@ def start_bot():
     global dispatcher
     
     dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('menu', menu))
     dispatcher.add_handler(CommandHandler('check', check))
     dispatcher.add_handler(CommandHandler('help', help))
     
@@ -68,6 +70,19 @@ def start_bot():
     
     updater.start_polling()
     updater.idle()
+    
+def menu(update, context):
+    
+    keyboard = [
+    [
+        InlineKeyboardButton("Option 1", callback_data='1'),
+        InlineKeyboardButton("Option 2", callback_data='2'),
+    ],
+    [InlineKeyboardButton("Option 3", callback_data='3')],
+]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    update.message.reply_text('Please choose:', reply_markup=reply_markup)
     
 def start(update, context):
     global users
