@@ -31,7 +31,8 @@
             });
             {% for unit in units %}
                 var marker = new mapboxgl.Marker()
-                .setLngLat([unit.lng, unit.lat])
+                .setLngLat([{{unit.lng}}, {{unit.lat}}])
+                .setPopup(new mapboxgl.Popup().setHTML("<p>{{unit.name}} - {{unit.status}}</p><p>{{unit.last_statrep}}</p>"))
                 .addTo(map)
             {% endfor %}
             </script>

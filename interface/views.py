@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.views.generic.edit import CreateView
 
 
 from .models import AuthorisedUser
@@ -109,3 +109,17 @@ def unit_map(request):
     else:
         messages.success(request, f'Your account is not authorised yet. Please contact an administrator.')
         return redirect(f'/')
+
+# more customisable if I don't use classviews
+
+# class UnitMapView(CreateView):
+#     model = Unit
+#     fields = ['lat','lng']
+#     template_name = "interface/unit_map.html"
+#     success_url = "/"
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['mapbox_token'] = config("mapbox_token")
+#         context['units'] = Unit.objects.all()
+#         return context
