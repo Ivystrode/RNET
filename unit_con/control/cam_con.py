@@ -1,13 +1,14 @@
 import io
 import socket
 import struct
-from flask import Flask,render_template,Response
+import subprocess
 import cv2
+import os
+import time
+from hub_con.hub_bot.bot import stop_stream_comd
 
 from picamera import PiCamera
 from datetime import datetime
-import os
-import time
 from unit_id import unit_details
 
 from tqdm import tqdm
@@ -18,6 +19,21 @@ file_channel = 7503 # same as status channel which hub is listening on. make a t
 
 SEPARATOR = "<SEPARATOR>"
 BUFFER_SIZE = 1024
+
+# ==========COMMAND SUBROUTER==========
+def command_subrouter(command):
+    print("CAM_CON - COMMAND RECEIVED")
+    print(command)
+    if command[1] == "stream":
+        print("starting vid stream service")
+        start_stream()
+        print("streaming active")
+    elif command[1] == "stopstream":
+        print("stopping video transmission")
+        stop_stream_comd()
+        print("stream stopped")
+    else:
+        print(f"unknown command: {command[1]}")
 
 # ==========IMAGE DETECTION SETUP==========
 camera_active = False
@@ -91,81 +107,55 @@ def send_photo(hub_addr, file, file_description):
     
 
 # ==========Live video streaming==========
+def start_stream():
+    subprocess.run(['sudo','service','motion','start'])
+    print("Video transmitting")
 
-
-# def stream_video():
-    
-
-    # app=Flask(__name__)
-    # camera=PiCamera()
-
-    # def generate_frames():
-    #     while True:
-                
-    #         ## read the camera frame
-    #         success,frame=camera.read()
-    #         if not success:
-    #             break
-    #         else:
-    #             ret,buffer=cv2.imencode('.jpg',frame)
-    #             frame=buffer.tobytes()
-
-    #         yield(b'--frame\r\n'
-    #                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-
-    # @app.route('/')
-    # def index():
-    #     return render_template('index.html')
-
-    # @app.route('/video')
-    # def video():
-    #     return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
-
-    # app.run(host='0.0.0.0', debug=True, threaded=True)
+def stop_stream():
+    subprocess.run(['sudo','service','motion','stop'])
+    print("Video transmitting")
 
 def stream_video_worksButNotToBrowser():
+    """
+    This works but not yet integrated into browser (ie target machine does receive)
+    For now we are achieving stream and stream control with motion and subprocess
+    Yes...hack-y
+    """
+    
+    
     client_socket = socket.socket()
 
-    client_socket.connect(('192.168.1.79', 8081))  # ADD IP HERE
+    client_socket.connect((unit_details['hub_address'], unit_details['video_port'])) 
 
-    # Make a file-like object out of the connection
     connection = client_socket.makefile('wb')
+    
     try:
         camera = PiCamera()
         camera.vflip = True
         camera.resolution = (500, 480)
-        # Start a preview and let the camera warm up for 2 seconds
         camera.start_preview()
         time.sleep(2)
-
-        # Note the start time and construct a stream to hold image data
-        # temporarily (we could write it directly to connection but in this
-        # case we want to find out the size of each capture first to keep
-        # our protocol simple)
         start = time.time()
         stream = io.BytesIO()
-        for foo in camera.capture_continuous(stream, 'jpeg'):
-            # Write the length of the capture to the stream and flush to
-            # ensure it actually gets sent
+        
+        for _ in camera.capture_continuous(stream, 'jpeg'):
             connection.write(struct.pack('<L', stream.tell()))
             connection.flush()
-            # Rewind the stream and send the image data over the wire
             stream.seek(0)
             connection.write(stream.read())
-            # If we've been capturing for more than 30 seconds, quit
+            
             if time.time() - start > 60:
                 break
-            # Reset the stream for the next capture
+            
             stream.seek(0)
             stream.truncate()
-        # Write a length of zero to the stream to signal we're done
+            
         connection.write(struct.pack('<L', 0))
+        
     finally:
         connection.close()
         client_socket.close()
-def stop_stream():
-    pass
+        
 
 
 

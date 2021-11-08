@@ -1,0 +1,31 @@
+{% extends 'interface/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+<head>
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block title %}RNET{% endblock %}
+{% block page_title %}Data{% endblock %}
+{% block subtitle %}Details of all data gathered by wifi scans (and more tbc){% endblock %}
+</head>
+{% block content %}     
+
+    <body>
+        <div class="page-body">
+
+            <p>This page will display data from the wifi scan reports</p>
+
+
+
+
+
+
+        </div>
+        
+    </body>
+    
+
+{% endblock %}
+{% block script %}<script src="{% static 'scripts/js/profile.js' %}"></script>{% endblock %}

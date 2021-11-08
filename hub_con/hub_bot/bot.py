@@ -61,6 +61,7 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     dispatcher.add_handler(CommandHandler('send', send_comd))
     dispatcher.add_handler(CommandHandler('stream', stream_comd))
+    dispatcher.add_handler(CommandHandler('stopstream', stream_comd))
     
     dispatcher.add_handler(CommandHandler('wifi', wifi_comd))
     dispatcher.add_handler(CommandHandler('stopwscan', stop_wifi_scan))
@@ -284,6 +285,20 @@ def stream_comd(update, context):
     try:
         commands.vid_comd(unit_address, command_channel, command, stream_time)
         update.message.reply_text(f"Video stream command sent to {name}")
+    except Exception as e:
+        update.message.reply_text(f"Unable to initiate video stream. {e}")
+    
+def stop_stream_comd(update, context):
+    name = context.args[0]
+    # if context.args[1]:
+    #     stream_time = context.args[1]
+    # else:
+    unit_address = dbcontrol.get_unit_address(name)
+    command="stopstream"
+    
+    try:
+        commands.vid_comd(unit_address, command_channel, command, "n/a")
+        update.message.reply_text(f"Stop stream command sent to {name}")
     except Exception as e:
         update.message.reply_text(f"Unable to initiate video stream. {e}")
     

@@ -75,6 +75,18 @@ def dashboard(request):
     else:
         messages.success(request, f'Your account is not authorised yet. Please contact an administrator.')
         return redirect(f'/')
-    # else:
-    #     messages.success(request, f'You cannot access this page until your account has been approved.')
-    #     return redirect('/')
+    
+@login_required()
+def data(request):
+    if request.user.profile.approved:
+        units = Unit.objects.all()
+        context = {'units':units}
+        try:
+            hub = Control_Hub.objects.get(name="Hub")
+            context['hub'] = hub
+        except:
+            print("NO HUB YET")
+        return render(request, "interface/data.html", context)
+    else:
+        messages.success(request, f'Your account is not authorised yet. Please contact an administrator.')
+        return redirect(f'/')

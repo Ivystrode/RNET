@@ -1,4 +1,5 @@
-import socket
+import os
+import socket, subprocess
 import time
 
 from control import servo_con, cpu_con, cam_con, wifi_con, rad_con, vid_stream
@@ -16,6 +17,10 @@ def command_router(command, hub_addr):
         
     elif command[0] == "<SEND_FILE>":
         if command[1] == "image":
+            camera_status = os.system('systemctl is-active --quiet motion')
+            if camera_status == 0:
+                print("Stopping video live stream first")
+                subprocess.run(['sudo','service','motion','stop'])
             cam_con.capt_img(hub_addr)
         else:
             print("not ready yet")
@@ -25,7 +30,12 @@ def command_router(command, hub_addr):
         
     elif command[0] == "<VIDEO>":
         print("VIDEO COMD")
-        vid_stream.run()
+        # camera_status = os.system('systemctl is-active --quiet motion')
+        # if camera_status == 0:
+        #     print("Stopping video live stream first")
+        # else:
+            # vid_stream.run()
+        cam_con.command_subrouter(command)
             
 def servo_command(command):
     
