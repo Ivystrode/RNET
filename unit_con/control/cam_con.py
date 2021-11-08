@@ -29,7 +29,7 @@ def command_subrouter(command):
         print("streaming active")
     elif command[1] == "stopstream":
         print("stopping video transmission")
-        stop_stream_comd()
+        stop_stream()
         print("stream stopped")
     else:
         print(f"unknown command: {command[1]}")
@@ -112,7 +112,7 @@ def start_stream():
 
 def stop_stream():
     subprocess.run(['sudo','service','motion','stop'])
-    print("Video transmitting")
+    print("Video transmission stopped")
 
 def stream_video_worksButNotToBrowser():
     """

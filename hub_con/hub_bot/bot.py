@@ -61,7 +61,7 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('cpu', cpu_comd))
     dispatcher.add_handler(CommandHandler('send', send_comd))
     dispatcher.add_handler(CommandHandler('stream', stream_comd))
-    dispatcher.add_handler(CommandHandler('stopstream', stream_comd))
+    dispatcher.add_handler(CommandHandler('stopstream', stop_stream_comd))
     
     dispatcher.add_handler(CommandHandler('wifi', wifi_comd))
     dispatcher.add_handler(CommandHandler('stopwscan', stop_wifi_scan))
