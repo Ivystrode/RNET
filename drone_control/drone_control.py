@@ -2,6 +2,10 @@ from pymavlink import mavutil
 import time
 """
 Drone control. The functions have some really long lines, blame mavlink, that's just how it is.
+THIS WOULD BE A LOT NICER WITH DRONEKIT
+THIS WOULD BE A LOT NICER WITH DRONEKIT
+THIS WOULD BE A LOT NICER WITH DRONEKIT
+THIS WOULD BE A LOT NICER WITH DRONEKIT
 """
 
 # REMEMBER!!! MAKE SURE ARM PARAMETERS ARE SET TO 0 OR 1 AS REQUIRED
