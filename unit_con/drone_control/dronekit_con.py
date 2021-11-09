@@ -9,9 +9,16 @@ This can be done by measuring distance to target though
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 import time
 
+
+from drone_control import signaller
+from unit_id import unit_details
+
 # connecting to local vehicle simulated
 # can this work if we use VPN/local network IP addresses??
 vehicle = connect("127.0.0.1:14550", wait_ready=True)
+
+HUB_ADDRESS = "127.0.0.1"
+SIGNAL_PORT = 7501
 
 #connecting over serial device (for rpi connected to the vehicle via serial port, use com14 for windows serial AND telem radio)
 # vehicle = connect("/dev/ttyAMA0", wait_ready=True, baud=57600)
@@ -25,6 +32,17 @@ print(f"GPS: {vehicle.gps_0}")
 print(f"Can be armed: {vehicle.is_armable}")
 print(f"Mode: {vehicle.mode.name}")
 print(f"Armed: {vehicle.armed}")
+
+
+def command_subrouter(command):
+    print("[FLIGHT CONTROLLER] - COMMAND RECEIVED")
+    print(command)
+    if command[1] == "launch":
+        print("launching...")
+        initialise()
+        launch(10)
+    else:
+        print(f"unknown command: {command[1]}")
 
 def initialise():
     while not vehicle.home_location:
@@ -65,6 +83,7 @@ def launch(starting_alt):
         print(f"Alt: {vehicle.location.global_relative_frame.alt}")
         if vehicle.location.global_relative_frame.alt >= starting_alt*0.95:
             print("Takeoff successful - UAV at target altitude")
+            signaller.message(HUB_ADDRESS, SIGNAL_PORT, f"{unit_details['unit_name']} Takeoff successful")
             break
         time.sleep(1)
         

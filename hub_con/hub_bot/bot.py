@@ -68,6 +68,8 @@ def start_bot():
     dispatcher.add_handler(CommandHandler('wifi', wifi_comd))
     dispatcher.add_handler(CommandHandler('stopwscan', stop_wifi_scan))
     
+    dispatcher.add_handler(CommandHandler('fc', fc_comd))
+    
     updater.start_polling()
     updater.idle()
     
@@ -116,6 +118,7 @@ def help(update, context):
     """
     
     update.message.reply_text(reply)
+    
     
 def get_unit_address(update, context):
     """
@@ -271,6 +274,10 @@ def send_unrequested_file(unitname, filename, file_description):
     except Exception as e:
         print(f"[HUB - BOT] Unable to send file {filename} - {e}")
         
+def send_message(message):
+    for user in users:
+        updater.bot.send_message(user, message)
+        
 
 def wifi_comd(update, context):
     name = context.args[0]
@@ -288,6 +295,13 @@ def wifi_comd(update, context):
         update.message.reply_text(f"Unable to initiate wifi scan. {e}")
         
 
+def fc_comd(update, context):
+    name = context.args[0]
+    command = context.args[1]
+    update.message.reply_text(f"Sending launch command to {name}")
+    unit_address = dbcontrol.get_unit_address(name)
+    commands.fc_comd(unit_address, command_channel, command)
+    
 def stream_comd(update, context):
     name = context.args[0]
     # if context.args[1]:

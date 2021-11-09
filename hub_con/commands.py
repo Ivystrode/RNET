@@ -83,3 +83,12 @@ def vid_comd(unit_addr, command_channel, command, time):
     s.send(f"<VIDEO>{SEPARATOR}{command}{SEPARATOR}{time}".encode())
     print(f"[HUB - COMMANDS] Video {command} command sent to {unit_addr}")
     s.close()
+    
+def fc_comd(unit_addr, command_channel, command):
+    
+    print("[HUB - COMMANDS] Flight Controller command")
+    s = socket.socket()
+    s.connect((unit_addr, command_channel))
+    s.send(f"<FC_COMD>{SEPARATOR}{command}".encode())
+    print(f"[HUB - COMMANDS] Flight Controller {command} command sent to {unit_addr}")
+    s.close()  

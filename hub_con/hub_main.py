@@ -119,9 +119,10 @@ class Hub():
                             print(f"[HUB] {cleaned_received[2]} re-activated")
                         except Exception as e:
                             print(f"[HUB] Database error: {e}")
-
                 else:
-                    pass
+                    print(f"[HUB] Message received: {cleaned_received}")
+                    bot.send_message(cleaned_received[2])
+
                 
             except Exception as e:
                 print(f"[HUB] Connection error:\n{e}")

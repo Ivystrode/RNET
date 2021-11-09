@@ -3,6 +3,7 @@ import socket, subprocess
 import time
 
 from control import servo_con, cpu_con, cam_con, wifi_con, rad_con
+from drone_control import drone_control, dronekit_con
 
 label = "[" + socket.gethostname().upper() + "]"
 
@@ -21,12 +22,20 @@ def command_router(command, hub_addr):
             if camera_status == 0:
                 print("Stopping video live stream first")
                 subprocess.run(['sudo','service','motion','stop'])
+                time.sleep(2)
             cam_con.capt_img(hub_addr)
+            print("Restarting video live stream")
+            time.sleep(2)
+            subprocess.run(['sudo','service','motion','start'])
+            print("Live streaming active")
         else:
             print("not ready yet")
             
     elif command[0] == "<WIFI>":
         wifi_con.wifi_control(command, hub_addr)
+    elif command[0] == "<FC_COMD>":
+        print("drone fc command")
+        dronekit_con.command_subrouter(command)
         
     elif command[0] == "<VIDEO>":
         print("VIDEO COMD")

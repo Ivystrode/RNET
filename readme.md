@@ -11,17 +11,28 @@ Make sure all PCs have git config set to match github account email address, oth
 - Status channel = 7501
 - Command channel = 7502
 
+DRONE TESTING - NOTE THAT HUB_ADDRESS IS CHANGED TO LOOPBACK ADDRESS
+CHANGE THIS BACK TO SERVER ADDRESS WHEN NOT SIM TESTING
+
+- Command pathway done from bot --> hub --> cmd router --> unit --> router --> drone controller
+- Signaller messages FC status back to hub
+- For working with drones/sim drones
+    - Start hub
+    - Start drone
+    - Start unit (unit_main.py)
+    - Start mission planner on hub machine - try pointing it to the [unit address]:14550 udp port
+    - Send commands via bot or web interface
+- When testing - running unit AND mission planner on loopback (127.0.0.1) stops mission planner from working so may need two machines to do proper testing
+- However it does seem to still run the sim (sim_vehicle.py output still showing the sim vehicle is active). Just mission planner that doesn't work.
+
 
 
 
 TODO
 - Telegram bot keyboard commands & nested options
-- Unique unit-location page - google maps interface with unit location & commands for mobile units (geodjango)
-- Video embed on unit page (perhaps even on dashboard if video active) - DONE but barebones
 - Unit control panel on unit profile page (start video stream, take picture, etc) - same commands as telegram bot
 - Run object recognition model/recognition alerts
 - RF silent mode
-- Mavlink testing
 - sqlite3 is rubbish, migrate to postgres
 
 How to use:
@@ -47,7 +58,7 @@ IMPORTANT - You will need to create your own telegram bot and use its key. For o
 
 13. To use with drones (simulated, unless you have a custom one pre-built):
     a. Install Mission Planner and SITL &/ sim_vehicle.py -- sim_vehicle.py -v ArduCopter -L devon
-    b. Run sim_vehicle.py (as quad/plane/anything)
+    b. Run sim_vehicle.py (as quad/plane/anything) or switch on drone/FC
     c. Open MP and then control as you would a real drone using RNET
     d. For a physical drone you will need one built to house RNET (ie an RPi in it with mountings for peripherals) and a means of telemetry (3DR/SiK radio)
 

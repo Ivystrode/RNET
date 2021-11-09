@@ -1,12 +1,23 @@
 from pymavlink import mavutil
 import time
+
+# from drone_control import signaller
 """
 Drone control. The functions have some really long lines, blame mavlink, that's just how it is.
 THIS WOULD BE A LOT NICER WITH DRONEKIT
-THIS WOULD BE A LOT NICER WITH DRONEKIT
-THIS WOULD BE A LOT NICER WITH DRONEKIT
-THIS WOULD BE A LOT NICER WITH DRONEKIT
+Or would it? Dronekit seems to have fewer features & some of the functionality abstracted away and not accessible
 """
+
+HUB_ADDRESS = "127.0.0.1"
+SIGNAL_PORT = 7501
+
+def command_subrouter(command):
+    print("CAM_CON - COMMAND RECEIVED")
+    print(command)
+    if command[1] == "launch":
+        arm_disarm(1)
+    else:
+        print(f"unknown command: {command[1]}")
 
 # REMEMBER!!! MAKE SURE ARM PARAMETERS ARE SET TO 0 OR 1 AS REQUIRED
 
@@ -45,6 +56,8 @@ def arm_disarm(which: int):
 
         msg = fc_connection.recv_match(type="COMMAND_ACK", blocking=True)
         print(msg)
+        # if msg.result == 0:
+        #     signaller.message(HUB_ADDRESS, SIGNAL_PORT, "FC ARMED")
     # see result param of the ACK message - it corresponds to MAV_RESULT result code. 0 means accepted/it worked
 
 # ==========TAKEOFF==========
@@ -72,21 +85,21 @@ def travel(x: int, y: int, z: int, vX: int):
     Basic move command relative to current position
     """
     fc_connection.mav.send(mavutil.mavlink.MAVLink_set_position_target_local_ned_message(10,
-                                                                                         fc_connection.target_system,
-                                                                                         fc_connection.target_component,
-                                                                                         mavutil.mavlink.MAV_FRAME_LOCAL_NED,
-                                                                                         int(0b100111110000), # type mask...image its a series of o(off) and 1(on) for the below features of this function. In reverse order. So you need to switch some on and some off
-                                                                                         x, # forward
-                                                                                         y,# right/left
-                                                                                         z, # negative is UPWARDS!!!
-                                                                                         vX, #vX
-                                                                                         0, #vY
-                                                                                         0, #vZ
-                                                                                         0,
-                                                                                         0,
-                                                                                         0,
-                                                                                         1.57, # yaw "target" - somehow 1.57 is 90 degrees to the right?!
-                                                                                         0.5)) # yaw_rate
+                                                        fc_connection.target_system,
+                                                        fc_connection.target_component,
+                                                        mavutil.mavlink.MAV_FRAME_LOCAL_NED,
+                                                        int(0b100111110000), # type mask...image its a series of o(off) and 1(on) for the below features of this function. In reverse order. So you need to switch some on and some off
+                                                        x, # forward
+                                                        y,# right/left
+                                                        z, # negative is UPWARDS!!!
+                                                        vX, #vX
+                                                        0, #vY
+                                                        0, #vZ
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        1.57, # yaw "target" - somehow 1.57 is 90 degrees to the right?!
+                                                        0.5)) # yaw_rate
     # 51.80409 -4.06425
 def global_travel():
     """
