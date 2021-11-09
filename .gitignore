@@ -21,7 +21,7 @@ img/
 vscode/
 
 # mavlink files
-drone_control/logs/
-drone_control/terrain/
+unit_con/drone_control/logs/
+unit_con/drone_control/terrain/
 mav.*
 eeprom.bin
