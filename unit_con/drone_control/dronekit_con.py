@@ -9,7 +9,7 @@ This can be done by measuring distance to target though
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 import time
 
-
+import unit_dbcontrol
 from drone_control import signaller
 from unit_id import unit_details
 
@@ -84,6 +84,7 @@ def launch(starting_alt):
         if vehicle.location.global_relative_frame.alt >= starting_alt*0.95:
             print("Takeoff successful - UAV at target altitude")
             signaller.message(HUB_ADDRESS, SIGNAL_PORT, f"{unit_details['unit_name']} Takeoff successful")
+            unit_dbcontrol.update_status("Airborne")
             break
         time.sleep(1)
         
@@ -91,6 +92,8 @@ def travel(dest, groundspeed: float):
     target = LocationGlobalRelative(dest[0], dest[1], dest[2])
     vehicle.simple_goto(target, groundspeed=groundspeed)
     print("Vehicle moving")
+    signaller.message(HUB_ADDRESS, SIGNAL_PORT, f"{unit_details['unit_name']} Travelling to {dest[0]} | {dest[1]} Final Alt: {dest[2]}")
+    unit_dbcontrol.update_status("Travelling")
 
 if __name__ == '__main__':
     if not vehicle.armed:
