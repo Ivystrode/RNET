@@ -17,7 +17,7 @@ from unit_id import unit_details
 # can this work if we use VPN/local network IP addresses??
 vehicle = connect("127.0.0.1:14550", wait_ready=True)
 
-HUB_ADDRESS = "127.0.0.1"
+HUB_ADDRESS = unit_details['hub_address']
 SIGNAL_PORT = 7501
 
 #connecting over serial device (for rpi connected to the vehicle via serial port, use com14 for windows serial AND telem radio)

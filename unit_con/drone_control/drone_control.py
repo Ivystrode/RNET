@@ -1,6 +1,8 @@
 from pymavlink import mavutil
 import time
 
+from unit_id import unit_details
+
 # from drone_control import signaller
 """
 Drone control. The functions have some really long lines, blame mavlink, that's just how it is.
@@ -8,7 +10,7 @@ THIS WOULD BE A LOT NICER WITH DRONEKIT
 Or would it? Dronekit seems to have fewer features & some of the functionality abstracted away and not accessible
 """
 
-HUB_ADDRESS = "127.0.0.1"
+HUB_ADDRESS = unit_details['hub_address']
 SIGNAL_PORT = 7501
 
 def command_subrouter(command):
