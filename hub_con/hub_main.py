@@ -121,6 +121,8 @@ class Hub():
                             print(f"[HUB] Database error: {e}")
                 else:
                     print(f"[HUB] Message received: {cleaned_received}")
+                    if cleaned_received[3] != "N/A":
+                        record_activity(cleaned_received[3])
                     bot.send_message(cleaned_received[2])
 
                 
