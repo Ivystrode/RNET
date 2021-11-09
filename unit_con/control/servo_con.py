@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 import socket
 
-SERVO 1 (ROTATE SERVO)
+# SERVO 1 (ROTATE SERVO)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12, GPIO.OUT)
 
@@ -14,7 +14,7 @@ rot_fl = 12.6
 rot_ce = 7.1
 rot_fr = 1.5
 
-# elevate_servo=GPIO.PWM(12,50)
+elevate_servo=GPIO.PWM(12,50)
 elevate_servo.start(2.5)
 
 print(f"[{socket.gethostname().upper()}] Testing elevate servo")
