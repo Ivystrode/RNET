@@ -18,3 +18,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     push_to_repo(vars(args)['message'])
+    
