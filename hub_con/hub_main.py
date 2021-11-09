@@ -141,15 +141,20 @@ class Hub():
             timenow = int(datetime.now().strftime("%Y%m%d%H%M"))
             
             for unit in known_units:
+                print(unit)
                 
                 if int(unit[5]) - timenow < -1:
+                    if unit[1] not in self.lost_connection_units:
+                        bot.send_message(f"Lost connection to {unit[1]}")
                     self.lost_connection_units[unit[1]] = unit[5] # if it's missed a statrep, report connection loss
-                    dbcontrol.update_unit(unit[2], "Disconnected", unit[5])
+                    dbcontrol.update_unit(unit[2], "Disconnected", unit[5], unit[6], unit[7])
+                    print(f"[HUB] Lost connection to {unit[1]}")
                     
                 else:
                     if unit[1] in self.lost_connection_units.keys(): # if it has since made a statrep, report connection regained
                         self.lost_connection_units.pop(unit[1])
                         print(f"[HUB] Connection recovered to {unit[1]}")
+                        bot.send_message(f"Connection to {unit[1]} recovered")
                         record_activity(unit[1], "Connection recovered")
                     
             # print(f"[HUB] Active units: {self.active_units}")
