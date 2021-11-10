@@ -107,6 +107,9 @@ def send_photo(hub_addr, file, file_description):
 
 # ==========Live video streaming==========
 def start_stream():
+    """
+    These two functions work but using motion isn't ideal
+    """
     subprocess.run(['sudo','service','motion','start'])
     print("Video transmitting")
 
@@ -119,6 +122,7 @@ def stream_video_worksButNotToBrowser():
     This works but not yet integrated into browser (ie target machine does receive)
     For now we are achieving stream and stream control with motion and subprocess
     Yes...hack-y
+    Use this to run server side recognition models
     """
     
     
