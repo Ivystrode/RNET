@@ -28,7 +28,12 @@ def unit_profile(request, unitname):
             command.unit = unit
             command.save()
             try:
-                commands.fc_comd(dbcontrol.get_unit_address(unitname), commands.command_channel, command.command)
+                if command.command[:3] == "FC_":
+                    commands.fc_comd(dbcontrol.get_unit_address(unitname), commands.command_channel, command.command)
+                    print("FC COMMAND")
+                else:
+                    commands.interface_command(unitname, command.command)
+                    print("Sent to hub command router")
                 record_activity(unitname, command.command)
                 messages.success(request, f'{command.command} command sent to {unit.name}')
                 return render(request, 'units/unit_profile.html', context)

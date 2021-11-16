@@ -67,7 +67,7 @@ class UnitPhoto(models.Model):
     # can replace the thumb = models.imagefield above this block
 
     caption = models.CharField(max_length=100)
-    time = models.DateTimeField(default=timezone.localtime(timezone.now()))
+    time = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-time']
@@ -80,7 +80,7 @@ class UnitFile(models.Model):
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='files')
     file = models.FileField(upload_to=unit_folder)
     caption = models.CharField(max_length=100)
-    time = models.DateTimeField(default=timezone.localtime(timezone.now()))
+    time = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-time']
@@ -92,7 +92,7 @@ class UnitActivity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='activity')
     detail = models.TextField(default="Unknown activity recorded")
-    time = models.DateTimeField(default=timezone.localtime(timezone.now()))
+    time = models.DateTimeField(auto_now=True)
     
     class Meta:
         ordering = ['-time']
@@ -104,7 +104,7 @@ class UnitActivity(models.Model):
 class UnitObjectDetection(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='object_detections')
-    time = models.DateTimeField(default=timezone.localtime(timezone.now()))
+    time = models.DateTimeField(auto_now=True)
     object_detected = models.CharField(default='Unknown', max_length=200, null=True, blank=True)
     
     class Meta:
@@ -115,18 +115,18 @@ class UnitObjectDetection(models.Model):
     
 class Command(models.Model):
     commands = (
-    ("TAKEOFF", "TAKEOFF"),
-    ("LAND", "LAND"),
-    ("RTH", "RTH"),
-    ("CAMERA SHOT", "CAMERA SHOT"),
-    ("WIFI SCAN", "WIFI SCAN"),
+    ("FC_TAKEOFF", "TAKEOFF"),
+    ("FC_LAND", "LAND"),
+    ("FC_RTH", "RTH"),
+    ("CAMERA_SHOT", "CAMERA SHOT"),
+    ("WIFI_SCAN", "WIFI SCAN"),
         )
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='commands')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issued')
     command = models.CharField(max_length=30)
-    time = models.DateTimeField(default=timezone.localtime(timezone.now()), editable=False)
+    time = models.DateTimeField(auto_now=True, editable=False)
     
     class Meta:
         ordering = ['-time']

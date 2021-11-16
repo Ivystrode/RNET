@@ -13,6 +13,13 @@ from hub_con import dbcontrol
 SEPARATOR = "<SEPARATOR>"
 command_channel = 7502
 
+def interface_command(unit, command):
+    unitaddr = dbcontrol.get_unit_address(unit)
+    if command == "WIFI_SCAN":
+        wifi_comd(unitaddr, command_channel, command, 5)
+    elif command == "CAMERA_SHOT":
+        send_file(unitaddr, command_channel, 'image', 'N/A')
+
 
 def get_unit_status(name, addr):
     print(f"[HUB - COMMANDS] Check status of {name} ({addr})")
