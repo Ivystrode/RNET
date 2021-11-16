@@ -25,6 +25,7 @@ SIGNAL_PORT = 7501
 
 """
 Connect to multiple vehicles by calling connect() for each vehicle
+Each vehicle will need to be a separate class?
 """
 print("Connected")
 print(f"Global location: {vehicle.location.global_frame}")

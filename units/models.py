@@ -113,6 +113,28 @@ class UnitObjectDetection(models.Model):
     def __str__(self):
         return str(self.object_detected) + ": " + str(self.time)
     
+class Command(models.Model):
+    commands = (
+    ("TAKEOFF", "TAKEOFF"),
+    ("LAND", "LAND"),
+    ("RTH", "RTH"),
+    ("CAMERA SHOT", "CAMERA SHOT"),
+    ("WIFI SCAN", "WIFI SCAN"),
+        )
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='commands')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issued')
+    command = models.CharField(max_length=30)
+    time = models.DateTimeField(default=timezone.localtime(timezone.now()), editable=False)
+    
+    class Meta:
+        ordering = ['-time']
+
+    def __str__(self):
+        return str(self.command) + ": " + str(self.time)
+    
+    
     
 # ==========MODEL ADMIN==========
 
@@ -124,7 +146,9 @@ class UnitActivityInline(admin.TabularInline):
     model = UnitActivity
 class UnitObjectDetectionInline(admin.TabularInline):
     model = UnitObjectDetection
+class CommandInLine(admin.TabularInline):
+    model = Command
 class UnitAdmin(admin.ModelAdmin):
     search_fields = ['name', 'type']
     list_display = ['name', 'type']
-    inlines = [UnitActivityInline, UnitFileInline, UnitPhotoInline, UnitObjectDetectionInline]
+    inlines = [UnitActivityInline, CommandInLine, UnitFileInline, UnitPhotoInline, UnitObjectDetectionInline]

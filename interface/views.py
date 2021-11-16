@@ -22,8 +22,6 @@ def home(request):
     
     
     if request.method == "POST":
-        # activate the unit control hub
-        # need to make this happen on a button press on the dashboard
         main_hub = hub_main.Hub("0.0.0.0")
         new_hub = Control_Hub(name="Hub", listen_address="0.0.0.0", activated=True)
         new_hub.save()
@@ -39,6 +37,7 @@ def home(request):
                 num_active_units += 1                
                 
         # until we associate a unit default profile pic to each one (not essential work)
+        # this is just for testing...
         unit_type = random.choice(["air", "ground"])
                 
         print(f"ACTIVE UNITS: {num_active_units}")

@@ -31,14 +31,9 @@
                             <div class="profilepic">
                                 <p><strong>Commands</strong></p>
                                 <br>
-                                <form>
-                                    <select class="ui black search dropdown">
-                                        <option value="">{{unit.name}}</option>
-                                        <option value="TAKEOFF">TAKEOFF</option>
-                                        <option value="RTH">RTH</option>
-                                        <option value="PIC">CAMERA SHOT</option>
-                                        <option value="WIFI">WIFI SCAN</option>
-                                    </select>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{form}}
                                     <br>
                                     <br>
                                     <button type="submit" class="ui secondary button">SEND</button>                                   

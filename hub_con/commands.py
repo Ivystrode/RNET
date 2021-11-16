@@ -86,7 +86,7 @@ def vid_comd(unit_addr, command_channel, command, time):
     
 def fc_comd(unit_addr, command_channel, command):
     
-    print("[HUB - COMMANDS] Flight Controller command")
+    print(f"[HUB - COMMANDS] Flight Controller command: {command}")
     s = socket.socket()
     s.connect((unit_addr, command_channel))
     s.send(f"<FC_COMD>{SEPARATOR}{command}".encode())
