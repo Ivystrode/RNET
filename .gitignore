@@ -19,6 +19,7 @@ venv.bak/
 media/
 img/
 vscode/
+.gz
 
 # mavlink files
 unit_con/drone_control/logs/
