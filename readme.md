@@ -8,9 +8,11 @@
 
 This readme is mostly my own notes
 
-###READMES:
+### READMES:
 1. Main readme (here)
 2. unit_con/drone_control - drone control readme
+
+---
 
 LMT-Desktop: Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
 
@@ -40,6 +42,7 @@ CHANGE THIS BACK TO SERVER ADDRESS WHEN NOT SIM TESTING (THIS APPLIES ONLY WHEN 
 - However it does seem to still run the sim (sim_vehicle.py output still showing the sim vehicle is active). Just mission planner that doesn't work.
 
 
+---
 
 
 TODO
