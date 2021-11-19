@@ -28,3 +28,4 @@ You will need a lot of hardware to run RNET properly, or a lot of patience to se
 1. Main readme (here)
 2. unit_con/drone_control - drone control readme
 
+Note - arstoahrta is a user that signed up with the email address "b@b.com". He'll appear as a contributor if you try to sign in to the git CLI with that as your "fake" email address...
