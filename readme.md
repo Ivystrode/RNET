@@ -1,10 +1,24 @@
+#RNET
+
+*"One hub to control them all, and in the browser, manage them"*
+
+**RNET** is a control system for area surveillance - as well as being capable of some active measures. A server hosts the control "hub", that links to numerous "units" over the cellular network using a VPN for security. The server hosts a web GUI for operators to manage and control the various units. Each unit is simply a companion computer (RPi) running the RNET OS image, either as a standalone static unit (essentially a smart CCTV camera with extra features) or integrated into an autonomous vehicle ("drone") that can take any form - multirotor, fixed wing, wheeled, water-borne, etc.
+
+---
+
+This readme is mostly my own notes
+
+###READMES:
+1. Main readme (here)
+2. unit_con/drone_control - drone control readme
+
 LMT-Desktop: Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
 
 LMT-Desktop-2: use project_env dir for virtual env (same alias as LMT DT 1)
 
 Make sure all PCs have git config set to match github account email address, otherwise commits will appear to come from some random user (FFS!)
 
-- The UNIT directory is what will be running on each static/rover unit. This will contain control code for the individual unit (inc for motion if a rover), communication code for talking to the hub, etc
+- The UNIT directory is what will be running on each static/rover unit. This will contain control code for the individual unit (inc for motion if a rover), communication code for talking to the hub, etc. There is also a unit OS image that should be flashed to each unit first.
 
 - The other files will run on the server. This is the web interface, control hub and a telegram bot to help control and check the status of all units. Bot will get grumpy.
 
@@ -12,7 +26,7 @@ Make sure all PCs have git config set to match github account email address, oth
 - Command channel = 7502
 
 DRONE TESTING - NOTE THAT HUB_ADDRESS IS CHANGED TO LOOPBACK ADDRESS
-CHANGE THIS BACK TO SERVER ADDRESS WHEN NOT SIM TESTING
+CHANGE THIS BACK TO SERVER ADDRESS WHEN NOT SIM TESTING (THIS APPLIES ONLY WHEN RUNNING HUB, UNIT, MISSION PLANNER AND SITL ON SAME MACHINE)
 
 - Command pathway done from bot --> hub --> cmd router --> unit --> router --> drone controller
 - Signaller messages FC status back to hub
@@ -30,7 +44,6 @@ CHANGE THIS BACK TO SERVER ADDRESS WHEN NOT SIM TESTING
 
 TODO
 - Telegram bot keyboard commands & nested options
-- Unit control panel on unit profile page (start video stream, take picture, etc) - same commands as telegram bot
 - Run object recognition model/recognition alerts
 - RF silent mode
 - sqlite3 is rubbish, migrate to postgres

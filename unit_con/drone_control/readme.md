@@ -2,6 +2,8 @@
 
 These are my own notes...
 
+Installation issues on prototype1. Reinstall from unit OS backup (simple enough to clone the repo) - NOT DONE YET
+
 1. Simulation (for testing)
     - Start unit and hub, in this case unit will be a test unit (ie running SITL sim_vehicle)
     - On test unit, once SITL sim_vehicle is running, type in the SITL console: *output add [ip_address_of_hub]:14550* (the port you select to receive on)
