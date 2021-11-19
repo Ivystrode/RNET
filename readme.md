@@ -1,8 +1,8 @@
 # RNET
 
-*"One hub to link them all, and in the browser, **manage them**"*
+*"One hub to link them all, and in the browser, manage them"*
 
-**RNET** is a control system for area surveillance - as well as being capable of some active measures. A server hosts the control "hub", that links to numerous "units" over the cellular network using a VPN for security. The server hosts a web GUI for operators to manage and control the various units. Each unit is simply a companion computer (RPi) running the RNET OS image, either as a standalone static unit (essentially a smart CCTV camera with extra features) or integrated into an autonomous vehicle ("drone") that can take any form - multirotor, fixed wing, wheeled, water-borne, etc.
+**RNET** is a control system for area surveillance - as well as being capable of some active measures. A server hosts the control "hub", that links to numerous "units" over the cellular network using a VPN for security. The server hosts a web GUI for operators to manage and control the various units. Each unit is built around a micro computer/SBC (RPi) running the RNET OS image, either as a standalone static unit (essentially a smart CCTV camera with extra features) or integrated into an autonomous vehicle ("drone") that can take any form - multirotor, fixed wing, wheeled, water-borne, etc.
 
 ---
 
