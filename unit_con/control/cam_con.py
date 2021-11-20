@@ -6,6 +6,7 @@ import cv2
 import os
 import time
 import threading
+import numpy as np
 
 from picamera import PiCamera
 from datetime import datetime
@@ -252,39 +253,51 @@ def im_recog():
     model.setInputMean((127.5,127.5,127.5))
     model.setInputSwapRB(True)
     
-    stream = cv2.VideoCapture(0)
+    # stream = cv2.VideoCapture(0)
+    
+    camera = PiCamera()
+    camera.resolution = (640, 480)
+    camera.framerate = 32
+    raw_capture = PiRGBArray(camera, size=(640, 480))
+    time.sleep(1)
+        
     
     while object_detection_active:
-        ret, frame = stream.read()
+        # ret, frame = stream.read()
+        for frame in camera.capture.continuous(raw_capture, format="bgr", use_video_port=True):
+            
+            image = frame.array
 
-        ClassIndex, confidence, bbox = model.detect(frame, confThreshold=0.55)
+            ClassIndex, confidence, bbox = model.detect(image, confThreshold=0.55)
 
-        if len(ClassIndex) != 0:
-            for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
-                if ClassInd <= 80:
-                    if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
-                        cv2.rectangle(frame, boxes, (0,255,0), 2)
-                        
-                        cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
+            if len(ClassIndex) != 0:
+                for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
+                    if ClassInd <= 80:
+                        if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
+                            cv2.rectangle(frame, boxes, (0,255,0), 2)
+                            
+                            cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
 
-                    if not detection:
-                        cv2.imwrite(f"detection.jpg", frame)
-                        detection = True
-                        print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
-                        send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
-                        
-        if detection:
-            counts_before_detect_again += 1
-            if counts_before_detect_again > 500: # this is about a minute or so? we don't want to do this TOO often...
-                detection = False
-                counts_before_detect_again = 0
-                
-            # monitor present only
-            cv2.imshow("Video detection", frame)
+                        if not detection:
+                            cv2.imwrite(f"detection.jpg", frame)
+                            detection = True
+                            print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
+                            send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
+                            
+            if detection:
+                counts_before_detect_again += 1
+                if counts_before_detect_again > 500: # this is about a minute or so? we don't want to do this TOO often...
+                    detection = False
+                    counts_before_detect_again = 0
+                    
+                # monitor present only
+                cv2.imshow("Video detection", frame)
 
-        # only relevant if testing unit with a monitor/keyboard connected...
-        if cv2.waitKey(5) & 0xFF == ord("c"):
-            break
+            # only relevant if testing unit with a monitor/keyboard connected...
+            if cv2.waitKey(5) & 0xFF == ord("c"):
+                break
+            
+            raw_capture.truncate(0)
 
     stream.release()
     cv2.destroyAllWindows()
