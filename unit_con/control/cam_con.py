@@ -300,7 +300,7 @@ def im_recog():
                 break
             
             raw_capture.truncate(0)
-
+    print("end of detection")
     # stream.release()
     camera.close()
     cv2.destroyAllWindows()
