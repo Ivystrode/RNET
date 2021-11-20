@@ -7,7 +7,7 @@ Mass image downloader for model training
 Still slightly buggy but good enough for now...
 """
 
-cdriver = "/home/main/Documents/Main/Code/Projects/rnet/rnet/data_collect/chromedriver"
+cdriver = "/home/main/Documents/Main/Code/Projects/rnet/rnet/data_management/chromedriver"
 
 wd = webdriver.Chrome(cdriver)
 save_folder = "media"
