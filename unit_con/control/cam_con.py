@@ -47,6 +47,7 @@ def command_subrouter(command):
             object_detection_active = True
             detection_duration = int(command[2])
             detection_thread.start()
+            count_thread.start()
         else:
             print("detection already running - stopping it now")
             det_stop()
