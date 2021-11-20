@@ -277,8 +277,8 @@ def im_recog():
                         if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
                             print(f"{labels[ClassInd-1]} detection!")
                             # these aren't working in this implementation
-                            # cv2.rectangle(frame, boxes, (0,255,0), 2)
-                            # cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
+                            cv2.rectangle(image, boxes, (0,255,0), 2)
+                            cv2.putText(image, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
 
                             if not detection:
                                 cv2.imwrite(f"detection.jpg", image)
@@ -293,7 +293,7 @@ def im_recog():
                     counts_before_detect_again = 0
                     
                 # monitor present only
-                cv2.imshow("Video detection", frame)
+                # cv2.imshow("Video detection", frame)
 
             # only relevant if testing unit with a monitor/keyboard connected...
             if cv2.waitKey(5) & 0xFF == ord("c"):
