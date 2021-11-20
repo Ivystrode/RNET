@@ -26,6 +26,7 @@ BUFFER_SIZE = 1024
 # ==========COMMAND SUBROUTER==========
 def command_subrouter(command):
     global detection_duration
+    global object_detection_active
     print("CAM_CON - COMMAND RECEIVED")
     print(command)
     if command[1] == "stream":
@@ -41,6 +42,7 @@ def command_subrouter(command):
         if not object_detection_active:
             # stop_stream()
             # time.sleep(2)
+            object_detection_active = True
             detection_duration = int(command[2])
             detection_thread.start()
         else:
