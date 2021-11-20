@@ -234,6 +234,7 @@ class SingleMotionDetector:
 def im_recog():
     """
     Run the model on the rpi's camera, if it detects a person or a car it takes a still and sends it to the users
+    Later on this function will take parameters allowing users to choose which model to use or what object to detect/look for
     """
     global object_detection_active
     stop_stream()
@@ -254,8 +255,6 @@ def im_recog():
     model.setInputMean((127.5,127.5,127.5))
     model.setInputSwapRB(True)
     
-    # stream = cv2.VideoCapture(0)
-    
     camera = PiCamera()
     camera.resolution = (1024, 768)
     camera.vflip = True
@@ -265,7 +264,6 @@ def im_recog():
         
     print("detecting active")
     while object_detection_active:
-        # ret, frame = stream.read()
         for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
             
             image = frame.array
@@ -276,7 +274,6 @@ def im_recog():
                 for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
                     if ClassInd <= 80:
                         if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
-                            print(f"{labels[ClassInd-1]} detection!")
                             # these aren't working in this implementation
                             cv2.rectangle(image, boxes, (0,255,0), 2)
                             cv2.putText(image, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
@@ -302,7 +299,8 @@ def im_recog():
             
             raw_capture.truncate(0)
 
-    stream.release()
+    # stream.release()
+    camera.close()
     cv2.destroyAllWindows()
     
 def det_timer(_duration):
