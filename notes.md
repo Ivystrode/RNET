@@ -1,3 +1,13 @@
+### TODO
+
+- Vid stream - separate to motion, stream vid to hub, hub run object recognition, bot send alert on detection/s
+- Telegram bot keyboard commands & nested options
+- Run object recognition model/recognition alerts on unit
+- Train drone detect model
+- RF silent mode
+- sqlite3 is rubbish, migrate to postgres
+
+---
 
 LMT-Desktop: Local bash alias is annoying. Use activate-rnet in home alias (for pyvenv)
 
@@ -29,12 +39,6 @@ CHANGE THIS BACK TO SERVER ADDRESS WHEN NOT SIM TESTING (THIS APPLIES ONLY WHEN 
 
 ---
 
-
-TODO
-- Telegram bot keyboard commands & nested options
-- Run object recognition model/recognition alerts
-- RF silent mode
-- sqlite3 is rubbish, migrate to postgres
 
 How to use:
 IMPORTANT - You will need to create your own telegram bot and use its key. For obvious reason I'm not letting anyone else have my bot key! Same goes for the django settings key. Store them as environment variables or however you want.

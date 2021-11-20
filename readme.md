@@ -6,7 +6,7 @@
 
 ---
 
-## Running RNET
+### Running RNET
 
 You will need a lot of hardware to run RNET properly, or a lot of patience to set up a sim environment with at least two machines. Furthermore you'll need to create your own bot token, map token/API key and install SITL & MP. Otherwise this probably isn't worth you doing.
 
@@ -26,6 +26,7 @@ You will need a lot of hardware to run RNET properly, or a lot of patience to se
 
 ### READMES:
 1. Main readme (here)
-2. unit_con/drone_control - drone control readme
+2. unit_con/drone_control
+3. data_management
 
 Note - arstoahrta is a user that signed up with the email address "b@b.com". He'll appear as a contributor if you try to sign in to the git CLI with that as your "fake" email address...

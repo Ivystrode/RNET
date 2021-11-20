@@ -8,6 +8,7 @@ __pycache__
 *.db
 *.jpg
 *.jpeg
+*.tar.gz
 .env
 project_env
 .venv
@@ -19,7 +20,7 @@ venv.bak/
 media/
 img/
 vscode/
-.gz
+chromedriver
 
 # mavlink files
 unit_con/drone_control/logs/
