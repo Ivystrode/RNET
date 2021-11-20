@@ -2,11 +2,15 @@
 Unique file for each unit
 """
 
-import socket, random
+import socket, hashlib
+
+hasher = hashlib.sha1()
+encoded_id = socket.gethostname().lower().encode()
+hasher.update(encoded_id)
 
 unit_details = {
     "unit_name": socket.gethostname().upper(),
-    "unit_id": hash(socket.gethostname()),
+    "unit_id": hasher.hexdigest(),
     "type": "prototype",
     "description": "Test unit for development",
     "hub_address": "192.168.1.79", # MEDEND NETWORK
