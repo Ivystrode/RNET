@@ -39,9 +39,8 @@ def command_subrouter(command):
     elif command[1] == "image_detection":
         print("toggle image detection")
         if not object_detection_active:
-            stop_stream()
-            print("stream stopped")
-            time.sleep(2)
+            # stop_stream()
+            # time.sleep(2)
             detection_duration = int(command[2])
             detection_thread.start()
         else:
@@ -234,6 +233,7 @@ def im_recog():
     """
     global object_detection_active
     stop_stream()
+    time.sleep(4)
     
     detection = False
     counts_before_detect_again = 0
