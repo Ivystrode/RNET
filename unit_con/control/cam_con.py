@@ -261,6 +261,7 @@ def im_recog():
     camera = PiCamera()
     camera.resolution = (1024, 768)
     camera.vflip = True
+    camera.hflip = True
     camera.framerate = 32
     raw_capture = PiRGBArray(camera, size=(1024, 768))
     time.sleep(1)
