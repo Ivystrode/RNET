@@ -1,6 +1,6 @@
 import os
 import socket, subprocess
-import time
+import time, threading
 
 from control import servo_con, cpu_con, cam_con, wifi_con, rad_con
 from drone_control import drone_control, dronekit_con
@@ -21,12 +21,14 @@ def command_router(command, hub_addr):
             camera_status = os.system('systemctl is-active --quiet motion')
             if camera_status == 0:
                 print("Stopping video live stream first")
-                subprocess.run(['sudo','service','motion','stop'])
+                # subprocess.run(['sudo','service','motion','stop'])
+                cam_con.stop_stream()
                 time.sleep(2)
             cam_con.capt_img(hub_addr)
             print("Restarting video live stream")
             time.sleep(2)
-            subprocess.run(['sudo','service','motion','start'])
+            # subprocess.run(['sudo','service','motion','start'])
+            cam_con.start_stream()
             print("Live streaming active")
         else:
             print("not ready yet")

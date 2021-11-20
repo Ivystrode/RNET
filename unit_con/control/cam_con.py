@@ -5,6 +5,7 @@ import subprocess
 import cv2
 import os
 import time
+import threading
 
 from picamera import PiCamera
 from datetime import datetime
@@ -16,11 +17,15 @@ label = "[" + socket.gethostname().upper() + "]"
 name = socket.gethostname()
 file_channel = 7503 # same as status channel which hub is listening on. make a third channel if necessary/possible (i think it was necessary)
 
+object_detection_active = False
+detection_duration = 30
+
 SEPARATOR = "<SEPARATOR>"
 BUFFER_SIZE = 1024
 
 # ==========COMMAND SUBROUTER==========
 def command_subrouter(command):
+    global detection_duration
     print("CAM_CON - COMMAND RECEIVED")
     print(command)
     if command[1] == "stream":
@@ -31,6 +36,17 @@ def command_subrouter(command):
         print("stopping video transmission")
         stop_stream()
         print("stream stopped")
+    elif command[1] == "image_detection":
+        print("toggle image detection")
+        if not object_detection_active:
+            stop_stream()
+            print("stream stopped")
+            time.sleep(2)
+            detection_duration = int(command[2])
+            detection_thread.start()
+        else:
+            print("detection already running - stopping it now")
+            det_stop()
     else:
         print(f"unknown command: {command[1]}")
 
@@ -117,12 +133,11 @@ def stop_stream():
     subprocess.run(['sudo','service','motion','stop'])
     print("Video transmission stopped")
 
-def stream_video_worksButNotToBrowser():
+def stream_video_direct():
     """
-    This works but not yet integrated into browser (ie target machine does receive)
-    For now we are achieving stream and stream control with motion and subprocess
-    Yes...hack-y
+    This streams direct to the hub - not the interface
     Use this to run server side recognition models
+    (At some point want this showing on the interface)
     """
     
     
@@ -214,7 +229,30 @@ class SingleMotionDetector:
 
 # ==========Object recognition==========
 def im_recog():
-    while True:
+    """
+    Run the model on the rpi's camera, if it detects a person or a car it takes a still and sends it to the users
+    """
+    global object_detection_active
+    stop_stream()
+    
+    detection = False
+    counts_before_detect_again = 0
+    
+    config_file = "ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt"
+    frozen_model="frozen_inference_graph.pb"
+    labels = []
+    with open("Labels", "r") as f:
+        labels = [line.strip() for line in f.readlines()]
+
+    model = cv2.dnn_DetectionModel(frozen_model, config_file)
+    model.setInputSize(320,320)
+    model.setInputScale(1.0/127.5)
+    model.setInputMean((127.5,127.5,127.5))
+    model.setInputSwapRB(True)
+    
+    stream = cv2.VideoCapture(0)
+    
+    while object_detection_active:
         ret, frame = stream.read()
 
         ClassIndex, confidence, bbox = model.detect(frame, confThreshold=0.55)
@@ -225,22 +263,52 @@ def im_recog():
                     if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
                         cv2.rectangle(frame, boxes, (0,255,0), 2)
                         
-                        # cv2.rectangle(frame,(boxes[0]-1, boxes[1]-30),(boxes[2]+boxes[0], boxes[1]),(0,255,0), -1)
                         cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
-                        
-                        print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
-                    
-        cv2.imshow("Video detection", frame)
 
+                    if not detection:
+                        cv2.imwrite(f"detection.jpg", frame)
+                        detection = True
+                        print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
+                        send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
+                        
+        if detection:
+            counts_before_detect_again += 1
+            if counts_before_detect_again > 500: # this is about a minute or so? we don't want to do this TOO often...
+                detection = False
+                counts_before_detect_again = 0
+                
+            # monitor present only
+            cv2.imshow("Video detection", frame)
+
+        # only relevant if testing unit with a monitor/keyboard connected...
         if cv2.waitKey(5) & 0xFF == ord("c"):
             break
 
     stream.release()
     cv2.destroyAllWindows()
+    
+def det_timer(_duration):
+    """
+    Stops the object recognition after the determined duration
+    """
+    global object_detection_active
+    time.sleep(_duration)
+    object_detection_active = False
+    print("Detection running status:")
+    print(detection_thread.is_alive())
+    time.sleep(2)
+    print(detection_thread.is_alive())
+    
+def det_stop():
+    """
+    Stops object detection on order
+    """
+    global object_detection_active
+    object_detection_active = False
+    print("Detection stopped")
+    
 
-
-
-
-
+detection_thread = threading.Thread(target=im_recog)
+count_thread = threading.Thread(target=det_timer, kwargs={'_duration':detection_duration})
 
 
