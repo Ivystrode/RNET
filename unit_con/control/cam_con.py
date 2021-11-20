@@ -257,9 +257,10 @@ def im_recog():
     # stream = cv2.VideoCapture(0)
     
     camera = PiCamera()
-    camera.resolution = (640, 480)
+    camera.resolution = (1024, 768)
+    camera.vflip = True
     camera.framerate = 32
-    raw_capture = PiRGBArray(camera, size=(640, 480))
+    raw_capture = PiRGBArray(camera, size=(1024, 768))
     time.sleep(1)
         
     print("detecting active")
