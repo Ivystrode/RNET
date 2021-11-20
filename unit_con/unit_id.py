@@ -9,7 +9,7 @@ unit_details = {
     "unit_id": random.randint(1, 10000),
     "type": "prototype",
     "description": "Test unit for development",
-    # "hub_address": "192.168.1.79", # MEDEND NETWORK
-    "hub_address": "127.0.0.1", # LOCAL TESTING
+    "hub_address": "192.168.1.79", # MEDEND NETWORK
+    # "hub_address": "127.0.0.1", # LOCAL TESTING
     "video_port": 8081
 }
