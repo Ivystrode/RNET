@@ -4,11 +4,13 @@
 
 **RNET** is a control system for area surveillance - as well as being capable of some active measures. A server hosts the control "hub", that links to numerous "units" over the cellular network using a VPN for security. The server hosts a web GUI for operators to manage and control the various units. Each unit is built around a micro computer/SBC (RPi) running the RNET OS image, either as a standalone static unit (essentially a smart CCTV camera with extra features) or integrated into an autonomous vehicle ("drone") that can take any form - multirotor, fixed wing, wheeled, water-borne, etc.
 
+I couldn't think of a name for this project, so I just went with RNET for "Remote Network" and it stuck.
+
 ---
 
 ### Running RNET
 
-You will need a lot of hardware to run RNET properly, or a lot of patience to set up a sim environment with at least two machines. Furthermore you'll need to create your own bot token, map token/API key and install SITL & MP. Otherwise this probably isn't worth you doing.
+You will need a lot of hardware to run RNET properly, or a lot of patience to set up a sim environment - preferably with at least two machines instead of one. Furthermore you'll need to create your own bot token, map token/API key and install SITL & MP. Otherwise this probably isn't worth you doing.
 
 1. Clone repo
 2. Install requirements (into a virtual env preferably)
