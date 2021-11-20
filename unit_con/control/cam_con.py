@@ -9,6 +9,7 @@ import threading
 import numpy as np
 
 from picamera import PiCamera
+from picamera.array import PiRGBArray
 from datetime import datetime
 from unit_id import unit_details
 
