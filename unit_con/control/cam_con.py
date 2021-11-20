@@ -265,7 +265,7 @@ def im_recog():
     
     while object_detection_active:
         # ret, frame = stream.read()
-        for frame in camera.capture.continuous(raw_capture, format="bgr", use_video_port=True):
+        for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
             
             image = frame.array
 
