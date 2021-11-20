@@ -339,9 +339,9 @@ def toggle_image_detection(update, context):
     
     try:
         commands.vid_comd(unit_address, command_channel, "image_detection", duration)
-        update.message.reply_text(f"Stop stream command sent to {name}")
+        update.message.reply_text(f"Object detection command send to {name}")
     except Exception as e:
-        update.message.reply_text(f"Unable to initiate video stream. {e}")
+        update.message.reply_text(f"Command error: {e}")
     
     
 def stop_wifi_scan(update, context):

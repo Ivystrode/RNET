@@ -238,8 +238,8 @@ def im_recog():
     detection = False
     counts_before_detect_again = 0
     
-    config_file = "ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt"
-    frozen_model="frozen_inference_graph.pb"
+    config_file = "unit_con/control/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt"
+    frozen_model="unit_con/control/frozen_inference_graph.pb"
     labels = []
     with open("unit_con/control/Labels", "r") as f:
         labels = [line.strip() for line in f.readlines()]
