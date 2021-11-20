@@ -262,7 +262,7 @@ def im_recog():
     raw_capture = PiRGBArray(camera, size=(640, 480))
     time.sleep(1)
         
-    
+    print("detecting active")
     while object_detection_active:
         # ret, frame = stream.read()
         for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
@@ -275,12 +275,12 @@ def im_recog():
                 for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
                     if ClassInd <= 80:
                         if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
+                            print(f"{labels[ClassInd-1]} detection!")
                             # these aren't working in this implementation
                             # cv2.rectangle(frame, boxes, (0,255,0), 2)
                             # cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
 
                             if not detection:
-                                frame = cv2.imread("detection-image.jpg")
                                 cv2.imwrite(f"detection.jpg", frame)
                                 detection = True
                                 print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
