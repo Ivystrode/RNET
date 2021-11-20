@@ -275,15 +275,15 @@ def im_recog():
                 for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
                     if ClassInd <= 80:
                         if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
-                            cv2.rectangle(frame, boxes, (0,255,0), 2)
-                            
-                            cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
+                            # these aren't working in this implementation
+                            # cv2.rectangle(frame, boxes, (0,255,0), 2)
+                            # cv2.putText(frame, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
 
-                        if not detection:
-                            cv2.imwrite(f"detection.jpg", frame)
-                            detection = True
-                            print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
-                            send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
+                            if not detection:
+                                cv2.imwrite(f"detection.jpg", frame)
+                                detection = True
+                                print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
+                                send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
                             
             if detection:
                 counts_before_detect_again += 1
