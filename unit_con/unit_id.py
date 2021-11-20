@@ -10,7 +10,7 @@ hasher.update(encoded_id)
 
 unit_details = {
     "unit_name": socket.gethostname().upper(),
-    "unit_id": hasher.hexdigest(),
+    "unit_id": str(hasher.hexdigest()),
     "type": "prototype",
     "description": "Test unit for development",
     "hub_address": "192.168.1.79", # MEDEND NETWORK
