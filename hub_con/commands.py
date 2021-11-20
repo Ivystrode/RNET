@@ -5,7 +5,7 @@ This could be refactored to be significantly less DRY but I'll waste my time wit
 """
 
 import socket, threading
-from hub_con import video_receiver
+from hub_con.video import video_receiver
 
 # import dbcontrol
 from hub_con import dbcontrol

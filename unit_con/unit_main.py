@@ -8,7 +8,10 @@ import time
 import threading
 
 import commands
-from drone_control import drone_control, dronekit_con
+try:
+    from drone_control import drone_control, dronekit_con
+except:
+    print("Can't import mavlink ffs need to reinstall OS")
 import unit_dbcontrol
 import unit_id
 
