@@ -7,6 +7,7 @@ import os
 import time
 import threading
 import numpy as np
+from datetime import datetime
 
 from picamera import PiCamera
 from picamera.array import PiRGBArray
@@ -280,7 +281,7 @@ def im_recog():
                             cv2.putText(image, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
 
                             if not detection:
-                                cv2.imwrite(f"detection.jpg", image)
+                                cv2.imwrite(f'{labels[ClassInd-1].capitalize()} detection_{datetime.now().strftime("%H%M%S")}.jpg', image)
                                 detection = True
                                 print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
                                 send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")

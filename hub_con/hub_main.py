@@ -217,7 +217,7 @@ class Hub():
                         # so I just do this
                         if file_description == "Wifi scan":
                             data.sort(filename)
-                        shutil.move(filename, f'media/')
+                        shutil.copy(filename, f'media/') # changed from move - to overwrite if already exists?
                         print(f"[HUB] {filename} moved to files directory")
                         
                         # save as unitphoto object to link to unit in django
