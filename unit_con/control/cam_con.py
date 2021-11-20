@@ -286,7 +286,7 @@ def im_recog():
                                     cv2.imwrite(f'{labels[ClassInd-1].capitalize()} detection_{datetime.now().strftime("%H%M%S")}.jpg', image)
                                     detection = True
                                     print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
-                                    send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
+                                    send_photo(unit_details['hub_address'], f'{labels[ClassInd-1].capitalize()} detection_{datetime.now().strftime("%H%M%S")}.jpg', f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
                                 
                 if detection:
                     counts_before_detect_again += 1
@@ -336,7 +336,7 @@ def det_stop():
     print(detection_thread.is_alive())
     
 
-detection_thread = threading.Thread(target=im_recog)
+detection_thread = threading.Thread(target=im_recog, daemon=True)
 count_thread = threading.Thread(target=det_timer, kwargs={'_duration':detection_duration})
 
 
