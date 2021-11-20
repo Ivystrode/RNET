@@ -43,6 +43,7 @@ def command_subrouter(command):
     elif command[1] == "image_detection":
         print("toggle image detection")
         if not object_detection_active:
+            print("its active")
             # stop_stream()
             # time.sleep(2)
             object_detection_active = True
@@ -265,41 +266,46 @@ def im_recog():
     time.sleep(1)
         
     print("detecting active")
-    while object_detection_active:
-        for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
-            
-            image = frame.array
+    while True:
+        if object_detection_active:
+            for frame in camera.capture_continuous(raw_capture, format="bgr", use_video_port=True):
+                
+                image = frame.array
 
-            ClassIndex, confidence, bbox = model.detect(image, confThreshold=0.55)
+                ClassIndex, confidence, bbox = model.detect(image, confThreshold=0.55)
 
-            if len(ClassIndex) != 0:
-                for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
-                    if ClassInd <= 80:
-                        if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
-                            # these aren't working in this implementation
-                            cv2.rectangle(image, boxes, (0,255,0), 2)
-                            cv2.putText(image, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
+                if len(ClassIndex) != 0:
+                    for ClassInd, conf, boxes in zip(ClassIndex.flatten(), confidence.flatten(), bbox):
+                        if ClassInd <= 80:
+                            if labels[ClassInd-1] == "person" or labels[ClassInd-1] == "car":
+                                # these aren't working in this implementation
+                                cv2.rectangle(image, boxes, (0,255,0), 2)
+                                cv2.putText(image, f"{labels[ClassInd-1].capitalize()}: {round(float(conf*100), 1)}%",(boxes[0], boxes[1]-10), font, fontScale=font_scale, color=(0,255,0), thickness=2)
 
-                            if not detection:
-                                cv2.imwrite(f'{labels[ClassInd-1].capitalize()} detection_{datetime.now().strftime("%H%M%S")}.jpg', image)
-                                detection = True
-                                print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
-                                send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
-                            
-            if detection:
-                counts_before_detect_again += 1
-                if counts_before_detect_again > 500: # this is about a minute or so? we don't want to do this TOO often...
-                    detection = False
-                    counts_before_detect_again = 0
-                    
-                # monitor present only
-                # cv2.imshow("Video detection", frame)
+                                if not detection:
+                                    cv2.imwrite(f'{labels[ClassInd-1].capitalize()} detection_{datetime.now().strftime("%H%M%S")}.jpg', image)
+                                    detection = True
+                                    print(f"{labels[ClassInd-1]} detected, dimensions: {boxes}, confidence: {round(float(conf*100), 1)}%")
+                                    send_photo(unit_details['hub_address'], "detection.jpg", f"{labels[ClassInd-1].capitalize()} detected: {round(float(conf*100), 1)}% confidence")
+                                
+                if detection:
+                    counts_before_detect_again += 1
+                    if counts_before_detect_again > 500: # this is about a minute or so? we don't want to do this TOO often...
+                        detection = False
+                        counts_before_detect_again = 0
+                        
+                    # monitor present only
+                    # cv2.imshow("Video detection", frame)
 
-            # only relevant if testing unit with a monitor/keyboard connected...
-            if cv2.waitKey(5) & 0xFF == ord("c"):
-                break
-            
-            raw_capture.truncate(0)
+                # only relevant if testing unit with a monitor/keyboard connected...
+                if cv2.waitKey(5) & 0xFF == ord("c"):
+                    break
+                
+                raw_capture.truncate(0)
+                
+        else:
+            break
+        
     print("end of detection")
     # stream.release()
     camera.close()
@@ -324,6 +330,10 @@ def det_stop():
     global object_detection_active
     object_detection_active = False
     print("Detection stopped")
+    print("Detection running status:")
+    print(detection_thread.is_alive())
+    time.sleep(2)
+    print(detection_thread.is_alive())
     
 
 detection_thread = threading.Thread(target=im_recog)
