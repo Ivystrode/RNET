@@ -12,8 +12,8 @@ from datetime import datetime
 import json
 import logging
 import os
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Dispatcher, ConversationHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters, Dispatcher, ConversationHandler
 import threading
 import time
 import socket
@@ -50,7 +50,7 @@ def start_bot():
     global dispatcher
     
     dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('menu', menu))
+    dispatcher.add_handler(CommandHandler('menu', open_menu))
     dispatcher.add_handler(CommandHandler('check', check))
     dispatcher.add_handler(CommandHandler('help', help))
     
@@ -71,21 +71,185 @@ def start_bot():
     
     dispatcher.add_handler(CommandHandler('fc', fc_comd))
     
+    dispatcher.add_handler(CallbackQueryHandler(main_menu, pattern="main"))
+    
+    dispatcher.add_handler(CallbackQueryHandler(rf_menu, pattern="rf_menu"))
+    dispatcher.add_handler(CallbackQueryHandler(cam_menu, pattern="cam_menu"))
+    dispatcher.add_handler(CallbackQueryHandler(fc_menu, pattern="fc_menu"))
+    
+    dispatcher.add_handler(CallbackQueryHandler(wifi_menu, pattern="wifi_menu"))
+    
+    dispatcher.add_handler(CallbackQueryHandler(unit_menu, pattern="unit_menu"))
+    dispatcher.add_handler(CallbackQueryHandler(button))
+    
     updater.start_polling()
     updater.idle()
     
-def menu(update, context):
     
+# ==========MAIN MENUS==========
+def open_menu(update, context):
+    update.message.reply_text("Main Menuu", reply_markup=main_menu_keyboard())
+    
+    
+# LEVEL 1
+# -------
+def main_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="Main Menu", reply_markup=main_menu_keyboard())
+    
+# LEVEL 2
+# -------
+def rf_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="RF Menu", reply_markup=rf_menu_keyboard())
+    
+def cam_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="Camera Menu", reply_markup=cam_menu_keyboard())
+    
+def fc_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="Flight Control", reply_markup=fc_menu_keyboard())
+    
+# LEVEL 3
+# -------    
+def wifi_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="Wifi Menu", reply_markup=wifi_menu_keyboard())
+    
+# LEVEL 4
+# -------    
+def unit_menu(update, context):
+    print("unit menu")
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="Select Unit", reply_markup=unit_menu_keyboard())
+    
+def button(update, context):
+    query = update.callback_query
+    query.answer()
+    choice = query.data
+    if choice == "wifi_menu":
+        send_message("yaaa")
+    else:
+        print(choice)
+        
+def choose_unit(update, context, command):
+    print("nahhh")
+    query = update.callback_query
+    query.answer()
+    choice = query.data
+    
+    
+    
+    
+# ==========KEYBOARDS==========
+
+# ==========LEVEL 1 (MAIN)==========
+def main_menu_keyboard():
     keyboard = [
     [
-        InlineKeyboardButton("Option 1", callback_data='1'),
-        InlineKeyboardButton("Option 2", callback_data='2'),
+        InlineKeyboardButton("RF Commands", callback_data='rf_menu'),
+        InlineKeyboardButton("Camera Commands", callback_data='cam_menu'),
     ],
-    [InlineKeyboardButton("Option 3", callback_data='3')],
+    [InlineKeyboardButton("Flight Control", callback_data='fc_menu')],
 ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    return InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+# ==========LEVEL 2==========
+    
+def rf_menu_keyboard():
+    print("++++++++++++++++++++++++++++++++")
+    keyboard = [
+    [
+        InlineKeyboardButton("Wifi Scan", callback_data='wifi_menu'),
+        InlineKeyboardButton("RF Emission", callback_data='rf_emit_menu'),
+        InlineKeyboardButton("RF Silent Mode", callback_data='rf_silent'),
+    ],
+    [InlineKeyboardButton("Back", callback_data='main_menu')],
+]
+    return InlineKeyboardMarkup(keyboard)
+        
+def cam_menu_keyboard():
+    print("++++++++++++++++++++++++++++++++")
+    keyboard = [
+    [
+        InlineKeyboardButton("Send Picture", callback_data='unit_menu'),
+        InlineKeyboardButton("Object Detection", callback_data='object_detection'),
+        InlineKeyboardButton("Stream Video", callback_data='stream_video'),
+    ],
+    [InlineKeyboardButton("Back", callback_data='main_menu')],
+]
+    return InlineKeyboardMarkup(keyboard)
+            
+            
+def fc_menu_keyboard():
+    print("++++++++++++++++++++++++++++++++")
+    keyboard = [
+    [
+        InlineKeyboardButton("Takeoff", callback_data='fc_takeoff'),
+        InlineKeyboardButton("RTH", callback_data='fc_rth'),
+        InlineKeyboardButton("Payload Release", callback_data='fc_payload_release'),
+    ],
+    [InlineKeyboardButton("Back", callback_data='main_menu')],
+]
+    return InlineKeyboardMarkup(keyboard)    
+
+# ==========LEVEL 3========== 
+def wifi_menu_keyboard():
+    print("++++++++++++++++++++++++++++++++")
+    keyboard = [
+    [
+        InlineKeyboardButton("Short Scan (5s)", callback_data='short_scan'),
+        InlineKeyboardButton("Med Scan (60s)", callback_data='med_scan'),
+        InlineKeyboardButton("Long Scan (5 mins)", callback_data='long_scan'),
+    ],
+    [InlineKeyboardButton("Back", callback_data='rf_menu')],
+]
+    return InlineKeyboardMarkup(keyboard)
+# ==========LEVEL 4==========
+       
+def unit_menu_keyboard():
+    print("++++++++++++++++++++++++++++++++")
+    # keyboard = [InlineKeyboardButton(f"{unit}", callback_data='try') for unit in dbcontrol.get_all_units()]
+    units = dbcontrol.get_all_units()
+    print("====")
+    print(units)
+    print("===")
+    buttons = []
+    for unit in units:
+        print(unit[1])
+        buttons.append(InlineKeyboardButton(unit[1], callback_data="none"))
+    print(buttons)
+    
+    print("right...")
+    return InlineKeyboardMarkup(buttons)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+# ==========WORKER FUNCTIONS==========    
+# THIS GETS VERY BORING NOW
+# THESE ARE JUST FUNCTIONS YOU CAN CALL BY SENDING MESSAGES TO THE BOT
+# NOT SO DIFFERENT FROM A CLI
+    
+    
+    
+    
     
 def start(update, context):
     global users
@@ -278,6 +442,8 @@ def send_unrequested_file(unitname, filename, file_description):
 def send_message(message):
     for user in users:
         updater.bot.send_message(user, message)
+def send_private_message(user, message):
+    updater.bot.send_message(user, message)
         
 
 def wifi_comd(update, context):
