@@ -6,14 +6,11 @@ import shutil
 import socket
 import threading
 import time
-import django
-from django.utils.translation import activate
 from tqdm import tqdm
 from decouple import config
 
 import sys
-sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/") # stop module import error ffs
-# print(sys.path)
+sys.path.append("/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/")
 
 from units.models import UnitPhoto
 from .models import Control_Hub
@@ -21,15 +18,10 @@ from .views import save_file, record_activity
 
 from hub_con import commands
 from hub_con import dbcontrol
-from hub_con.hub_bot import bot
+
+from hub_con.hub_bot.bot import HubBot
 
 from interface import data
-
-# from django.db import models
-
-# import commands
-# import dbcontrol
-# from hub_bot import bot
 
 class Hub():
     
@@ -46,7 +38,10 @@ class Hub():
         self.lost_connection_units = {} # units that have missed a statrep
         
         self.initialise()
-        bot.activate_hub_bot()
+        
+        self.bot = HubBot()
+        self.bot.activate_hub_bot()
+        
         dbcontrol.connect()
     
     def initialise(self):
@@ -123,7 +118,7 @@ class Hub():
                     print(f"[HUB] Message received: {cleaned_received}")
                     if cleaned_received[3] != "N/A":
                         record_activity(cleaned_received[3])
-                    bot.send_message(cleaned_received[2])
+                    self.bot.send_message(cleaned_received[2])
 
                 
             except Exception as e:
@@ -145,7 +140,7 @@ class Hub():
                 
                 if int(unit[5]) - timenow < -1:
                     if unit[1] not in self.lost_connection_units:
-                        bot.send_message(f"Lost connection to {unit[1]}")
+                        self.bot.send_message(f"Lost connection to {unit[1]}")
                     self.lost_connection_units[unit[1]] = unit[5] # if it's missed a statrep, report connection loss
                     dbcontrol.update_unit(unit[2], "Disconnected", unit[5], unit[6], unit[7])
                     print(f"[HUB] Lost connection to {unit[1]}")
@@ -154,7 +149,7 @@ class Hub():
                     if unit[1] in self.lost_connection_units.keys(): # if it has since made a statrep, report connection regained
                         self.lost_connection_units.pop(unit[1])
                         print(f"[HUB] Connection recovered to {unit[1]}")
-                        bot.send_message(f"Connection to {unit[1]} recovered")
+                        self.bot.send_message(f"Connection to {unit[1]} recovered")
                         record_activity(unit[1], "Connection recovered")
                     
             # print(f"[HUB] Active units: {self.active_units}")
@@ -206,7 +201,7 @@ class Hub():
                     # if file_description[0:5] != "FIREQ": # if this is a file the unit decided to send of its own accord
                     try:
                         print(f"[HUB] Unsolicited file, sending to bot")
-                        bot.send_unrequested_file(unit_name, filename, file_description)
+                        self.bot.send_unrequested_file(unit_name, filename, file_description)
                         print(f"[HUB] File sent by bot")
                         
                         #Ideally I'd like to save to a subdir in media/
