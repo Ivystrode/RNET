@@ -300,6 +300,7 @@ def im_recog():
 
                 # only relevant if testing unit with a monitor/keyboard connected...
                 if cv2.waitKey(5) & 0xFF == ord("c"):
+                    object_detection_active = False
                     break
                 
                 raw_capture.truncate(0)

@@ -72,7 +72,7 @@ def receive_file(unit_name, filename, filetype):
     pass
     
 def wifi_comd(unit_addr, command_channel, command, time):
-    """Currently issue monitor mode commands to the unit"""
+    """Currently issue monitor mode commands to the unit, later will also attack wifi networks"""
     
     print("[HUB - COMMANDS] Wifi command")
     s = socket.socket()
@@ -92,6 +92,7 @@ def vid_comd(unit_addr, command_channel, command, time):
     s.close()
     
 def fc_comd(unit_addr, command_channel, command):
+    """Send a command to the unit that will be routed through pymavlink to the FC"""
     
     print(f"[HUB - COMMANDS] Flight Controller command: {command}")
     s = socket.socket()
