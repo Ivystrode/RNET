@@ -17,8 +17,13 @@ You will need a lot of hardware to run RNET properly, or a lot of patience to se
 3. Create telegram bot - set key as environment variable - and maps token. Also create new django settings secret key.
 4. Download media dir (I haven't uploaded this yet so the web GUI ("interface") will look ***terrible*** without this FYI!!!)
 5. For simulated testing:
-    a. Install Mission Planner
-    b. Install ardupilot/SITL (Software In The Loop)
+    - Install Mission Planner
+    - Install ardupilot/SITL (Software In The Loop)
+6. For Live testing:
+    - Flash RNET OS to Micro SD card
+    - Install SD card into an RPi/s
+    - Connect secondary wifi antenna and 4G antenna (one that emulated eth0 with activated SIM) to RPi
+    - Turn on RPi
 6. Run manage.py runserver in the project directory, and open the web interface
 7. Click "Activate Hub" to activate the server
 8. On a separate machine - from the main project dir, run unit_con/unit_main.py (live units will autorun on startup)
