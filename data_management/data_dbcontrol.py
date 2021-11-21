@@ -30,8 +30,9 @@ def insert(bssid, channel, power, essid, maker, sightings):
         cur.execute("INSERT INTO test VALUES (?, ?, ?, ?, ?, ?)", (bssid, channel, power, essid, maker, sightings))
     except:
         raise Exception("exists")
-    conn.commit()
-    conn.close()
+    finally:
+        conn.commit()
+        conn.close()
     
 def check_device(bssid):
     conn=sqlite3.connect("data_db.db")

@@ -76,9 +76,13 @@ def check_unit_status(address):
 def insert(id, name, address, type, status, last_statrep, lat, lng):
     conn=sqlite3.connect("hub_db.sqlite3", timeout=5)
     cur=conn.cursor()
-    cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep, lat, lng))
-    conn.commit()
-    conn.close()
+    try:
+        cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep, lat, lng))
+    except Exception as e:
+        print("[HUB - DATABASE] Entry error: {e}")
+    finally:
+        conn.commit()
+        conn.close()
     
 def delete(address):
     conn=sqlite3.connect("hub_db.sqlite3")

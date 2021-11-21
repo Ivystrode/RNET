@@ -17,6 +17,9 @@ class DataSorter():
         # self.engine = sqlalchemy.create_engine('sqlite:///data_db.db')
         
     def mac_lookup(self, macaddr):
+        """
+        Got warning saying I had exceeded request limit so commenting this out for now...
+        """
         # headers = {'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'}
         # r = requests.get(f'https://maclookup.app/search/result?mac={macaddr}', headers = headers)
         # c = r.content
@@ -26,10 +29,13 @@ class DataSorter():
         # except:
         #     org="Unknown"
         # return org
-        print("simulating makers (maclookup requests exceeded")
+        print("simulating makers (maclookup requests exceeded)")
         return "simulated"
         
     def mac_gather(self, data):
+        """
+        Later on we could use the suffixes as unique identifiers in a more user/aesthetically friendly way?
+        """
         macs = [mac for mac in data['BSSID'] if mac != "Station MAC"]
         mac_prefixes = [mac[:8].replace(":", "") for mac in macs] 
         mac_suffixes = [mac[9:].replace(":", "") for mac in macs]
@@ -42,13 +48,22 @@ class DataSorter():
     
     def deserialize(self, table, device, detail):
         res = dbcon.check_device(device)
-        for row in res[0]:
-            original_db_string = row[detail]
-            original_db_string = original_db_string.replace("[", "")
-            original_db_string = original_db_string.replace("]", "")
-            original_db_string = original_db_string.replace("'", "")
-            original_db_string = original_db_string.split(",")
-            return original_db_string
+        original_db_string = res[0][detail]
+        
+        original_db_string = original_db_string.replace("[", "")
+        original_db_string = original_db_string.replace("]", "")
+        original_db_string = original_db_string.replace("'", "")
+        original_db_string = original_db_string.replace('"', "")
+        original_db_string = original_db_string.split(",")
+        return original_db_string
+        
+    def deserialize_one(self, string):
+        string = string.replace("[", "")
+        string = string.replace("]", "")
+        string = string.replace("'", "")
+        string = string.replace('"', "")
+        string = string.split(",")
+        return string
         
 
     def store_new_report(self):
@@ -87,15 +102,21 @@ class DataSorter():
         data = data[['BSSID','channel','power_readings','ESSID', 'maker', 'sightings']]
         
         for row in data.iterrows():
-            time.sleep(1)
             try:
                 dbcon.insert(row[1][0], row[1][1], self.serialize(row[1][2]), row[1][3], row[1][4], self.serialize(row[1][5]))
             except:
+                print(f"Entry already exists for {row[1][0]}")
+                
                 power_readings_list = self.deserialize(self.db_table, row[1][0], 2)
                 sightings_list = self.deserialize(self.db_table, row[1][0], 5)
                 
-                power_readings_list.append(str(row[1][2]))
-                sightings_list.append(str(row[1][5]))
+                p = self.deserialize_one(row[1][2])
+                s = self.deserialize_one(row[1][5])
+                for _ in p:
+                    power_readings_list.append(_)
+                for _ in s:
+                    sightings_list.append(_)
+                
                 
                 power_readings_list = self.serialize(power_readings_list)
                 sightings_list = self.serialize(sightings_list)
@@ -111,5 +132,5 @@ class DataSorter():
         
 if __name__ == '__main__':
     # just for testing
-    d = DataSorter("../media/20210601-1752_prototype1_wifi_scan-01.csv", "test")
+    d = DataSorter("../media/20211121-1659_TESTUNIT-1_wifi_scan-01.csv", "test")
     d.store_new_report()
