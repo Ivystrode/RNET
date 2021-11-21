@@ -2,7 +2,6 @@ from pymavlink import mavutil
 import time
 
 from unit_id import unit_details
-
 # from drone_control import signaller
 """
 Drone control. The functions have some really long lines, blame mavlink, that's just how it is.
@@ -26,20 +25,7 @@ def command_subrouter(command):
 # Note - link/assign unit model to UDP port --- ? Can be a model attribute
 # how about we make a drone Class that can be instantiated by models individually...maybe
 
-# ==========INITIATE==========
-fc_connection = mavutil.mavlink_connection('udpin:localhost:14551') # creates a UDP socket to *listen* on said port - udpout *initiates* an IP connection
-# 14550 used for GCS to monitor vehicle
 
-# we are going to need to use multiple ports for multiple vehicles - both inbound and outbound
-
-# Check for connection...
-fc_connection.wait_heartbeat() 
-print(f"=====Receiving Telemetry! {fc_connection.target_system} -- {fc_connection.target_component}=====")
-
-# Get initial location
-msg = fc_connection.recv_match(type="TERRAIN_REPORT", blocking=True)
-coords = [msg.lat, msg.lon]
-print(f"Vehicle location: {coords} | Alt: {msg.current_height}")
 
 # ==========ARM==========
 # ARM - connection.target_system & component is filled in when we receive the heartbeat from the vehicle
@@ -127,6 +113,20 @@ def global_travel():
         msg = fc_connection.recv_match(type="LOCAL_POSITION_NED", blocking=True)
         print(msg)
 if __name__ == '__main__':
+    # ==========INITIATE==========
+    fc_connection = mavutil.mavlink_connection('udpin:localhost:14551') # creates a UDP socket to *listen* on said port - udpout *initiates* an IP connection
+    # 14550 used for GCS to monitor vehicle
+
+    # we are going to need to use multiple ports for multiple vehicles - both inbound and outbound
+
+    # Check for connection...
+    fc_connection.wait_heartbeat() 
+    print(f"=====Receiving Telemetry! {fc_connection.target_system} -- {fc_connection.target_component}=====")
+
+    # Get initial location
+    msg = fc_connection.recv_match(type="TERRAIN_REPORT", blocking=True)
+    coords = [msg.lat, msg.lon]
+    print(f"Vehicle location: {coords} | Alt: {msg.current_height}")
     arm_disarm(1)
     takeoff(24)
     time.sleep(5)

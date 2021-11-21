@@ -5,7 +5,6 @@ For example no way of confirming commands were successful
 No way of indicate when a moving vehicle has reached its destination (whereas pymavlink constantly sending telemetry)
 This can be done by measuring distance to target though
 """
-
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 import time
 

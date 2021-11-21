@@ -1,7 +1,6 @@
 import os
 import socket, subprocess
 import time, threading
-
 from control import servo_con, cpu_con, cam_con, wifi_con, rad_con
 from drone_control import drone_control, dronekit_con
 
