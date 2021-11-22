@@ -7,14 +7,11 @@ import data_dbcontrol as dbcon
 
 class DataSorter():
     
-    def __init__(self, file_to_read, db_table):
-        self.file_to_read = file_to_read
-        self.db_table = db_table
+    def __init__(self):
+        self.file_to_read = ''
+        self.db_table = ''
         self.devices = []
         dbcon.connect()
-        
-        #need this??
-        # self.engine = sqlalchemy.create_engine('sqlite:///data_db.db')
         
     def mac_lookup(self, macaddr):
         """
@@ -66,7 +63,10 @@ class DataSorter():
         return string
         
 
-    def store_new_report(self):
+    def store_new_report(self, file_to_read, db_table):
+        self.file_to_read = file_to_read
+        self.db_table = db_table
+        
         data = pd.read_csv(self.file_to_read, sep=r'\s*,\s*', encoding='ascii', engine='python')
         mac_prefixes = self.mac_gather(data)
         manufacturers = [self.mac_lookup(prefix) for prefix in mac_prefixes]
@@ -132,5 +132,5 @@ class DataSorter():
         
 if __name__ == '__main__':
     # just for testing
-    d = DataSorter("../media/20211121-1659_TESTUNIT-1_wifi_scan-01.csv", "test")
-    d.store_new_report()
+    d = DataSorter()
+    d.store_new_report("../media/20211121-1659_TESTUNIT-1_wifi_scan-01.csv", "test")
