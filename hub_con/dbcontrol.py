@@ -5,7 +5,7 @@ def connect():
     cur = conn.cursor()
     cur.execute(f"CREATE TABLE IF NOT EXISTS units (id TEXT PRIMARY KEY, Name text, Address text, Type text, Status text, last_statrep text, lat text, lng text)")
     cur.execute(f"CREATE TABLE IF NOT EXISTS authorised_users (id INTEGER PRIMARY KEY, Name text, Type text)") # where id should be telegram chat id or USER id? probably user
-    print("[HUB - Database] Database created")
+    print("[HUB] DATABASE: Database created")
     conn.commit()
     conn.close()
     
@@ -14,7 +14,7 @@ def connect():
     
 def get_unit_status(unitname):
     unitname = unitname.lower()
-    print(f"[HUB - DATABASE] checking status of {unitname}")
+    print(f"[HUB] DATABASE: checking status of {unitname}")
     conn=sqlite3.connect("hub_db.sqlite3")
     cur = conn.cursor()
 
@@ -22,7 +22,7 @@ def get_unit_status(unitname):
     result = cur.fetchall()
     
     if result:
-        # print(f"[HUB - DATABASE] {unitname} found, status: {result}")
+        # print(f"[HUB] DATABASE: {unitname} found, status: {result}")
         return result[0][4], result[0][5]
     else:
         print(f"{unitname} not found, it may not have checked in recently")
@@ -42,7 +42,7 @@ def get_unit_address(unitname):
         # print(f"{unitname} found: {result}")
         return result[0][2]
     else:
-        print(f"[HUB - DATABASE] {unitname} not found, it may not have checked in recently")
+        print(f"[HUB] DATABASE: {unitname} not found, it may not have checked in recently")
         
 def get_all_units():    
     conn=sqlite3.connect("hub_db.sqlite3")
@@ -79,7 +79,7 @@ def insert(id, name, address, type, status, last_statrep, lat, lng):
     try:
         cur.execute("INSERT INTO units VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (id, name.lower(), address, type, status, last_statrep, lat, lng))
     except Exception as e:
-        print("[HUB - DATABASE] Entry error: {e}")
+        print("[HUB] DATABASE: Entry error: {e}")
     finally:
         conn.commit()
         conn.close()

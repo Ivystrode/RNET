@@ -5,7 +5,7 @@ For example no way of confirming commands were successful
 No way of indicate when a moving self.vehicle has reached its destination (whereas pymavlink constantly sending telemetry)
 This can be done by measuring distance to target though
 """
-from dronekit import connect, vehicleMode, LocationGlobalRelative
+from dronekit import connect, VehicleMode, LocationGlobalRelative
 import time
 
 import unit_dbcontrol
@@ -67,7 +67,7 @@ class FlightController():
         print(f"[{unit_details['unit_name']}] FC CONTROL: WARNING - ARMING MOTORS!")
         time.sleep(1)
         
-        self.vehicle.mode = self.vehicleMode("GUIDED")
+        self.vehicle.mode = VehicleMode("GUIDED")
         self.vehicle.armed = True
         
         while not self.vehicle.armed:
