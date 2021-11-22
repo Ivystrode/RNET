@@ -13,12 +13,12 @@ HUB_ADDRESS = unit_details['hub_address']
 SIGNAL_PORT = 7501
 
 def command_subrouter(command):
-    print("CAM_CON - COMMAND RECEIVED")
+    print(f"[{unit_details['unit_name']}] FC CONTROL: ")
     print(command)
     if command[1] == "launch":
         arm_disarm(1)
     else:
-        print(f"unknown command: {command[1]}")
+        print(f"[{unit_details['unit_name']}] FC CONTROL: unknown command: {command[1]}")
 
 # REMEMBER!!! MAKE SURE ARM PARAMETERS ARE SET TO 0 OR 1 AS REQUIRED
 
@@ -31,7 +31,7 @@ def command_subrouter(command):
 # ARM - connection.target_system & component is filled in when we receive the heartbeat from the vehicle
 def arm_disarm(which: int):
     if which > 1:
-        print("Function takes either 0 or 1 disarm/arm")
+        print("[{unit_details['unit_name']}] FC CONTROL: Function takes either 0 or 1 disarm/arm")
     else:
         fc_connection.mav.command_long_send(fc_connection.target_system,
                                             fc_connection.target_component,
@@ -111,7 +111,7 @@ def global_travel():
                                                                                          0)) # yaw_rate
     while True:
         msg = fc_connection.recv_match(type="LOCAL_POSITION_NED", blocking=True)
-        print(msg)
+        print(f"[{unit_details['unit_name']}] FC CONTROL: {msg}")
 if __name__ == '__main__':
     # ==========INITIATE==========
     fc_connection = mavutil.mavlink_connection('udpin:localhost:14551') # creates a UDP socket to *listen* on said port - udpout *initiates* an IP connection
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     # Get initial location
     msg = fc_connection.recv_match(type="TERRAIN_REPORT", blocking=True)
     coords = [msg.lat, msg.lon]
-    print(f"Vehicle location: {coords} | Alt: {msg.current_height}")
+    print(f"[{unit_details['unit_name']}] FC CONTROL: Vehicle location: {coords} | Alt: {msg.current_height}")
     arm_disarm(1)
     takeoff(24)
     time.sleep(5)

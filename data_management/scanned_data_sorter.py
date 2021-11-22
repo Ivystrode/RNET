@@ -43,6 +43,7 @@ class DataSorter():
         detail = str(detail)
         return detail
     
+    # make DRY with args, works fine for now
     def deserialize(self, table, device, detail):
         res = dbcon.check_device(device)
         original_db_string = res[0][detail]
@@ -105,7 +106,7 @@ class DataSorter():
             try:
                 dbcon.insert(row[1][0], row[1][1], self.serialize(row[1][2]), row[1][3], row[1][4], self.serialize(row[1][5]))
             except:
-                print(f"Entry already exists for {row[1][0]}")
+                print(f"[HUB] DATA: Entry already exists for {row[1][0]}")
                 
                 power_readings_list = self.deserialize(self.db_table, row[1][0], 2)
                 sightings_list = self.deserialize(self.db_table, row[1][0], 5)

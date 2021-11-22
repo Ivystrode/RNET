@@ -4,7 +4,7 @@ def connect():
     conn = sqlite3.connect("data_db.db")
     cur = conn.cursor()
     cur.execute(f"CREATE TABLE IF NOT EXISTS test (BSSID TEXT PRIMARY KEY, channel text, power_readings text, ESSID text, maker text, sightings text)")
-    print("[DATA - Database] Database created")
+    print("[HUB] DATA: Database created")
     conn.commit()
     conn.close()
 

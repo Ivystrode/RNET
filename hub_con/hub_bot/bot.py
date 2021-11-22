@@ -21,8 +21,8 @@ from hub_con.hub_bot.bot_menu import MenuTree
 
 class HubBot():
     
-    def __init__(self):
-        self.tbot_key=config('tbot_key')
+    def __init__(self, tbot_key):
+        self.tbot_key = tbot_key
 
         self.updater = None
         self.dispatcher = None
@@ -106,14 +106,14 @@ class HubBot():
         try:
             dbcontrol.add_authorised_user(int(chat_id), users_name, "regular")
             users = [user[0] for user in dbcontrol.get_all_users()]
-            print(f"[HUB - BOT] User added to authorised users: {str(chat_id)}")
+            print(f"[HUB] BOT: User added to authorised users: {str(chat_id)}")
             update.message.reply_text(reply)
             time.sleep(0.5)
             update.message.reply_text(f"I have added you to the authorised users database, {users_name}")
-            print(f"[HUB - BOT] Added user {users_name}, ID: {chat_id} to authorised users database")
+            print(f"[HUB] BOT: Added user {users_name}, ID: {chat_id} to authorised users database")
         except Exception as e:
             update.message.reply_text(f"You're already on the authorised users list, {users_name}, or for some reason I can't add you")
-            print(f"[HUB - BOT] Add authorised user error: {e}")
+            print(f"[HUB] BOT: Add authorised user error: {e}")
         
     def help(self,update, context):
         reply = "work in progress"
@@ -178,7 +178,7 @@ class HubBot():
                 update.message.reply_text(f"{e}")
                 
         else: # if just one argument - which is the name of the unit - it is an autorotate command
-            print("[HUB - BOT] Move servo function; autorotate command")
+            print("[HUB] BOT: Move servo function; autorotate command")
             axis = "<AUTOROTATE>"
             position = "n/a"
 
@@ -234,7 +234,7 @@ class HubBot():
             vid_length = "n/a"
             update.message.reply_text(f"Requesting camera shot from {name}...")
         else:
-            print("error not ready yet, will send image for now")
+            print("[HUB] DEBUG: error not ready yet, will send image for now")
             filetype = "image"
             vid_length = "n/a"
             
@@ -260,30 +260,30 @@ class HubBot():
         # since i added the user data base i need to change how  this works
         #users = dbcontrol.get_all_users()
         #print(users)
-        print(f"[HUB - BOT] FILE SEND, users: {users}")
+        print(f"[HUB] BOT: FILE SEND, users: {users}")
         try:
             for user in users:
                 sent = False
                 try:
                     self.updater.bot.sendPhoto(user, photo=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
-                    print("[HUB - BOT] Sent photo")
+                    print("[HUB] BOT: Sent photo")
                     sent = True
                 except Exception as e:
-                    print(f"[HUB - BOT] Not a photo...send as file?")
+                    print(f"[HUB] BOT: Not a photo...send as file?")
                     try:
                         if not sent:
                             self.updater.bot.sendDocument(user, document=open(filename, "rb"), timeout=50, caption=f"{unitname.upper()}: {file_description}")
-                            print("[HUB - BOT] Sent as document")
+                            print("[HUB] BOT: Sent as document")
                         sent = True
                     except Exception as e:
-                        print(f"[HUB - BOT] Unable to send file (neither a photo or a document recognised) {filename} - {e}")
+                        print(f"[HUB] BOT: Unable to send file (neither a photo or a document recognised) {filename} - {e}")
                 if sent == True:
-                    print(f"[HUB - BOT] File sent: {filename} to {user}")
+                    print(f"[HUB] BOT: File sent: {filename} to {user}")
                 else:
-                    print(f"[HUB - BOT] Unable to send {filename} to user: {user}")
+                    print(f"[HUB] BOT: Unable to send {filename} to user: {user}")
                     
         except Exception as e:
-            print(f"[HUB - BOT] Unable to send file {filename} - {e}")
+            print(f"[HUB] BOT: Unable to send file {filename} - {e}")
             
     def send_message(self, message):
         for user in users:
@@ -377,10 +377,10 @@ class HubBot():
     def activate_hub_bot(self):
         global users
         users = [user[0] for user in dbcontrol.get_all_users()]
-        print(f"[HUB - BOT] Authorised users by ID: {users}")
+        print(f"[HUB] BOT: Authorised users by ID: {users}")
         bot_thread = threading.Thread(name='bot', target=self.start_bot)
         bot_thread.start()
-        print("[HUB - BOT] Hub bot started")
+        print("[HUB] BOT: Hub bot started")
         
 # if __name__ == '__main__':
 #     HubBot.start_bot()

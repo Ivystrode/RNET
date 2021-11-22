@@ -1,5 +1,6 @@
 """
 Handles Flight Controller messaging to the hub
+Either make it a separate Class or integrate it into the FlightController class
 """
 import socket
 import unit_id
@@ -19,9 +20,9 @@ def message(HUB_ADDRESS, PORT, message):
     
     s=socket.socket()
     
-    print(f"[FLIGHT CONTROLLER] Connecting to hub...")
+    print(f"[{unit_details['unit_name']}] FC SIGNALLER: Connecting to hub...")
     s.connect((HUB_ADDRESS, PORT))
-    print(f"[FLIGHT CONTROLLER] Connected to hub at {HUB_ADDRESS}")
+    print(f"[{unit_details['unit_name']}] FC SIGNALLER: Connected to hub at {HUB_ADDRESS}")
     
     message = f"<TELEM>{SEPARATOR}{unit_details['unit_name'].upper()}{SEPARATOR}{message}{SEPARATOR}Launch"
     
@@ -29,6 +30,6 @@ def message(HUB_ADDRESS, PORT, message):
     
     s.send(message.encode())
     
-    print(f"[FLIGHT CONTROLLER] Message to hub: {message}\n")
+    print(f"[{unit_details['unit_name']}] FC SIGNALLER: Message to hub: {message}\n")
     
     s.close()

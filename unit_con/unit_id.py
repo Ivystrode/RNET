@@ -1,7 +1,9 @@
 """
 Unique file for each unit
 ID is based on a bash of the hostname/unit name
-Should make these class attributes? But then because of the way I've structured the bloody thing I'd have circular imports
+
+THESE NEED TO BE UPDATED TO BE CLASS ATTRIBUTES NOW
+
 """
 
 import socket, hashlib

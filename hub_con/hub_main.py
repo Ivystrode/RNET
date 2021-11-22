@@ -1,7 +1,5 @@
 from datetime import datetime
-import json
 import ntpath
-import os
 import shutil
 import socket
 import threading
@@ -39,7 +37,7 @@ class Hub():
         
         self.initialise()
         
-        self.bot = HubBot()
+        self.bot = HubBot(config('tbot_key'))
         self.bot.activate_hub_bot()
         
         dbcontrol.connect()

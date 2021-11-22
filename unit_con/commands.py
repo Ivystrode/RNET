@@ -19,23 +19,23 @@ def command_router(command, hub_addr):
         if command[1] == "image":
             camera_status = os.system('systemctl is-active --quiet motion')
             if camera_status == 0:
-                print("Stopping video live stream first")
+                print(f"{label} COMMANDS: Stopping video live stream")
                 # subprocess.run(['sudo','service','motion','stop'])
                 cam_con.stop_stream()
                 time.sleep(2)
             cam_con.capt_img(hub_addr)
-            print("Restarting video live stream")
+            print(f"{label} COMMANDS: Restarting video live stream")
             time.sleep(2)
             # subprocess.run(['sudo','service','motion','start'])
             cam_con.start_stream()
-            print("Live streaming active")
+            print(f"{label} COMMANDS: Live streaming active")
         else:
-            print("not ready yet")
+            print(f"{label} DEBUG: not ready yet")
             
     elif command[0] == "<WIFI>":
         wifi_con.wifi_control(command, hub_addr)
     elif command[0] == "<FC_COMD>":
-        print("drone fc command")
+        print(F"{label} COMMANDS: FC command...")
         dronekit_con.command_subrouter(command)
         
     elif command[0] == "<VIDEO>":
@@ -55,34 +55,34 @@ def servo_command(command):
         try:
             axis = command[1]
             position = command[2]
-            print(f"{label} {axis.upper()} servo move to {position}")
+            print(f"{label} COMMANDS: {axis.upper()} servo move to {position}")
             servo_con.rotate(position, axis)
-            print(f"{label} Command complete")
+            print(f"{label} COMMANDS: Command complete")
         except:
-            print(f"{label} Invalid servo move command")
+            print(f"{label} COMMANDS: Invalid servo move command")
     
     # CENTRE ONE OR BOTH SERVOS
     elif command[1] == "centre" or command[1] == "center":
         if command[2] == "rotate" or command[2] == "x":
             try:
                 servo_con.centre_rotate()
-                print(f"{label} Centred X servo axis")
+                print(f"{label} COMMANDS: Centred X servo axis")
             except Exception as e:
-                print(f"{label} Servo error: {e}")
+                print(f"{label} COMMANDS: Servo error: {e}")
                 
         elif command[2] == "elevate" or command[2] == "y":
             try:
                 servo_con.centre_elevate()()
-                print(f"{label} Centred Y servo axis")
+                print(f"{label} COMMANDS: Centred Y servo axis")
             except Exception as e:
-                print(f"{label} Servo error: {e}")
+                print(f"{label} COMMANDS: Servo error: {e}")
                 
         elif command[2] == "both" or not command[2]:
             try:
                 servo_con.centre_both()
-                print(f"{label} Centred X and Y servo axis")
+                print(f"{label} COMMANDS: Centred X and Y servo axis")
             except Exception as e:
-                print(f"{label} Servo error: {e}")
+                print(f"{label} COMMANDS: Servo error: {e}")
                 
     # AUTOROTATE - SCAN CAMERA BACK AND FORTH
     elif command[1] == "<AUTOROTATE>":
@@ -91,6 +91,6 @@ def servo_command(command):
 def cpu_comd(command):
     
     if command[1] == "reboot":
-        print(f"{label} Rebooting...")
+        print(f"{label} COMMANDS: Rebooting...")
         time.sleep(2)
         cpu_con.reboot()
