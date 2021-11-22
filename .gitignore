@@ -22,6 +22,8 @@ img/
 vscode/
 chromedriver
 
+camlocal.py
+
 # mavlink files
 unit_con/drone_control/logs/
 unit_con/drone_control/terrain/
