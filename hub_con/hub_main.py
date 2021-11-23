@@ -134,7 +134,7 @@ class Hub():
             timenow = int(datetime.now().strftime("%Y%m%d%H%M"))
             
             for unit in known_units:
-                print(unit)
+                # print(unit)
                 
                 if int(unit[5]) - timenow < -1:
                     if unit[1] not in self.lost_connection_units:
