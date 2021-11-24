@@ -4,10 +4,11 @@ from keras.preprocessing import image
 from keras.models import load_model
 from keras.preprocessing.image import ImageDataGenerator
 
-class DetectionModelBuilder():
+class ClassificationModelBuilder():
     """
-    Builds a new NN to detect custom objects. Use auto-downloader to download image data.
-    Scalability in question...
+    Builds a new NN. Use auto-downloader to download image data.
+    Questionable...
+    This doesn't actually work that well, there are loads of other ways to do this, shortcutting isn't paying off....
     """
 
     def __init__(self):
@@ -20,10 +21,10 @@ class DetectionModelBuilder():
         self.subject = subject
         
         train_datagen = ImageDataGenerator(rescale = 1./255, shear_range = 0.2, zoom_range = 0.2, horizontal_flip = True)
-        self.training_set = train_datagen.flow_from_directory(f'datasets/{subject}', target_size = (64, 64), batch_size = 32, class_mode = 'binary')
+        self.training_set = train_datagen.flow_from_directory(f'datasets/{subject}/train', target_size = (64, 64), batch_size = 32, shuffle=True, class_mode = 'binary')
 
         test_datagen = ImageDataGenerator(rescale = 1./255)
-        self.test_set = test_datagen.flow_from_directory(f'datasets/{subject}', target_size = (64, 64), batch_size = 32, class_mode = 'binary')
+        self.test_set = test_datagen.flow_from_directory(f'datasets/{subject}/test', target_size = (64, 64), batch_size = 32, shuffle=True, class_mode = 'binary')
         
         print("Training and test sets created")
         self.create_model(self.subject)
@@ -39,13 +40,15 @@ class DetectionModelBuilder():
         self.cnn.add(tf.keras.layers.Dense(units=128, activation='relu'))
         self.cnn.add(tf.keras.layers.Dense(units=1, activation='sigmoid'))
 
-        self.cnn.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
-        self.cnn.fit(x = self.training_set, validation_data = self.test_set, epochs = 30)
+        self.cnn.compile(optimizer = 'SGD', loss = 'binary_crossentropy', metrics = ['accuracy'])
+        
+        # need a LOT more data to do this properly
+        self.cnn.fit(x = self.training_set, validation_data = self.test_set, epochs = 25)
         
         print("Model trained")
         save = input("Save model? y/n\n")
         if save.lower() == "y":
-            self.cnn.save(f"{self.subject}_detmod.hd5")
+            self.cnn.save(f"{self.subject}_classmod.hd5")
 
     def predict(self, pic): # model
         # model = load_model(f"{model}_detmod.hd5")
@@ -68,16 +71,6 @@ class DetectionModelBuilder():
         
 # ==== TEST =====
 if __name__ == '__main__':
-    new_model = DetectionModelBuilder()
-    new_model.get_data("quadcopter")
+    new_model = ClassificationModelBuilder()
+    new_model.get_data("drones")
     
-    # testing...
-    new_model.predict("quad.jpg")
-    new_model.predict("blackpaint.jpg")
-    
-    new_model.predict("bebop.jpg")
-    new_model.predict("fruit.jpg")
-    
-    new_model.predict("racingdrone.jpg")
-    new_model.predict("shopfront.jpg")
-    # seems to work alright, more data would be good though (smash autodownloader sometime)

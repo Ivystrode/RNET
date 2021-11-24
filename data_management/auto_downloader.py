@@ -65,19 +65,26 @@ def download_img(subject, img_url):
         
         if not os.path.exists("datasets"):
             os.mkdir("datasets")
+            
+        # don't like how DRY this is but it "just werks"
         if not os.path.exists(f"datasets/{save_folder}"):
             os.mkdir(f"datasets/{save_folder}")
+            if not os.path.exists(f"datasets/{save_folder}/train"):
+                os.mkdir(f"datasets/{save_folder}/train")
+                if not os.path.exists(f"datasets/{save_folder}/train/1"):
+                    os.mkdir(f"datasets/{save_folder}/train/1")
             
-        filename = f"datasets/{save_folder}/{subject}_{global_download_count}.jpg"
+        filename = f"datasets/{save_folder}/train/1/{subject}_{global_download_count}.jpg"
         
         with open(filename, "wb") as f:
             f.write(response.content)
         print(f"Downloaded {global_download_count}")
+        global_download_count += 1
         
     except Exception as e:
         print(f"Failed: {e}")
         
-    global_download_count += 1
+    # global_download_count += 1
     
 
 if __name__ == '__main__':
@@ -90,7 +97,7 @@ if __name__ == '__main__':
     
     images = image_search(wd,
                           vars(args)['subject'],
-                          2,
+                          1,
                           int(vars(args)['number'])
                           )
     
@@ -101,5 +108,22 @@ if __name__ == '__main__':
     for i, url in enumerate(images):
         print(url)
         download_img(vars(args)['subject'], url)
-    
+        
+    random_images = input("Download random images to train against? y/n\n>>")
+    if random_images == "y":
+
+        if not os.path.exists(f"datasets/{vars(args)['subject']}/train/0"):
+            os.mkdir(f"datasets/{vars(args)['subject']}/train/0")
+        
+        for i in range(int(vars(args)['number'])):
+            url = "https://picsum.photos/200/200/?random"
+            response = requests.get(url)
+            filename = f"datasets/{vars(args)['subject']}/train/0/rands_{str(i)}.jpg"
+            if response.status_code == 200:
+                with open(filename, 'wb') as f:
+                    print("saving: " + filename)
+                    f.write(response.content)
+                print(f"Downloaded {i}")
+                    
     wd.quit()
+    
