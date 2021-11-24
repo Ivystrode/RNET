@@ -7,10 +7,11 @@ Mass image downloader for model training
 Still slightly buggy but good enough for now...
 """
 
-cdriver = "/home/main/Documents/Main/Code/Projects/rnet/rnet/data_management/chromedriver"
+# NEED TO MAKE DT1 AND 2 THE SAME FOR PATH
+cdriver = "/home/main/Documents/File_Root/Main/Code/Projects/rnet/rnet/data_management/chromedriver"
 
 wd = webdriver.Chrome(cdriver)
-save_folder = "media"
+save_folder = ""
 
 global_download_count = 0
 
@@ -56,14 +57,18 @@ def image_search(wd, subject, delay, n_images):
 
 def download_img(subject, img_url):
     global global_download_count
+    global save_folder
+    save_folder = str(subject)
     
     try:
         response = requests.get(img_url)
         
-        if not os.path.exists("media"):
-            os.mkdir("media")
+        if not os.path.exists("datasets"):
+            os.mkdir("datasets")
+        if not os.path.exists(f"datasets/{save_folder}"):
+            os.mkdir(f"datasets/{save_folder}")
             
-        filename = f"{save_folder}/{subject}_{global_download_count}.jpg"
+        filename = f"datasets/{save_folder}/{subject}_{global_download_count}.jpg"
         
         with open(filename, "wb") as f:
             f.write(response.content)
@@ -85,7 +90,7 @@ if __name__ == '__main__':
     
     images = image_search(wd,
                           vars(args)['subject'],
-                          1,
+                          2,
                           int(vars(args)['number'])
                           )
     

@@ -1,7 +1,7 @@
 ## Data stuff
 
-Collecting and managing data:
-- Collection of data to be used for system features (ie object recognition models)
-- Management of data collected by the system (ie detected device data)
+- Collect data (acquire imagesets, scan reports)
+- Use imagesets to train detection models
+- Sort scan reports for device tracking
 
-Collected data will be stored in a "media" directory that will not be necessary to include in the git repository
+Datasets are ignored by git for obvious reasons!!
