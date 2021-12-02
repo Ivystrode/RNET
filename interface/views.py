@@ -94,6 +94,7 @@ def data(request):
         We also want it to be done only on receipt of a new report or something
         Not every time the bloody page loads - testing only!
         """
+        # ==========This bit can move to hub_main file receiver when I'm happy with how it works then it can take the sending unit name==========
         data_updater = DataSorter()
         data_updater.store_new_report("media/20210601-1834_prototype1_wifi_scan-01.csv", "test", "euthan4")
         
