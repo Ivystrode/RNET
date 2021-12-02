@@ -87,18 +87,27 @@ class DataSorter():
         power_dict = {}
         for device, power_reading in zip(data['BSSID'], data['Power']):
             power_readings = []
-            power_readings.append(power_reading)
+            if not pd.isna(power_reading):
+                power_readings.append(power_reading)
             power_dict[device] = power_readings
 
         # sort out devices that appeared below second heaader row (non-dynamically...)
         for index, row in data.iterrows():
             if int(row.channel) < 0:
-                data.at[index, 'Power'] = row.channel
+                power = float(data.at[index, 'channel'])
+                print(f"Channel reading is {power}")
+                # data.at[index, 'Power'] = power
                 data.at[index, 'channel'] = 99
+                if len(power_dict[row.BSSID]) == 0:
+                    power_dict[row.BSSID] = power
+                    print(f"NEW dict is  {power_dict[row.BSSID]}")
+                else:
+                    power_dict[row.BSSID].append(power)
+                    print(f"Power dict is now {power_dict[row.BSSID]}")
 
             
         data = data.assign(sightings=[str(value) for value in sightings_dict.values()])
-        data = data.assign(power_readings=[str(value) for value in power_dict.values()])
+        data = data.assign(power_readings=[str(value) for value in power_dict.values() if str(value) != "nan"])
         data = data.assign(maker=[m for m in manufacturers])
         data = data[['BSSID','channel','power_readings','ESSID', 'maker', 'sightings']]
         
@@ -134,4 +143,4 @@ class DataSorter():
 if __name__ == '__main__':
     # just for testing
     d = DataSorter()
-    d.store_new_report("../media/20211121-1659_TESTUNIT-1_wifi_scan-01.csv", "test")
+    d.store_new_report("../media/20210601-1752_prototype1_wifi_scan-01.csv", "test")
