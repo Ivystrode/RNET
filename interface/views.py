@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.views.generic.edit import CreateView
 
-# from graphos.sources.simple import SimpleDataSource
+from graphos.sources.model import ModelDataSource
 # from graphos.renderers.gchart import LineChart
 
 
@@ -101,11 +101,12 @@ def data(request):
         units = Unit.objects.all()
         devices = Device.objects.all()
         detections = DeviceDetection.objects.all()
-        # scan_data = SimpleDataSource(data=)
+        scan_data = ModelDataSource(detections, fields = ['time','power'])
         
         context = {'units':units,
                    'devices':devices,
-                   'detections':detections}
+                   'detections':detections,
+                   'scan_data':scan_data}
         try:
             hub = Control_Hub.objects.get(name="Hub")
             context['hub'] = hub
