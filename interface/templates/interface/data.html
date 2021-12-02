@@ -19,29 +19,37 @@
                 <div class="row">
                     <div class="column" id="table-column">
                         <div class="table-container">
+                          {% for device in devices %}
                             <table class="ui celled inverted table">
                               <thead>
                                 <tr>
-                                  <th>Unit</th>
-                                  <th>Type</th>
-                                  <th>Status</th>
+                                  <th>{{device.mac}}</th>
+                                  <th>{{device.make}}</th>
+                                </tr>
+                              </thead>
+                              <thead>
+                                <tr>
+                                  <th>Sightings</th>
+                                  <th>Power</th>
+                                  <th>Channel</th>
+                                  <th>Detected by</th>
                                 </tr>
                               </thead>
       
                               <tbody>
-  
-                              {% for unit in units %}
+                                {% for det in device.detections.all %} 
                                 <tr class="profile-link">
-                                  <td>{{unit.name}}</td>
-                                  <td>{{unit.type}}</td>
-                                  <td>{{unit.status}}</td>
+                                  <td>{{det.time}}</td>
+                                  <td>{{det.power}}</td>
+                                  <td>{{det.channel}}</td>
+                                  <td>{{det.detected_by}}</td>
                                 </tr>
-                                {% endfor %}
   
                               </tbody>
+                              {% endfor %}
   
                             </table>
-                              
+                            {% endfor %}
                           </div>
                     </div>
 

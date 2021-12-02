@@ -92,14 +92,17 @@ def data(request):
         OF WHATEVER UNIT SENDS THE WIFI SCAN REPORT
         """
         data_updater = DataSorter()
-        data_updater.store_new_report("media/20210601-1817_prototype1_wifi_scan-01.csv", "test", "euthan4")
+        data_updater.store_new_report("media/20210601-1834_prototype1_wifi_scan-01.csv", "test", "euthan4")
         
         
         units = Unit.objects.all()
-        
+        devices = Device.objects.all()
+        detections = DeviceDetection.objects.all()
         # scan_data = SimpleDataSource(data=)
         
-        context = {'units':units}
+        context = {'units':units,
+                   'devices':devices,
+                   'detections':detections}
         try:
             hub = Control_Hub.objects.get(name="Hub")
             context['hub'] = hub
