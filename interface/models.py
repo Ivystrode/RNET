@@ -40,6 +40,9 @@ class DeviceDetection(models.Model):
     power = models.IntegerField(blank=True, null=True)
     channel = models.IntegerField(blank=True, null=True)
     
+    class Meta:
+        ordering = ['-time']
+    
 class DeviceDetectionInline(admin.TabularInline):
     model = DeviceDetection
     

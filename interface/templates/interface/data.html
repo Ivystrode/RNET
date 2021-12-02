@@ -15,11 +15,10 @@
     <body>
         <div class="page-body">
 
-            <div class = "ui stackable two column inverted divided grid">
-                <div class="row">
+            <div class = "ui stackable three column inverted divided grid">
+                  {% for device in devices %}
                     <div class="column" id="table-column">
                         <div class="table-container">
-                          {% for device in devices %}
                             <table class="ui celled inverted table">
                               <thead>
                                 <tr>
@@ -49,14 +48,13 @@
                               {% endfor %}
   
                             </table>
-                            {% endfor %}
                           </div>
                     </div>
+                    {% endfor %}
 
                     <div class="column" id="graph-column---maybe">
 
                     </div>
-                </div>
             </div>
 
 

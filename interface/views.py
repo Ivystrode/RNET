@@ -90,6 +90,9 @@ def data(request):
         THIS IS TESTING ONLY
         WHEN DONE CHANGE THE LAST ARGUMENT FOR THE STORE NEW REPORT TO PROGRAMMATICALLY TAKE THE NAME
         OF WHATEVER UNIT SENDS THE WIFI SCAN REPORT
+        
+        We also want it to be done only on receipt of a new report or something
+        Not every time the bloody page loads - testing only!
         """
         data_updater = DataSorter()
         data_updater.store_new_report("media/20210601-1834_prototype1_wifi_scan-01.csv", "test", "euthan4")
