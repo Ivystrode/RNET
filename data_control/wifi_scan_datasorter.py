@@ -1,9 +1,12 @@
 from bs4 import BeautifulSoup
 import pandas as pd
-import requests, sqlalchemy, time
+from datetime import datetime
+import requests, random, sqlalchemy, time
 
-import data_dbcontrol as dbcon
+import data_control.data_dbcontrol as dbcon
 
+from interface.models import Device, DeviceDetection
+from units.models import Unit
 
 class DataSorter():
     
@@ -64,7 +67,7 @@ class DataSorter():
         return string
         
 
-    def store_new_report(self, file_to_read, db_table):
+    def store_new_report(self, file_to_read, db_table, unit):
         self.file_to_read = file_to_read
         self.db_table = db_table
         
@@ -112,8 +115,17 @@ class DataSorter():
         data = data[['BSSID','channel','power_readings','ESSID', 'maker', 'sightings']]
         
         for row in data.iterrows():
+            device = {"MAC": row[1][0],
+                      "channel": row[1][1],
+                      "power": self.deserialize_one(row[1][2]),
+                      "ESSID": row[1][3],
+                      "maker": row[1][4],
+                      "sightings": self.deserialize_one(row[1][5])}
+            print(device)
+            print("=======================")
             try:
                 dbcon.insert(row[1][0], row[1][1], self.serialize(row[1][2]), row[1][3], row[1][4], self.serialize(row[1][5]))
+                self.save_to_hub_db(device)
             except:
                 print(f"[HUB] DATA: Entry already exists for {row[1][0]}")
                 
@@ -132,6 +144,27 @@ class DataSorter():
                 sightings_list = self.serialize(sightings_list)
                 
                 dbcon.update_device(row[1][0], row[1][1], power_readings_list, row[1][3], row[1][4], sightings_list)
+                self.save_to_hub_db(device, unit)
+                
+    def save_to_hub_db(self, device, unitname):
+        # new_device = device.save()
+        print("SAVE TO HUB")
+        print(device)
+        # print(device[2])
+        if not Device.objects.filter(mac = device['MAC']).exists():
+            new_device = Device.objects.create(id = random.randint(0, 100000), make = device['maker'], mac = device['MAC'])
+            new_device.save()
+            print(new_device)
+            print("device saved")
+        else:
+            print("device already exists")
+        p = device['power'][-1]
+        p = float(p)
+        new_detection = DeviceDetection.objects.create(id=random.randint(0,100000), device=Device.objects.get(mac=device['MAC']), time=device['sightings'][-1], power=p, channel=device['channel'], detected_by=Unit.objects.get(name=unitname).name)
+        new_detection.save()
+        print(new_detection)
+        print("detection saved")
+        print("SAVE TO HUB DONE")
                 
         
         
@@ -143,4 +176,4 @@ class DataSorter():
 if __name__ == '__main__':
     # just for testing
     d = DataSorter()
-    d.store_new_report("../media/20210601-1752_prototype1_wifi_scan-01.csv", "test")
+    d.store_new_report("../media/20210601-1817_prototype1_wifi_scan-01.csv", "test")

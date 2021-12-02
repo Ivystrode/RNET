@@ -5,15 +5,21 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.views.generic.edit import CreateView
 
+# from graphos.sources.simple import SimpleDataSource
+# from graphos.renderers.gchart import LineChart
 
-from .models import AuthorisedUser
+
+from .models import AuthorisedUser, Device, DeviceDetection
 from units.models import Unit
 from hub_con import hub_main
 from hub_con.hub_bot import bot
 from hub_con.models import Control_Hub
 # from .forms import NoticeCreationForm, NoticeCommentForm, DeleteNoticeForm, EditNoticeForm, CustomEmailForm
+from data_control import data_dbcontrol as data_dbcon
+from data_control.wifi_scan_datasorter import DataSorter
 
 import random
+from datetime import datetime
 from decouple import config
 
 # @login_required()
@@ -79,7 +85,20 @@ def dashboard(request):
 @login_required()
 def data(request):
     if request.user.profile.approved:
+        
+        """
+        THIS IS TESTING ONLY
+        WHEN DONE CHANGE THE LAST ARGUMENT FOR THE STORE NEW REPORT TO PROGRAMMATICALLY TAKE THE NAME
+        OF WHATEVER UNIT SENDS THE WIFI SCAN REPORT
+        """
+        data_updater = DataSorter()
+        data_updater.store_new_report("media/20210601-1817_prototype1_wifi_scan-01.csv", "test", "euthan4")
+        
+        
         units = Unit.objects.all()
+        
+        # scan_data = SimpleDataSource(data=)
+        
         context = {'units':units}
         try:
             hub = Control_Hub.objects.get(name="Hub")

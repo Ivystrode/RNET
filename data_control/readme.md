@@ -4,6 +4,8 @@
 - Use imagesets to train detection models
 - Sort scan reports for device tracking
 
+Be Aware - need to make a permanent solution for data_db's path in the dbcon file. When called from other modules it will need the whole path ie from the project root
+
 Datasets are ignored by git for obvious reasons!!
 
 Model creation (single class classification):

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'hub_con',
     'users',
     'units',
+    'data_control',
     'graphos',
 ]
 
