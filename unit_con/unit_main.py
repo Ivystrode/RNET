@@ -14,7 +14,12 @@ import unit_id
 
 class Unit():
     
-    def __init__(self, HUB_ADDRESS):
+    def __init__(self, HUB_ADDRESS, fc_port=14550):
+        """
+        FC Port is 14550 by default because this is what Ardupilot/MP expect
+        May have to change this if using multiple drones? But that would only be if they all communicate to the hub on the same port
+        This is for communication between the RPi and FC so port doesn't matter...right?
+        """
         
 
         self.HUB_ADDRESS = HUB_ADDRESS
@@ -23,6 +28,7 @@ class Unit():
         self.FILE_PORT = 7503
         self.UNIT_ADDRESS = "0.0.0.0"
         self.BUFFER_SIZE = 1024
+        self.fc_port = fc_port
         
         # to make sure connection isn't doubled up
         self.socket_open = False
@@ -35,10 +41,18 @@ class Unit():
         self.autorotate = False
         
         self.unit_details = unit_id.unit_details
+        # DEFAULT LOCATION VALUES - THESE MUST BE GOT FROM THE GPS ON THE FC
         self.lat = "51.183862090545"
         self.lng = "-4.669410763157165"
         
+        
         self.label = "[" + self.unit_details['unit_name'].upper() + "]"
+        
+        # connect to the FC - if it is the right type of unit. for now just a try/except.
+        try:
+            self.fc = dronekit_con.FlightController(port=self.fc_port)
+        except:
+            print(f"{self.label} No Flight Controller found.")
         
         print(f"{self.label} initialised")
         
@@ -168,5 +182,5 @@ class Unit():
 
 # Try this, if doesn't work, use the above
 unit=socket.gethostname()
-unit = Unit(unit_id.unit_details['hub_address'])
+unit = Unit(unit_id.unit_details['hub_address']) # use unit_id file to set fc_port? if it needs to be different on each unit which it prob doesn't
 print(unit)
