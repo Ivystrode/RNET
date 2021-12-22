@@ -42,7 +42,7 @@ class FlightController():
         else:
             print(f"[{unit_details['unit_name']}] FC CONTROL: unknown command: {command[1]}")
 
-    def initialise(self, ):
+    def initialise(self):
         while not self.vehicle.home_location:
             cmds = self.vehicle.commands
             cmds.download()
