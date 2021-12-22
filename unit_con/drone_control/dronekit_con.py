@@ -15,6 +15,7 @@ from unit_id import unit_details
 class FlightController():
     """
     Represents the Flight Control board that the RPi will be connected to on each vehicle unit
+    Will probably need a FlightController to be instantiated in hub_con?!?!? Yes duh get round to it
     """
     
     def __init__(self, port=14550):
@@ -33,8 +34,7 @@ class FlightController():
 
 
     def command_subrouter(self, command):
-        print("[FLIGHT CONTROLLER] - COMMAND RECEIVED")
-        print(command)
+        print(f"[FLIGHT CONTROLLER] - COMMAND RECEIVED: {command}")
         if command[1] == "launch":
             print(f"[{unit_details['unit_name']}] FC CONTROL: Launching...")
             self.initialise()
@@ -86,11 +86,11 @@ class FlightController():
                 break
             time.sleep(1)
             
-    def travel(self, dest, groundspeed: float):
-        target = LocationGlobalRelative(dest[0], dest[1], dest[2])
+    def travel(self, dest: list, groundspeed: float):
+        target = LocationGlobalRelative(dest[0], dest[1], dest[2]) # lat, lng, alt (RELATIVE to home position)
         self.vehicle.simple_goto(target, groundspeed=groundspeed)
-        print(f"[{unit_details['unit_name']}] FC CONTROL: self.vehicle moving")
-        signaller.message(HUB_ADDRESS, SIGNAL_PORT, f"{unit_details['unit_name']} Travelling to {dest[0]} | {dest[1]} Final Alt: {dest[2]}")
+        print(f"[{unit_details['unit_name']}] FC CONTROL: vehicle moving")
+        signaller.message(HUB_ADDRESS, SIGNAL_PORT, message=f"{unit_details['unit_name']} Travelling to {dest[0]} | {dest[1]} Final Alt: {dest[2]}", activity="Launch")
         unit_dbcontrol.update_status("Travelling")
 
 if __name__ == '__main__':
@@ -114,6 +114,6 @@ if __name__ == '__main__':
     print(f"---Can be armed: {vehicle.is_armable}")
     print(f"---Mode: {vehicle.mode.name}")
     print(f"---Armed: {vehicle.armed}\n")
-    if not vehicle.armed:
-        vehicle.launch(10)
-    vehicle.travel([51.1415097, -4.2534511, 30], 15.0)
+    # if not vehicle.armed:
+    #     vehicle.launch(10)
+    # vehicle.travel([51.1415097, -4.2534511, 30], 15.0)
