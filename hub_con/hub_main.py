@@ -112,7 +112,7 @@ class Hub():
                             print(f"[HUB] {cleaned_received[2]} re-activated")
                         except Exception as e:
                             print(f"[HUB] Database error: {e}")
-                else:
+                else: # if TELEM ?
                     print(f"[HUB] Message received: {cleaned_received}")
                     if cleaned_received[3] != "N/A":
                         record_activity(cleaned_received[3])

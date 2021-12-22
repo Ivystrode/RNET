@@ -6,6 +6,7 @@ No way of indicate when a moving self.vehicle has reached its destination (where
 This can be done by measuring distance to target though
 """
 from dronekit import connect, VehicleMode, LocationGlobalRelative
+import haversine as hs
 import time
 
 import unit_dbcontrol
@@ -22,6 +23,8 @@ class FlightController():
         self.vehicle = connect(f"127.0.0.1:{port}", wait_ready=True)
         self.HUB_ADDRESS = unit_details['hub_address']
         self.SIGNAL_PORT = 7501
+        self.home_coords = None
+        self.default_groundspeed = 5 # this will need to be set according to vehicle type (don't stall a fixedwing!)
         
         print(f"[{unit_details['unit_name']}] FC CONTROL: Connected")
         print(f"---Location: {self.vehicle.location.global_frame}")
@@ -50,6 +53,7 @@ class FlightController():
             if not self.vehicle.home_location:
                 print(f"[{unit_details['unit_name']}] FC CONTROL: Waiting for home to be set...")
                 time.sleep(0.5)
+        self.home_coords = (self.vehicle.home_location.lat, self.vehicle.home_location.lon)
                 
     # def get_params():
     #     params = {}
@@ -81,17 +85,44 @@ class FlightController():
             print(f"[{unit_details['unit_name']}] FC CONTROL: Alt: {self.vehicle.location.global_relative_frame.alt}")
             if self.vehicle.location.global_relative_frame.alt >= starting_alt*0.95:
                 print(f"[{unit_details['unit_name']}] FC CONTROL: Takeoff successful - UAV at target altitude")
-                signaller.message(HUB_ADDRESS, SIGNAL_PORT, f"{unit_details['unit_name']} Takeoff successful")
+                signaller.message(HUB_ADDRESS, SIGNAL_PORT, message=f"{unit_details['unit_name']} Takeoff successful", activity="Takeoff complete")
                 unit_dbcontrol.update_status("Airborne")
                 break
             time.sleep(1)
             
-    def travel(self, dest: list, groundspeed: float):
+    def travel(self, dest: list, groundspeed=self.default_groundspeed):
         target = LocationGlobalRelative(dest[0], dest[1], dest[2]) # lat, lng, alt (RELATIVE to home position)
+        target_coords = (dest[0], dest[1]) # used for haversine distance calculation
+        print(f"TARGET COORDS: {target_coords} - TYPE: {type(target_coords[0])}")
+        
         self.vehicle.simple_goto(target, groundspeed=groundspeed)
         print(f"[{unit_details['unit_name']}] FC CONTROL: vehicle moving")
-        signaller.message(HUB_ADDRESS, SIGNAL_PORT, message=f"{unit_details['unit_name']} Travelling to {dest[0]} | {dest[1]} Final Alt: {dest[2]}", activity="Launch")
+        
+        signaller.message(HUB_ADDRESS, SIGNAL_PORT, message=f"{unit_details['unit_name']} Travelling to {dest[0]} | {dest[1]} Final Alt: {dest[2]}", activity=f"Travel to {dest[0], dest[1]}")
         unit_dbcontrol.update_status("Travelling")
+        
+        while True:
+            try:
+                lat = float(self.vehicle.location.global_relative_frame.lat)
+                lon = float(self.vehicle.location.global_relative_frame.lon)
+                alt = self.vehicle.location.global_relative_frame.alt
+                lvl = self.vehicle.battery.level
+                volt = self.vehicle.battery.voltage
+                amp = self.vehicle.battery.current
+                gspeed = self.vehicle.groundspeed
+                heading = self.vehicle.heading
+                current_loc = (lat, lon)
+                dist_target = hs.haversine(target_coords, current_loc)
+                dist_home = hs.haversine(self.home_coords, current_loc)
+                print("===========================================")
+                print(f"Distance to target: {dist_target} Altitude: {alt}")
+                print(f"Distance from home: {dist_home}\n")
+                print(f"Battery: {lvl}mAh {volt}V {amp}A")
+                print(f"Flight: {gspeed}m/s {heading} degrees {amp}A")
+                print("===========================================")
+            except Exception as e:
+                print(f"Error: {e}")
+            time.sleep(5)
 
 if __name__ == '__main__':
     # connecting to local vehicle simulated
