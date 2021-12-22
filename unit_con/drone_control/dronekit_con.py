@@ -16,7 +16,7 @@ from unit_id import unit_details
 class FlightController():
     """
     Represents the Flight Control board that the RPi will be connected to on each vehicle unit
-    Will probably need a FlightController to be instantiated in hub_con?!?!? Yes duh get round to it
+    Will probably need a FlightController to be instantiated in unit_con?!?!? Yes duh get round to it
     """
     
     def __init__(self, port=14550):
@@ -32,6 +32,8 @@ class FlightController():
         print(f"---Can be armed: {self.vehicle.is_armable}")
         print(f"---Mode: {self.vehicle.mode.name}")
         print(f"---Armed status: {self.vehicle.armed}\n")
+        
+        self.initialise()
 
 
 
@@ -40,20 +42,22 @@ class FlightController():
         print(f"[FLIGHT CONTROLLER] - COMMAND RECEIVED: {command}")
         if command[1] == "launch":
             print(f"[{unit_details['unit_name']}] FC CONTROL: Launching...")
-            self.initialise()
+            # self.initialise() moved to __init__ - surely this should happen as soon as unit is switched on? this would also mean we can GET the home coords if we restart the script
             self.launch(10)
         else:
             print(f"[{unit_details['unit_name']}] FC CONTROL: unknown command: {command[1]}")
 
     def initialise(self):
+        print(f"[{unit_details['unit_name']}] FC CONTROL: Initialising...")
         while not self.vehicle.home_location:
             cmds = self.vehicle.commands
             cmds.download()
             cmds.wait_ready()
             if not self.vehicle.home_location:
-                print(f"[{unit_details['unit_name']}] FC CONTROL: Waiting for home to be set...")
+                print(f"[{unit_details['unit_name']}] FC CONTROL: Waiting for home to be set/read...")
                 time.sleep(0.5)
         self.home_coords = (self.vehicle.home_location.lat, self.vehicle.home_location.lon)
+        signaller.message(HUB_ADDRESS, SIGNAL_PORT, message=f"{unit_details['unit_name']} Flight Controller initialised")
                 
     # def get_params():
     #     params = {}
@@ -138,6 +142,8 @@ if __name__ == '__main__':
     """
     Connect to multiple vehicles by calling connect() for each vehicle
     Each vehicle will need to be a separate class?
+    Wait no - this code runs on an rpi which only connects to ONE flight controller dummy
+    The hub connects to the whole fleet, but over sockets
     """
     print(f"[{unit_details['unit_name']}] FC CONTROL: Connected")
     print(f"---Global location: {vehicle.location.global_frame}")
