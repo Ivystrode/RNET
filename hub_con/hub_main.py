@@ -35,10 +35,10 @@ class Hub():
         self.active_units = {} # units that have reported active to the hub (key is unit address, value is time of last statrep)
         self.lost_connection_units = {} # units that have missed a statrep
         
-        self.initialise()
-        
         self.bot = HubBot(config('tbot_key'))
         self.bot.activate_hub_bot()
+        self.initialise()
+        
         
         dbcontrol.connect()
     
@@ -137,8 +137,8 @@ class Hub():
                 # print(unit)
                 
                 if int(unit[5]) - timenow < -1:
-                    if unit[1] not in self.lost_connection_units:
-                        self.bot.send_message(f"Lost connection to {unit[1]}")
+                    # if unit[1] not in self.lost_connection_units:
+                        # self.bot.send_message(f"Lost connection to {unit[1]}")
                     self.lost_connection_units[unit[1]] = unit[5] # if it's missed a statrep, report connection loss
                     dbcontrol.update_unit(unit[2], "Disconnected", unit[5], unit[6], unit[7])
                     print(f"[HUB] Lost connection to {unit[1]}")
@@ -154,6 +154,8 @@ class Hub():
             
             if len(self.lost_connection_units) > 0:
                 print(f"[HUB] WARNING! Connection Lost to: {self.lost_connection_units}")
+                unitstring = [key for key in self.lost_connection_units.keys()]
+                self.bot.send_message(f"Lost connection to: {', '.join(unitstring)}")
             else:
                 print("[HUB] All active units online")
             time.sleep(60)
