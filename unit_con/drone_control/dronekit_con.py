@@ -94,7 +94,10 @@ class FlightController():
                 break
             time.sleep(1)
             
-    def travel(self, dest: list, groundspeed=self.default_groundspeed):
+    def travel(self, dest: list, groundspeed=None):
+        if not groundspeed:
+            groundspeed = self.default_groundspeed
+        
         target = LocationGlobalRelative(dest[0], dest[1], dest[2]) # lat, lng, alt (RELATIVE to home position)
         target_coords = (dest[0], dest[1]) # used for haversine distance calculation
         print(f"TARGET COORDS: {target_coords} - TYPE: {type(target_coords[0])}")
